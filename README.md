@@ -15,3 +15,16 @@ El repositorio incluye:
 📑 Material de apoyo y referencias bibliográficas
 
 Está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan la asignatura como para cualquier persona interesada en el análisis de datos multivariados y técnicas modernas de reducción de dimensión y segmentación.
+
+
+
+| Tema | Materiales de apoyo | Material de clase |
+
+|------|---------------------|-------------------|
+
+| Bienvenida |  |  |
+
+| Análisis de Componentes Principales |  | \[Ver material](https://jgbabativam.github.io/Curso\_Multivariado/2.PCA.html) |
+
+
+
