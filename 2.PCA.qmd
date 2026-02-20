@@ -1,5 +1,5 @@
 ---
-title: "Estadística Descriptiva Multivariadas"
+title: "Estadística Descriptiva Multivariada"
 subtitle: "Análisis de Componentes Principales"
 author:
   - name: Jimmy A Corzo S, PhD
