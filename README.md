@@ -1,4 +1,4 @@
-\# Curso de Estadística Descriptiva Multivariada
+# Curso de Estadística Descriptiva Multivariada
 
 
 
@@ -6,19 +6,19 @@ Este repositorio reúne los materiales del curso de \*\*Estadística Descriptiva
 
 
 
-\## 📦 Contenido del repositorio
+## 📦 Contenido del repositorio
 
 
 
-\- 📘 Notas de clase y presentaciones teóricas  
+- 📘 Notas de clase y presentaciones teóricas  
 
-\- 💻 Scripts y ejemplos reproducibles en R  
+- 💻 Scripts y ejemplos reproducibles en R  
 
-\- 📊 Bases de datos para prácticas y ejercicios  
+- 📊 Bases de datos para prácticas y ejercicios  
 
-\- 🧪 Talleres y actividades aplicadas paso a paso  
+- 🧪 Talleres y actividades aplicadas paso a paso  
 
-\- 📑 Material de apoyo y referencias bibliográficas  
+- 📑 Material de apoyo y referencias bibliográficas  
 
 
 
@@ -30,7 +30,7 @@ Está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan
 
 
 
-\## 📚 Material del curso
+## 📚 Material del curso
 
 
 
@@ -40,7 +40,7 @@ Está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan
 
 | Bienvenida | — | — |
 
-| Análisis de Componentes Principales | — | \[Ver material](https://jgbabativam.github.io/Curso_Multivariado/2.PCA.html) |
+| Análisis de Componentes Principales | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/2.PCA.html) |
 
 
 
@@ -48,7 +48,7 @@ Está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan
 
 
 
-\## 🔗 Sitio web del curso
+## 🔗 Sitio web del curso
 
 
 
