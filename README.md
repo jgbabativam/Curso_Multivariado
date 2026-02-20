@@ -40,7 +40,7 @@ Está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan
 
 | Bienvenida | — | — |
 
-| Análisis de Componentes Principales | — | \[Ver material](https://jgbabativam.github.io/Curso\_Multivariado/2.PCA.html) |
+| Análisis de Componentes Principales | — | \[Ver material](https://jgbabativam.github.io/Curso_Multivariado/2.PCA.html) |
 
 
 
@@ -56,5 +56,5 @@ Puedes acceder al material completo en:
 
 
 
-👉 https://jgbabativam.github.io/Curso\_Multivariado/
+👉 https://jgbabativam.github.io/Curso_Multivariado/
 
