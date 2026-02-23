@@ -456,7 +456,7 @@ El conjunto de datos `RESUMEN.sav` contiene un preprocesamiento obtenido de la G
 library(pacman)
 p_load(tidyverse, janitor,
        FactoMineR, factoextra, Factoshiny, 
-       skimr, corrplot, psych, gt, gtsummary, haven)
+       skimr, corrplot, psych, haven)
 
 url <- "https://github.com/jgbabativam/AnaDatos/raw/main/datos/RESUMEN.sav"
 datos <- read_sav(url) |> as_factor()
@@ -527,7 +527,17 @@ mostrar que la suma de los valores propios (varianza de los CP) es igual a la su
 corrplot(res$var$contrib, is.corr=FALSE, tl.col = "black")
 ```
 
-## Análisis de la inercia por variables
+
+## Análisis correlación variable factor
+
+
+```{r, echo=TRUE}
+corrplot(res$var$cor, is.corr=FALSE, tl.col = "black")
+```
+
+## Análisis de los cos2
+
+Capacidad de los factores para explicar las variables
 
 ```{r}
 #| echo: true
