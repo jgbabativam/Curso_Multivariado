@@ -1,0 +1,2397 @@
+%% LyX 2.2.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt,english]{beamer}
+\usepackage{enumerate}
+
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{url}
+\usepackage[authoryear]{natbib}
+\usefonttheme[onlymath]{serif} % para las fuentes de las ecuaciones
+\makeatletter
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{xcolor} % para colorear textos con \textcolor o \color
+\usepackage{hyperref}
+\usepackage{times}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{longtable}
+\usepackage{float} % para usar comando [H] en tablas y gr\'aficas
+\usepackage{xcolor}% para modificar el color de la presentacion y del texto
+\usepackage{colortbl} % para tablas de Kable
+\usepackage{booktabs} % Para toprule: To thicken table lines 
+\usepackage[nogin]{Sweave} % elimina el tamaño por default de las figuras de sweave
+\usepackage{natbib}
+\bibliographystyle{agsm}
+% \usepackage[inline]{enumitem} % para enumerar dentro de un paragrafo
+\usepackage{rotating} % para rotar nombres de columnas
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[strings]{underscore}
+\usepackage{tabularx}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\providecommand{\LyX}{L\kern-.1667em\lower.25em\hbox{Y}\kern-.125emX\@}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+<<echo=F>>=
+  if(exists(".orig.enc")) options(encoding = .orig.enc)
+@
+\newcommand{\code}[1]{\texttt{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+\usepackage[T1]{fontenc}
+
+\makeatother
+
+\usepackage{babel}
+\usepackage{listings}
+\renewcommand{\lstlistingname}{\inputencoding{latin9}Listing}
+\newtheorem{ejem}{\textbf{Ejemplo}}[section]
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+
+\title{Estadística Descriptiva Multivariada\\
+\small Métodos multivariados aplicados (Aprendizaje no supervisado)
+}
+
+\subtitle{Contexto de la estadística descriptiva multivariada, contenido del curso y criterios de calificación}
+
+\author{Jimmy A Corzo S\inst{1} \inst{2}}
+
+\institute[Profesor Titular]{\inst{1}Profesor Titular\\
+Departamento de Estadística\and \inst{2}Facultad de ciencias\\
+Universidad Nacional de colombia}
+
+% \date[2023]{Métodos multivariados aplicados \LyX{} Contenido y criterios de calificación}
+
+\makebeamertitle
+
+%\pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo-filename}
+
+%\logo{\pgfuseimage{institution-logo}}
+
+\AtBeginSubsection[]{
+
+  \frame<beamer>{ 
+
+    \frametitle{Outline}   
+
+    \tableofcontents[currentsection,currentsubsection] 
+
+  }
+
+}
+
+%------------------------------------------------------------
+% (En el preámbulo de su Beamer .Rnw asegúrese de tener)
+% \usepackage{graphicx}
+% \usepackage{amsmath,amssymb}
+%------------------------------------------------------------
+
+%============================================================
+\begin{frame}
+\large{\textcolor{blue}{Panorama\\La Estadística Descriptiva Multivariada (EDM) en el contexto moderno del aprendizaje estadístico no supervisado}}
+\end{frame}
+
+\begin{frame}{Aprendizaje Estadístico Supervisado: el problema}
+\setkeys{Gin}{height=0.5\textheight, keepaspectratio}
+\small
+\textbf{Objetivo.} Predecir una variable respuesta $Y$ a partir de predictores
+$X_1,\ldots,X_p$ mediante un modelo
+\[
+Y = f(X_1,\ldots,X_p).
+\]
+\textbf{Evaluación.} La calidad del modelo se mide con un \emph{criterio externo de error}
+que compara predicciones $\hat{y}_i$ con observaciones reales $y_i$.
+
+\vspace{0.25cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.3, height=3.4>>=
+set.seed(123)
+n  <- 120
+x  <- runif(n, -3, 3)
+fx <- 1.2 + 0.9*x - 0.25*x^2
+y  <- fx + rnorm(n, sd=0.6)
+
+par(mar=c(4,4,1,1))
+plot(x, y, pch=19, cex=0.7,
+     xlab=expression(X[1]),
+     ylab=expression(Y),
+     main="")
+xx <- seq(min(x), max(x), length.out=200)
+lines(xx, 1.2 + 0.9*xx - 0.25*xx^2, lwd=2)
+legend("topleft",
+       legend=c("Datos observados", expression(f(X[1]))),
+       pch=c(19, NA), lty=c(NA, 1), bty="n", pt.cex=0.8, lwd=2)
+@
+\end{center}
+\end{frame}
+
+%============================================================
+\begin{frame}{¿Por qué se llama ``supervisado''?}
+\setkeys{Gin}{height=0.5\textheight, keepaspectratio}
+\small
+\textbf{Idea clave.} Al observar $Y$, el aprendizaje se puede \emph{supervisar}:
+\begin{itemize}
+  \item \textbf{Entrenamiento:} ajustar $f$ usando una parte de los datos.
+  \item \textbf{Prueba/validación:} evaluar en datos independientes comparando
+  $\hat{y}_i$ vs.\ $y_i$ con una medida de error.
+\end{itemize}
+
+\vspace{0.15cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.5, height=3.1>>=
+par(mar=c(0,0,0,0))
+plot(0:1, 0:1, type="n", axes=FALSE, xlab="", ylab="")
+
+# Cajas
+rect(0.05, 0.20, 0.45, 0.80)
+rect(0.55, 0.20, 0.95, 0.80)
+
+text(0.25, 0.70, "Conjunto\nde entrenamiento", cex=0.95)
+text(0.75, 0.70, "Conjunto\nde prueba", cex=0.95)
+
+text(0.25, 0.48, expression(paste("Ajustar ", hat(f))), cex=1.05)
+text(0.75, 0.48,
+     expression("Evaluar error\n(" * hat(y) * " vs " * y * ")"),
+     cex = 0.95)
+
+
+# Flecha
+arrows(0.45, 0.50, 0.55, 0.50, length=0.10, lwd=2)
+text(0.50, 0.58, "modelo", cex=0.9)
+@
+\end{center}
+
+\end{frame}
+
+%============================================================
+\begin{frame}{Métodos típicos en la categoría supervisada}
+\setkeys{Gin}{height=0.5\textheight, keepaspectratio}
+\small
+Pertenecen a esta categoría métodos como:
+\begin{itemize}
+  \item \textbf{Regresión:} regresión lineal; regresión polinómica; regresión regularizada (ridge/lasso).
+  \item \textbf{Clasificación:} regresión logística; árboles; k-NN; SVM; redes neuronales.
+  \item \textbf{Modelos extendidos:} modelos lineales generalizados (GLM) y aditivos generalizados (GAM).
+\end{itemize}
+
+\vspace{0.1cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.6, height=3.1>>=
+par(mar=c(4,4,1,1))
+counts <- c(Regresión=6, Clasificación=6, "GLM/GAM"=4)
+bp <- barplot(counts,
+              ylab="Ejemplos (conteo ilustrativo)",
+              xlab="Familias de métodos",
+              ylim=c(0, max(counts)+2))
+text(bp, counts + 0.3, labels=counts, cex=0.9)
+@
+\end{center}
+
+\end{frame}
+% 
+%============================================================
+\begin{frame}{Contraste: Aprendizaje Supervisado vs No Supervisado}
+\setkeys{Gin}{height=0.4\textheight, keepaspectratio}
+\small
+\textbf{Idea central.}  
+En el \textbf{Aprendizaje Estadístico No Supervisado} solo se observan variables
+explicativas $X_1,\ldots,X_p$; no existe una variable respuesta $Y$ que permita
+supervisar el aprendizaje ni evaluar el ajuste mediante un criterio externo de
+error.
+
+\begin{itemize}
+  \item No hay una respuesta observable que se desee predecir.
+  \item El problema no se formula en términos de predicción supervisada.
+  \item La evaluación del resultado es interna al método y de carácter exploratorio.
+\end{itemize}
+
+% \vspace{0.05cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.5, height=3.2>>=
+par(mar=c(0,0,0,0))
+plot(0:1, 0:1, type="n", axes=FALSE, xlab="", ylab="")
+
+# Caja supervisado
+rect(0.05, 0.20, 0.45, 0.80)
+text(0.25, 0.70, "Supervisado", font=2)
+text(0.25, 0.55, expression(X %->% Y))
+text(0.25, 0.40, "Error externo", cex=0.9)
+
+# Caja no supervisado
+rect(0.55, 0.20, 0.95, 0.80)
+text(0.75, 0.70, "No supervisado", font=2)
+text(0.75, 0.55, expression(X[1]*","*X[2]*","*phantom(X[p])))
+text(0.75, 0.40, "Sin Y observable", cex=0.9)
+
+# Flecha de contraste
+arrows(0.45, 0.50, 0.55, 0.50, lwd=2, length=0.10)
+@
+\end{center}
+
+\end{frame}
+
+%============================================================
+\begin{frame}{Objeto e interés del Análisis No Supervisado}
+\setkeys{Gin}{height=0.5\textheight, keepaspectratio}
+\footnotesize
+En ausencia de una variable respuesta, el \textbf{análisis no supervisado} se
+orienta a la \textbf{exploración de la estructura interna de los datos}.
+
+\begin{itemize}
+  \item Identificar asociaciones entre variables.
+  \item Detectar similitudes o agrupamientos entre individuos.
+  \item Descubrir patrones o estructuras latentes.
+  \item Construir representaciones gráficas informativas.
+  \item Reducir la dimensionalidad del problema.
+\end{itemize}
+
+\vspace{0.15cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.5, height=3.2>>=
+set.seed(321)
+n <- 90
+x1 <- c(rnorm(n/3, -2), rnorm(n/3, 0), rnorm(n/3, 2))
+x2 <- c(rnorm(n/3, -2), rnorm(n/3, 2), rnorm(n/3, 0))
+grupo <- rep(1:3, each=n/3)
+
+par(mar=c(4,4,1,1))
+plot(x1, x2, pch=19, col=grupo,
+     xlab=expression(X[1]),
+     ylab=expression(X[2]),
+     main="")
+legend("topright",
+       legend=c("Estructura latente"),
+       bty="n")
+@
+\end{center}
+
+\end{frame}
+% 
+%============================================================
+\begin{frame}{Métodos en Aprendizaje No Supervisado}
+\setkeys{Gin}{height=0.5\textheight, keepaspectratio}
+\small
+Como parte del \textbf{Aprendizaje Estadístico No Supervisado} se incluyen, entre otros,
+los siguientes métodos:
+\begin{itemize}
+  \item \textbf{Reducción de dimensión:} Análisis de Componentes Principales (ACP).
+  \item \textbf{Asociación en tablas categóricas:} Análisis de Correspondencias (AC) y
+        Análisis de Correspondencias Múltiples (ACM).
+  \item \textbf{Estructura de similitud:} métodos de agrupamiento (\emph{clustering}).
+\end{itemize}
+
+% \vspace{0.15cm}
+% \textbf{Complemento sugerido.}  
+% Estos métodos persiguen objetivos \emph{exploratorios}: representar la estructura interna
+% de los datos mediante factores/ejes, mapas perceptuales o particiones en grupos, usando
+% criterios \emph{internos} de optimalidad (inercia/varianza explicada, distancia, cohesión-separación).
+
+% \vspace{0.15cm}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=6.6, height=3.3>>=
+set.seed(2026)
+n <- 90
+# Tres grupos latentes
+g <- rep(1:3, each = n/3)
+x1 <- c(rnorm(n/3, -2, 0.6), rnorm(n/3,  0, 0.6), rnorm(n/3,  2, 0.6))
+x2 <- c(rnorm(n/3,  0, 0.7), rnorm(n/3,  2, 0.7), rnorm(n/3, -1.5, 0.7))
+
+# Ilustración tipo "PCA-like": eje 1 y eje 2 (solo pedagógico)
+pc1 <- scale(x1 + 0.2*x2)
+pc2 <- scale(-0.3*x1 + x2)
+
+par(mar=c(4,4,1,1))
+plot(pc1, pc2, pch=19, col=g, cex=0.8,
+     xlab="Eje 1 (factor / componente)",
+     ylab="Eje 2 (factor / componente)",
+     main="")
+# Centros por grupo (para sugerir clustering)
+centros <- t(sapply(1:3, function(k) c(mean(pc1[g==k]), mean(pc2[g==k]))))
+points(centros[,1], centros[,2], pch=4, cex=1.6, lwd=2)
+text(centros[,1], centros[,2], labels=paste("Grupo",1:3), pos=3, cex=0.9)
+
+legend("bottomleft",
+       legend=c("Individuos", "Centros (clustering)"),
+       pch=c(19,4), bty="n", pt.cex=c(0.9,1.2))
+@
+\end{center}
+
+\end{frame}
+
+% 
+\begin{frame}[fragile]{\large Mapa conceptual de métodos de aprendizaje no supervisado}
+
+\centering
+\vspace{-2mm} % opcional: sube un poco la figura
+
+% Clave: limitar por altura (Beamer tiene poca altura útil)
+\setkeys{Gin}{height=0.72\textheight, keepaspectratio}
+
+<<mapa_no_supervisado, echo=FALSE, fig=TRUE, width=10, height=6>>=
+par(mar = c(0.2, 0.2, 0.7, 0.2))
+plot(0:1, 0:1, type="n", axes=FALSE, xlab="", ylab="")
+
+wrap_txt <- function(x, width = 18){
+  paste(strwrap(x, width = width), collapse = "\n")
+}
+
+caja2 <- function(x1, y1, x2, y2, titulo, contenido,
+                  col="#E8ECF8", cex_t=0.85, cex_c=0.72,
+                  w_t=18, w_c=18){
+  rect(x1, y1, x2, y2, col=col, border="black", lwd=1.1)
+  text((x1+x2)/2, y2 - 0.03, wrap_txt(titulo, w_t),
+       cex=cex_t, font=2)
+  text((x1+x2)/2, (y1+y2)/2 - 0.02, wrap_txt(contenido, w_c),
+       cex=cex_c)
+}
+
+text(0.5, 0.97,
+     "Mapa conceptual de métodos de aprendizaje NO supervisado",
+     cex=1.00, font=2)
+
+caja2(0.05, 0.70, 0.45, 0.92,
+      "Reducción de dimensión",
+      "PCA, CA, MCA\nMFA, STATIS, MDS\nt-SNE\nUMAP\nIsomap\nNMF",
+      col="#CFE0FF", w_c=16)
+
+caja2(0.55, 0.70, 0.95, 0.92,
+      "Clustering",
+      "k-means\nk-medoids\nJerárquico\nDBSCAN/HDBSCAN\nGMM (mixturas)\nEspectral",
+      col="#FFE0CC", w_c=16)
+
+caja2(0.05, 0.40, 0.45, 0.62,
+      "Métodos de densidad",
+      "KDE\nModelos de mezcla\nProcesos de Dirichlet\nDensidad local (LOF)",
+      col="#FFF4C9", w_c=18)
+
+caja2(0.55, 0.40, 0.95, 0.62,
+      "Redes no supervisadas",
+      "Autoencoders\nSOM (Kohonen)\nRBMs\nVAE (modo no supervisado)",
+      col="#E3FFD8", w_c=18)
+
+caja2(0.25, 0.12, 0.75, 0.32,
+      "Detección de anomalías",
+      "Isolation Forest\nOne-Class SVM\nLOF\nAutoencoders (errores)",
+      col="#E8D8FF", w_c=20)
+
+arrows(0.25, 0.70, 0.25, 0.63, length=0.07, lwd=1.0)
+arrows(0.75, 0.70, 0.75, 0.63, length=0.07, lwd=1.0)
+arrows(0.25, 0.40, 0.25, 0.34, length=0.07, lwd=1.0)
+arrows(0.75, 0.40, 0.75, 0.34, length=0.07, lwd=1.0)
+arrows(0.50, 0.12, 0.50, 0.05, length=0.07, lwd=1.0)
+@
+\end{frame}
+% 
+\begin{frame}{Métodos de reducción de las dimensiones}
+\subsubsection*{Metodos basados directamente en SVD}
+
+\begin{itemize}
+
+  \item \textbf{PCA (Principal Components Analysis).} 
+  Metodo lineal para variables numericas que busca direcciones de maxima varianza. 
+  \textbf{Basado directamente en la SVD} de la matriz centrada.
+
+  \item \textbf{CA (Correspondence Analysis).} 
+  Método de análisis de dos varaibles cualitativas en tablas de contingencia basada en perfiles centrados y ponderados. 
+  \textbf{Utiliza una SVD ponderada} para obtener coordenadas principales.
+
+  \item \textbf{MCA (Multiple Correspondence Analysis).} 
+  Extension del CA a multiples variables cualitativas mediante la matriz indicatoria o de Burt
+  (tabla de tablas de contingencia). 
+  \textbf{Fundamentado en una SVD en el espacio chi-cuadrado}.
+
+
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{Métodos de reducción de las dimensiones}
+\subsubsection*{Metodos basados directamente en SVD}
+
+\begin{itemize}
+
+
+  \item \textbf{MFA (Multiple Factor Analysis).} 
+  Metodo para analizar múltiples tablas en el cual unas tablas pueden ser de 
+  variables cuantitativas o numéricas  y otras pueden ser de variables cualitativas
+  que normaliza cada bloque y luego aplica 
+  \textbf{una SVD global} para extraer factores comunes.
+
+  \item \textbf{STATIS (incluye DiSTATIS).} 
+  Metodo para tablas estructuradas en tres vias; construye una compromise matrix 
+  y aplica \textbf{SVD o descomposicion espectral} para obtener configuraciones y compromisos.
+
+  \item \textbf{MDS clasico (Classical Multidimensional Scaling o CMDS).}
+  Recupera coordenadas en un espacio euclidiano mediante la 
+  \textbf{descomposicion espectral de la matriz de distancias doblemente centrada}, 
+  algebraicamente equivalente a una SVD.
+
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{Metodos no lineales o no basados en SVD}
+\begin{itemize}
+
+  \item \textbf{t-SNE (t-distributed Stochastic Neighbor Embedding).} 
+  Metodo no lineal que minimiza la divergencia de Kullback--Leibler entre distribuciones de vecinos. 
+  \textbf{No utiliza SVD} salvo como opcion para inicializacion.
+
+  \item \textbf{UMAP (Uniform Manifold Approximation and Projection).} 
+  Metodo de aprendizaje de variedades basado en grafos fuzzy y optimizacion de atraccion-repulsion. 
+  \textbf{No utiliza SVD} excepto cuando se inicializa con PCA.
+
+  \item \textbf{Isomap.} 
+  Metodo de aprendizaje de manifolds basado en distancias geodesicas. 
+  Realiza MDS al final, pero \textbf{no es un metodo basado en SVD}, 
+  aunque emplea descomposicion espectral en la etapa final.
+
+  \item \textbf{NMF (Nonnegative Matrix Factorization).} 
+  Factorizacion iterativa de matrices no negativas mediante algoritmos multiplicativos o ALS. 
+  \textbf{No utiliza SVD}, aunque puede inicializarse con ella.
+
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{Métodos de agrupamiento (Clustering)}
+\begin{itemize}
+
+  \item \textbf{K-means.} 
+  Algoritmo particional que asigna cada observacion al centroide mas cercano, 
+  minimizando la suma de distancias cuadraticas dentro de cada grupo. 
+  Requiere fijar el numero de clusters y es sensible a valores atipicos.
+
+  \item \textbf{K-medoids (PAM).} 
+  Variante robusta de k-means que utiliza medoids (observaciones reales) en lugar de centroides, 
+  adecuada para diferentes metricas de distancia y menos sensible a valores atipicos.
+
+  \item \textbf{Clustering jerarquico (aglomerativo o divisivo).} 
+  Construye un dendrograma que agrupa observaciones de manera secuencial. 
+  No requiere especificar el numero de clusters a priori y permite distintos criterios de enlace 
+  (single, complete, average, Ward).
+\end{itemize}
+
+\end{frame}
+% 
+\begin{frame}{Métodos de agrupamiento (Clustering)}
+\small
+\begin{itemize}
+
+  \item \textbf{DBSCAN.} 
+  Metodo basado en densidad que identifica regiones densas separadas por zonas de baja densidad. 
+  Detecta ruido y produce clusters de formas arbitrarias sin necesidad de fijar el numero de grupos.
+
+  \item \textbf{HDBSCAN.} 
+  Extension jerarquica de DBSCAN que permite densidades variables. 
+  Produce clusters mas estables y una mejor deteccion de ruido en datos con heterogeneidad de densidad.
+
+  \item \textbf{GMM (Gaussian Mixture Models).} 
+  Modelo probabilistico que representa los datos como una mezcla de distribuciones normales. 
+  Ofrece pertenencias suaves (probabilidades) mediante el algoritmo EM y permite clusters elipticos.
+
+  \item \textbf{Clustering espectral.} 
+  Metodo que utiliza los autovectores del Laplaciano de un grafo de similitudes para representar los datos 
+  en un espacio reducido, donde luego se aplica un algoritmo particional como k-means. 
+  Permite detectar clusters no lineales.
+
+\end{itemize}
+
+\end{frame}
+%
+\begin{frame}{Métodos tratados en este curso}
+\begin{itemize}
+
+  \item \textbf{PCA (Principal Components Analysis).} 
+
+  \item \textbf{CA (Correspondence Analysis).} 
+
+  \item \textbf{MCA (Multiple Correspondence Analysis).} 
+
+  \item \textbf{K-means.} 
+
+  \item \textbf{Clustering jerarquico (aglomerativo o divisivo).} 
+
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{Elementos de álgebra lineal requeridos en análisis multivariado}
+
+\begin{itemize}
+\item \textbf{Espacios vectoriales}: vectores, subespacios, bases y dimensión.
+\item \textbf{Producto interno}: norma, ángulos y ortogonalidad.
+\item \textbf{Proyección ortogonal} y mínimos cuadrados.
+\item \textbf{Matrices}: operaciones matriciales, rango, traza e inversa (cuando existe).
+\item \textbf{Matrices simétricas} y definidas positivas.
+\item \textbf{Valores y vectores propios}.
+\item \textbf{Teorema de la descomposición espectral (TDE)}.
+\item \textbf{Teorema de la descomposición en valores singulares (TDVS)}.
+\end{itemize}
+
+\end{frame}
+% 
+% 
+\begin{frame}{Conjuntos de datos utilizados en los ejemplos y ejercicios}
+\begin{itemize}
+\item \textbf{ciudades} Tabla de datos de 22 ciudades colombianas con 6 variables referentes a la educación y número de habitantes.
+
+\item etiq\_ciudades
+
+\item \textbf{ciudadesC} Tabla de datos de 22 ciudades colombianas con 84 variables clasificadas en grupos que abarcan temas como Recursos Humanos, Ciencia y Tecnología, Infraestructura, Finazas públicas entre otros.
+
+\item \textbf{Etiquetas ciudades} Contiene las etiquetas del archivo ciudadesC
+
+\item \textbf{ARWU\_100\_top} Tabla de datos de puntajes y posiciones de las 100 mejores universidades del mundo según el ranking Academic Rank of World Universities (ARWU)
+
+\item arwu
+
+\item \textbf{r14\_Sci\_Qs\_Webometrics} Tabla de datos de puntajes y posiciones de 149 universidades latinoamericanas según estos tres rankings
+
+\item confianza Tabla con lresultados sobre confianza en instituciones
+
+\item ConfianzaJUsticia. Tabla resultados de confianza en la justicia
+
+\item RankLatino Rankins latinoamericanos
+
+\item CCLatin Ciudades latinoamericanas
+
+\item rankings Rankings 
+
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{\centering \textcolor{yellow}{Panorama del análisis multivariado}}
+{\large Tipos de variables para visualización de datos}
+
+En visualización y análisis no supervisado, las variables se clasifican
+según el \textbf{tipo de información que contienen}:
+\begin{itemize}
+
+\item Esta clasificación determina:
+  \begin{itemize}
+  \item los métodos gráficos apropiados,
+  \item las métricas de similitud o distancia,
+  \item y las técnicas multivariadas aplicables.
+  \end{itemize}
+\item Distinguimos principalmente entre:
+  \begin{itemize}
+  \item \textbf{variables cualitativas o categóricas},
+  \item \textbf{variables cuantitativas o numéricas}.
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+% 
+\begin{frame}{Variables cualitativas}
+
+\begin{itemize}
+\item Describen \textbf{cualidades, categorías o clases} de los objetos.
+\item No admiten operaciones aritméticas directas.
+\item Se distinguen dos tipos principales:
+  \begin{itemize}
+  \item \textbf{Nominales}: 
+    \begin{itemize}
+    \item funcionan como códigos sin orden implícito,
+    \item ejemplos: ciudades, países, identificadores.
+    \end{itemize}
+  \item \textbf{Categóricas (u ordinales)}:
+    \begin{itemize}
+    \item representan categorías con \textbf{orden o jerarquía},
+    \item ejemplos: niveles educativos, estratos socioeconómicos,
+    posiciones en rankings universitarios.
+    \end{itemize}
+  \end{itemize}
+\item Sus valores se denominan \textbf{modalidades} u \textbf{opciones de respuesta}.
+\end{itemize}
+
+\end{frame}
+% 
+\begin{frame}{Variables cuantitativas}
+
+\begin{itemize}
+\item Se expresan en una \textbf{escala numérica} y admiten comparaciones métricas.
+\item Permiten definir distancias y aplicar operaciones aritméticas.
+\item Se dividen en:
+  \begin{itemize}
+  \item \textbf{Continuas}:
+    \begin{itemize}
+    \item toman valores en un intervalo continuo,
+    \item interpretación directa,
+    \item ejemplos: altura, edad, ingresos, longitud.
+    \end{itemize}
+  \item \textbf{Discretas}:
+    \begin{itemize}
+    \item toman valores enteros,
+    \item ejemplos: número de habitantes, conteos de eventos,
+    \item promedios pueden producir valores no directamente interpretables
+    (p.\ ej., 4.6 aviones por minuto).
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+% 
+\begin{frame}{Tipos de variables y métodos multivariados}
+
+\begin{itemize}
+\item La elección del método de análisis multivariado depende
+directamente del \textbf{tipo de variables} disponibles.
+\item En análisis no supervisado, los métodos más utilizados son:
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{block}{Correspondencia entre variables y métodos}
+\begin{itemize}
+\item \textbf{PCA (Análisis de Componentes Principales)}  
+Variables \textbf{cuantitativas} (continuas o discretas tratadas como numéricas).
+
+\item \textbf{MCA (Análisis de Correspondencias Múltiples)}  
+Variables \textbf{cualitativas} (nominales u ordinales codificadas en modalidades).
+
+\item \textbf{MFA (Análisis Factorial Múltiple)}  
+Conjuntos de variables \textbf{mixtas} o \textbf{estructuradas en grupos}
+(cuantitativas y/o cualitativas).
+\end{itemize}
+\end{block}
+
+\vspace{0.5mm}
+\centering
+\textcolor{blue}{{\small \textit{El tipo de variable determina la geometría del espacio y la métrica utilizada.}}}
+
+\end{frame}
+
+% 
+\begin{frame}{Motivación: ¿por qué componentes principales?}
+
+\begin{itemize}
+\item Los \textbf{gráficos de dispersión} permiten explorar relaciones entre pares de
+variables cuantitativas e identificar patrones, tendencias y valores atípicos.
+\item Mediante colores, tamaños o etiquetas es posible incorporar información adicional,
+pero la representación sigue estando \textbf{limitada a dos dimensiones}.
+\item Cuando el número de variables es grande, los planos definidos por variables
+originales \textbf{no capturan adecuadamente} la estructura global de los datos.
+\item Las \textbf{componentes principales} definen nuevos ejes, como combinaciones
+lineales de las variables originales, que \textbf{maximizan la variabilidad}.
+\item Los planos generados por las primeras componentes proporcionan
+\textbf{representaciones más informativas y sintéticas} de los datos.
+\end{itemize}
+
+\end{frame}
+% 
+\begin{frame}[fragile]{Motivación: variables originales vs plano PCA}
+
+<<scatter_vs_pca, echo=FALSE, fig=TRUE, width=4.2, height=2.8>>=
+par(mfrow = c(1,2),
+    mar = c(3.8, 3.8, 2.5, 1),
+    cex.lab = 0.9,
+    cex.axis = 0.8)
+
+# Datos de ejemplo con correlación
+set.seed(123)
+X <- matrix(rnorm(200), ncol = 2)
+X[,2] <- 0.8 * X[,1] + rnorm(100, sd = 0.5)
+
+#----------------------------------
+# Scatter en variables originales
+#----------------------------------
+plot(X[,1], X[,2],
+     asp = 1,
+     xlab = "Variable 1",
+     ylab = "Variable 2",
+     cex.main = 0.7,     # ← título más pequeño
+     main = "Variables originales",
+     pch = 19, cex = 0.4, col = "gray40")
+
+#----------------------------------
+# PCA
+#----------------------------------
+pca <- prcomp(X, scale. = TRUE)
+Z <- pca$x
+
+#----------------------------------
+# Plano PCA
+#----------------------------------
+plot(Z[,1], Z[,2],
+     asp = 1,
+     xlab = "CP1",
+     ylab = "CP2",
+     cex.main = 0.85,     # ← título más pequeño
+     main = "Plano PCA",
+     pch = 19, cex = 0.4, col = "steelblue")
+@
+\end{frame}
+% 
+\begin{frame}{ARWU Cont.}
+
+\begin{ejem}
+
+
+\begin{itemize}
+  \item Los \textbf{rankings universitarios} son clasificaciones basadas en criterios definidos por las entidades que los elaboran.
+  \item Dichos criterios responden a un \textbf{modelo implícito de universidad de élite}, que puede variar entre rankings.
+  \item Por esta razón, los resultados y ponderaciones \textbf{difieren significativamente} de un ranking a otro.
+  \item Entre los criterios más frecuentes se encuentran:
+  \begin{itemize}
+    \item producción e impacto de publicaciones científicas,
+    \item calidad e impacto de las revistas,
+    \item actividades de investigación e innovación,
+    \item proporción de docentes con doctorado,
+    \item reputación académica y entre empleadores,
+    \item presencia e internacionalización,
+    \item premios de docentes y egresados.
+  \end{itemize}
+\end{itemize}
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{ARWU Cont.}
+
+\begin{ejem}
+
+
+\begin{itemize}
+\item Desde el punto de vista estadístico, los rankings universitarios se construyen
+a partir de \textbf{múltiples indicadores} asociados a diferentes criterios.
+\item Los indicadores suelen ser \textbf{normalizados o estandarizados} para hacerlos comparables.
+\item Luego se calcula un \textbf{puntaje total} mediante una \textbf{suma ponderada}
+(combinación lineal ponderada) de los indicadores; los pesos reflejan el
+\textbf{modelo implícito de universidad} del ranking.
+\item Con el puntaje total se obtiene un \textbf{ordenamiento}: puesto 1 al mayor puntaje,
+puesto 2 al siguiente, etc.
+\item El resultado es un \textbf{orden relativo}; las diferencias numéricas entre puntajes
+no necesariamente tienen interpretación como “distancias”.
+\end{itemize}
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{ARWU Cont.}
+
+\begin{ejem}
+\footnotesize 
+
+
+\begin{itemize}
+\item Uno de los rankings más reconocidos y selectivos es el
+\textbf{Academic Ranking of World Universities (ARWU)}.
+\item Su metodología se basa en indicadores asociados principalmente al desempeño
+académico y de investigación, entre ellos:
+  \begin{itemize}
+  \item \textbf{Premios Nobel y Medallas Fields} de egresados (Alumni) y docentes (Staff),
+  \item \textbf{investigadores altamente citados} (Highly Cited Researchers),
+  \item \textbf{publicaciones en \emph{Nature} y \emph{Science}},
+  \item \textbf{artículos indexados} en índices bibliométricos (p.\ ej., SCIE/SSCI),
+  \item \textbf{desempeño per cápita} del personal académico (PCP).
+  \end{itemize}
+\item En este ejemplo se consideran las universidades ubicadas en los \textbf{100 primeros puestos}
+del ARWU (año 2013) y se analizan sus posiciones \textbf{mundial} y, por derivación,
+sus posiciones \textbf{nacional} y \textbf{regional}. 
+\item Para más detalles metodológicos, ver \cite{liu2005academic}.
+\end{itemize}
+
+\end{ejem}
+
+\end{frame}
+% 
+% 
+% 
+\begin{frame}[fragile]{ARWU Cont.}
+
+\begin{ejem}
+\textbf{Distribución por país en el Top 100 (ARWU 2013)}\\[1mm]
+
+%---------------- Tabla ----------------
+<<results=tex, echo=FALSE>>=
+library(kableExtra)
+arwu<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/arwu.csv")
+arwunis_pais <- t(sort(table(arwu$Country), decreasing = TRUE))
+
+kableExtra::kable(
+  arwunis_pais,
+  format = "latex",
+  booktabs = TRUE,
+  digits = 0,
+  caption = NULL,
+  label = "tab:TablARWUpais"
+) %>%
+  kable_styling(
+    latex_options = c("scale_down", "hold_position"),
+    font_size = 6
+  )
+@
+
+\vspace{1mm}
+
+%---------------- Texto ----------------
+{\footnotesize
+En la Tabla \ref{tab:TablARWUpais} se muestra la distribución del número de
+universidades por país entre las \textbf{100 primeras} del ARWU 2013.
+Se observa una alta concentración en pocos países: \textbf{Estados Unidos (US)}
+aporta \textbf{54} universidades, seguido por el \textbf{Reino Unido (UK)} con
+\textbf{11}. En un segundo nivel aparecen \textbf{Alemania (GE)} y
+\textbf{Japón (JP)} con \textbf{5} universidades cada uno.
+}
+
+\end{ejem}
+
+\end{frame}
+
+\begin{frame}{ARWU Cont.}
+
+\setlength{\abovecaptionskip}{2pt}  % <-- reduce espacio arriba del caption
+\setlength{\belowcaptionskip}{1pt}  % <-- reduce espacio debajo del caption
+<<results=tex,echo=FALSE>>=
+kable(arwu[1:20,], "latex", booktabs = T, digits = 1,
+      caption = "20 mejores universidades del mundo según el ARWU 2013", label =" TablARWU") %>%
+  kable_styling(latex_options = c("striped", "scale_down",
+                                "hold_position"))
+@
+
+\end{frame}
+% 
+\begin{frame}{ARWU Cont.}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\begin{figure}[H]
+\captionsetup[subfigure]{font=tiny}
+\captionsetup{font=footnotesize}
+
+
+% \centering
+\captionsetup[subfigure]{justification=centering}
+
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+<<fig_arwu_left, fig=TRUE, echo=FALSE, width=5.5, height=6, out.width=\linewidth>>=
+plot(arwu$Regional.Rank, arwu$World.Rank, type = "n",
+     xlab = "Regional.Rank", ylab = "World.Rank",
+     xlim = c(0,100), main = "Ranking regional vs. Ranking mundial")
+text(arwu$Regional.Rank, arwu$World.Rank, arwu$Country,
+     cex = 0.7, pos = 3)
+abline(a = 0, b = 1, col = "red", lty = 2)
+@
+\caption{Posición regional vs. posición mundial de las primeras 100 universidades según el ranking ARWU, etiquetadas por su país de origen.}
+\label{arwuRegMunPaises}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+% \centering
+<<fig_arwu_right, fig=TRUE, echo=FALSE, width=5.5, height=6, out.width=\linewidth>>=
+require(FactoMineR)
+require(factoextra)
+arwupca <- PCA(arwu[,3:5], quali.sup = 1, graph = FALSE)
+print(fviz_pca_ind(arwupca, habillage = 1))
+@
+\caption{Posición regional vs. posición mundial de las primeras 100 universidades según el ranking ARWU, sobre las dos primeras componentes principales.}
+\label{arwuRegMunPaisesacp}
+\end{subfigure}
+\caption{Comparación de la visualización de los datos originales con su proyección sobre las dos primeras componetes principales}
+\end{figure}
+\end{frame}
+% 
+
+% 
+\begin{frame}{Rankings universidades latinoamericanas}
+\begin{ejem}
+
+\textbf{Scimago}
+\small 
+\vspace{1mm}
+
+\textbf{Sobre inconsistencias en algunos rankings universitarios}
+
+\vspace{1mm}
+
+Scimago es un ranking orientado a la evaluación de la
+\textbf{actividad investigativa} de universidades e instituciones de investigación.
+Su metodología incluye nueve indicadores de investigación, entre los que se
+encuentran medidas de impacto, productividad, colaboración internacional,
+publicaciones de alta calidad, liderazgo científico, excelencia y talento
+científico, además de tres indicadores de innovación y tres de factor social.
+Por su enfoque, este ranking privilegia el desempeño científico medido a partir
+de la producción y el impacto de la investigación.
+Para más detalles, véase \cite{scimagoi}.
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Rankings universidades latinoamericanas}
+\begin{ejem}
+
+\textbf{Webranking}
+\small
+\vspace{1mm}
+
+\textbf{Sobre inconsistencias en algunos rankings universitarios}
+
+\vspace{1mm}
+
+El Webranking es un ranking de \textbf{presencia en la web} que evalúa la visibilidad
+institucional de las universidades a partir de indicadores como el número de
+enlaces entrantes al dominio institucional, el número de páginas web y la cantidad
+de archivos publicados en formatos \texttt{pdf}, \texttt{doc}, \texttt{xls}, entre otros,
+alojados en los dominios universitarios. Adicionalmente, incorpora un indicador
+de excelencia tomado del ranking Scimago.
+Este enfoque prioriza la visibilidad digital y la difusión de contenidos académicos
+en la web. Para más detalles, véase \cite{webR}.
+
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Rankings universidades latinoamericanas}
+\begin{ejem}
+
+\textbf{QS}
+\small
+\vspace{1mm}
+
+\textbf{Sobre inconsistencias en algunos rankings universitarios}
+
+\vspace{1mm}
+
+El ranking QS combina indicadores de \textbf{reputación} y desempeño académico.
+Incluye dos indicadores de reputación —uno medido entre pares académicos y otro
+entre empleadores— obtenidos mediante encuestas, así como la razón
+estudiantes/profesor, el número de profesores con doctorado, el número de citas
+por artículo, el promedio de artículos por docente y un indicador de impacto web
+tomado del Webranking. Los indicadores de reputación tienen una ponderación del
+\textbf{25\%} cada uno, mientras que los restantes indicadores tienen una
+ponderación del \textbf{10\%} cada uno.
+Por esta razón, este ranking se considera principalmente un ranking de
+\textbf{reputación universitaria}. Para detalles metodológicos (2014), véase
+\cite{QsRank}.
+
+\end{ejem}
+\end{frame}
+
+
+\begin{frame}{Rankings universidades latinoamericanas}
+
+\begin{ejem}
+<<results=tex,echo=FALSE>>=
+RankLatino<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/r14_Sci_Qs_Webometrics.csv")
+RankLatino<-RankLatino[order(RankLatino[,4]),]
+Las20primeras<-RankLatino[1:20,1:5]
+
+kable(Las20primeras, "latex", booktabs = T, digits = 1,
+      caption = "Primeras 20 universidades según el ranking Qs", label ="TablaRankLatinos") %>%
+  kable_styling(latex_options = c("striped", "scale_down",
+                                "hold_position"))
+@
+
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{Rankings universidades latinoamericanas}
+
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\begin{figure}[H]
+	\centering
+	
+% ====================== nueva versión===========================
+<<fig_grid_rankings, echo=FALSE, fig=TRUE, width=14, height=10>>=
+library(ggrepel)
+library(png)
+library(grid)
+
+##------------------------------------------------------------
+## Layout: 2 filas
+##  - Fila 1: (a) y (b)
+##  - Fila 2: (c) centrada ocupando dos columnas
+##------------------------------------------------------------
+tp <- par(no.readonly = TRUE)
+
+layout(matrix(c(1,2,
+                3,4), nrow=2, byrow=TRUE))
+
+par(mar = c(4.2, 4.2, 2.2, 1.2), mgp = c(2.4, 0.8, 0))
+
+##==================== (a) Scimago vs QS =====================
+x <- RankLatino$SC.Lac.Ranking
+y <- RankLatino$QS.Ranking
+
+plot(x, y, type="n",
+     xlim=c(0,270), ylim=c(0,270),
+     xlab="Ranking Scimago", ylab="Ranking QS")
+abline(a=0,b=1,col="red",lty=2)
+
+highlight_indices <- which(y < x)
+for(i in seq_along(x)) {
+  if(!(i %in% highlight_indices)) {
+    text(x[i], y[i], RankLatino$Pais[i], cex=0.8, pos=2)
+  }
+}
+
+delta <- 8
+y_lab <- pmax(0, y[highlight_indices] - delta)
+text(x[highlight_indices], y_lab,
+     labels = RankLatino$Pais[highlight_indices],
+     col="red", font=3, cex=0.8, pos=3)
+
+mtext("a) Muchas universidades por encima de 150 en Sc \n posicionadas por debajo de 150 en Qs", side=3, adj=0, line=0.2, font=2)
+
+##==================== (b) Scimago vs WEB ====================
+x <- RankLatino$SC.Lac.Ranking
+y <- RankLatino$WEB.Ranking.LA
+
+plot(x, y, type="n",
+     xlim=c(0,270), ylim=c(0,270),
+     xlab="Ranking Scimago", ylab="WEB.Ranking")
+abline(a=0,b=1,col="red",lty=2)
+
+highlight_indices <- which(y < x)
+for(i in seq_along(x)) {
+  if(!(i %in% highlight_indices)) {
+    text(x[i], y[i], RankLatino$Pais[i], cex=0.8, pos=2)
+  }
+}
+
+y_lab <- pmax(0, y[highlight_indices] - delta)
+text(x[highlight_indices], y_lab,
+     labels = RankLatino$Pais[highlight_indices],
+     col="red", font=3, cex=0.8, pos=3)
+
+mtext("b) Muchas coincidencias en posiciones debajo de 150", side=3, adj=0, line=0.2, font=2)
+
+##==================== (c) QS vs WEB (centrada) ===============
+y <- RankLatino$QS.Ranking
+x <- RankLatino$WEB.Ranking.LA
+
+plot(x, y, type="n",
+     xlim=c(0,270), ylim=c(0,270),
+     xlab="WEB.Ranking", ylab="QS.Ranking")
+abline(a=0,b=1,col="red",lty=2)
+
+highlight_indices <- which(y < x)
+for(i in seq_along(x)) {
+  if(!(i %in% highlight_indices)) {
+    text(x[i], y[i], RankLatino$Pais[i], cex=0.8, pos=2)
+  }
+}
+
+y_lab <- pmax(0, y[highlight_indices] - delta)
+text(x[highlight_indices], y_lab,
+     labels = RankLatino$Pais[highlight_indices],
+     col="red", font=3, cex=0.8, pos=3)
+
+mtext("c) Similar a a) pero respecto al WEB.Ranking", side=3, adj=0, line=0.2, font=2)
+
+par(tp)
+@
+\caption{Comparación entre rankings (Scimago, QS y WEB). Entre más lejos de la diagonal mas diferentes son los rankings correspondientes}
+\label{fig:grid_rankings}
+\end{figure}
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{Rankings universidades latinoamericanas}
+\footnotesize
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\setlength{\abovecaptionskip}{2pt}  % <-- reduce espacio arriba del caption
+\setlength{\belowcaptionskip}{1pt}  % <-- reduce espacio debajo del caption
+
+\begin{figure}[H]
+	\centering
+
+<<fig=TRUE,echo=FALSE, width=5.5, height=4>>=
+##==================== (d) PCA biplot:  =====================
+
+res.sc.qs <- PCA(RankLatino[,2:5], quali.sup = 1, graph = FALSE)
+
+p <- fviz_pca_biplot(
+  res.sc.qs,
+  habillage = "Pais",
+  label = "var",
+  col.var = "black",
+  labelcolor = "black",
+  repel = TRUE,
+  legend = "none", title = "Representación simultánea de universidades y rankings\n etiquetados por país de origen"
+)
+
+ind <- as.data.frame(res.sc.qs$ind$coord)
+ind$Pais <- RankLatino$Pais
+
+p4 <- p +
+  geom_text_repel(
+    data = ind,
+    aes(x = Dim.1, y = Dim.2, label = Pais, color = Pais),
+    size = 4,
+    show.legend = FALSE
+  ) +
+  scale_color_manual(
+    values = c(
+      "BRA" = "#1F78B4",
+      "ARG" = "#E31A1C",
+      "MEX" = "#33A02C",
+      "CHL" = "#6A3D9A",
+      "COL" = "#B15928",
+      "CRI" = "#1B9E77",
+      "VEN" = "#E6AB02",
+      "PRI" = "#7570B3",
+      "URY" = "#66A61E"
+    )
+  )
+p4
+@
+\caption{Los dos vectores que representan los ranking SC.Lac.Ranking y WEB.Ranking.LA reflejan su grado de asociación visualizado en la gráfica \ref{fig:grid_rankings} b). El vector QS.Ranking muestra el grado de independencia de éste con los otros dos rankings, ya identificada en los gráficos \ref{fig:grid_rankings} a) y \ref{fig:grid_rankings} c).}
+\label{fig:acp_rankings}
+\end{figure}
+\end{ejem}
+
+\end{frame}
+% 
+
+\begin{frame}{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+
+\begin{ejem}
+
+\textbf{La Encuesta Mundial de Valores}
+
+\vspace{2mm}
+
+La \textbf{Encuesta Mundial de Valores} (\emph{World Values Survey}) es un estudio
+internacional comparativo que se realiza periódicamente desde 1981. Su objetivo es
+medir \textbf{valores, creencias y actitudes} de la población sobre múltiples temas
+sociales y culturales, mediante cuestionarios aplicados en diversos países.
+
+\vspace{2mm}
+
+Entre los temas que indaga se encuentran, por ejemplo, la democracia, la confianza
+en instituciones, la tolerancia hacia minorías, el papel de la religión en la sociedad,
+la globalización, el medio ambiente y la diversidad, entre otros
+\cite{inglehart2000world, bridge2001wikipedia}.
+
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+
+\begin{ejem}
+
+\textbf{La Encuesta Mundial de Valores}
+
+\vspace{2mm}
+
+Una de las muchas preguntas de esta encuesta indaga por la \textbf{confianza en la justicia}
+en un conjunto de países, entre los cuales se encuentran algunos países latinoamericanos.
+La pregunta es la siguiente:
+
+\vspace{2mm}
+
+\begin{center}
+\begin{tabular}{
+>{\centering\arraybackslash}p{2cm}
+>{\centering\arraybackslash}p{2cm}
+>{\centering\arraybackslash}p{2cm}
+>{\centering\arraybackslash}p{2cm}
+}
+\toprule
+\multicolumn{4}{c}{
+\shortstack{
+¿Cree usted que la justicia en este país se aplica \\ de manera justa para todos,\\
+independientemente de su origen social o económico?
+}
+} \\
+\midrule
+Muchísimo & Mucho & No mucho & Nada \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia  \textcolor{magenta}{(EMV)}}
+\begin{ejem}
+<<results=tex, echo=FALSE>>=
+confianzaJUstcia = read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/ConfianzaJUsticia.csv")
+rownames(confianzaJUstcia) = confianzaJUstcia$Pais
+confianzaJUstcia$Pais = NULL
+
+confianzaJUstcia = confianzaJUstcia[order(-confianzaJUstcia[,1]), -c(5,6)]
+# 
+# Filtrar solo los países de interés
+paises_interes <- c("Mexico", "Colombia", "Ecuador", "Chile", "Peru", "Argentina", "Brasil")
+# selcción filtro de la tabla de los países latinos solamente con rownames y %in%
+confianzaJUstcia_filtrado <- confianzaJUstcia[rownames(confianzaJUstcia) %in% paises_interes, ]
+confianzaJUstcia_filtrado_tot = cbind(confianzaJUstcia_filtrado, Total_F=rowSums(confianzaJUstcia_filtrado))
+confianzaJUstcia_filtrado_tot = rbind(confianzaJUstcia_filtrado_tot, Total_C=colSums(confianzaJUstcia_filtrado_tot))
+confianzaJUstcia_filtrado_tot["Total_C", "Total_F"] <- ""
+# confianzaJUstcia_filtrado_tot = confianzaJUstcia_filtrado_tot[,-c(5,6)]
+# Mostrar tabla en LaTeX
+kable(confianzaJUstcia_filtrado_tot, "latex", booktabs = TRUE, 
+      caption = "Confianza en la justicia en países seleccionados", label = "conf_just_lat") %>%
+  kable_styling(latex_options = c("striped", "hold_position"))
+
+@
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia  \textcolor{magenta}{(EMV)}}
+
+\begin{ejem}
+<<results=tex, echo=FALSE>>=
+confianzaJUstcia_filtrado = as.matrix(confianzaJUstcia_filtrado[,-c(5,6)])
+confianzaJUstcia_filtrado = as.table(confianzaJUstcia_filtrado)
+perf_fil = round(prop.table(confianzaJUstcia_filtrado, margin = 1),3)
+perf_fil = cbind(perf_fil, Suma = round(rowSums(perf_fil)))
+perf_fil = perf_fil[order(-perf_fil[,1]),]
+kable(perf_fil, "latex", booktabs = T, 
+      caption = "Perfiles por países para los grados de confianza en la justicia ordenados por la opción muchísimo", label = "perfil_Cofjust" ) %>%
+  kable_styling(latex_options = c("striped", 
+                                  "hold_position"))
+@
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia  \textcolor{magenta}{(EMV)}}
+
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\begin{figure}[H]
+	\centering
+<<fig=TRUE, echo=FALSE>>=
+# Filtrar solo los países de interés
+paises_interes <- c("Mexico", "Colombia", "Ecuador", "Chile", "Peru", "Argentina", "Brasil")
+# selcción filtro de la tabla de los países latinos solamente con rownames y %in%
+confianzaJUstcia_filtrado <- confianzaJUstcia[rownames(confianzaJUstcia) %in% paises_interes, ]
+
+
+# ====== con ggplot frecuencias =======
+library(ggplot2)
+# Eliminar la fila Total_C
+datos <- confianzaJUstcia_filtrado[
+  rownames(confianzaJUstcia_filtrado) != "Total_C", 
+]
+
+datos_df <- data.frame(
+  Pais = rownames(datos),
+  Muchis = datos$muchis.
+)
+
+f1 = ggplot(datos_df, aes(x = reorder(Pais, -Muchis), y = Muchis)) +
+  geom_col(fill = "lightblue") +
+  geom_text(aes(label = Muchis), vjust = -0.3, size = 3) +
+  labs(
+    title = "Muchísima confianza en la justicia",
+    x = "País",
+    y = "Frecuencia"
+  ) +
+  theme_minimal()+ theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+# f1
+# ==== perfiles =============
+library(ggplot2)
+confianzaJUstcia_filtrado = as.matrix(confianzaJUstcia_filtrado[,-c(5,6)])
+confianzaJUstcia_filtrado = as.table(confianzaJUstcia_filtrado)
+perf_fil = round(prop.table(confianzaJUstcia_filtrado, margin = 1),3)
+perf_fil = cbind(perf_fil, Suma = round(rowSums(perf_fil)))
+perf_fil = perf_fil[order(-perf_fil[,1]),]
+# Si existiera alguna fila de totales, elimínela (aquí no aparece, pero queda robusto)
+datos <- perf_fil[!rownames(perf_fil) %in% c("Total_C", "Total_F"), , drop = FALSE]
+
+# Asegurar que sea data.frame y conservar nombres de filas
+datos <- as.data.frame(perf_fil)
+
+# (Opcional) eliminar filas de to7tales si existieran
+datos <- datos[!rownames(datos) %in% c("Total_C", "Total_F"), , drop = FALSE]
+
+# Extraer perfil de muchis. (columna puede existir con ese nombre)
+muchis <- datos[["muchis."]]   # <- funciona aunque el nombre tenga punto
+
+datos_df <- data.frame(
+  Pais   = rownames(datos),
+  Muchis = as.numeric(muchis)
+)
+
+p1 = ggplot(datos_df, aes(x = reorder(Pais, -Muchis), y = Muchis)) +
+  geom_col(fill = "lightblue") +
+  geom_text(aes(label = sprintf("%.3f", Muchis)), vjust = -0.3, size = 3) +
+  scale_y_continuous(limits = c(0, max(datos_df$Muchis) * 1.10)) +
+  labs(
+    title = "Frecuencias condicionales: Muchísima confianza",
+    x = "País",
+    y = "Perfil de muchis."
+  ) +
+  theme_minimal()+
+  theme_minimal()+ theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+# p1
+# ============ Correspondencias simples ===========
+library(ggplot2)
+library(grid)
+library(gridExtra)
+grid.arrange(f1,p1, ncol =2)
+@
+\caption{EMV}
+\label{fig:EMV_1}
+\end{figure}
+
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+\begin{ejem}
+<<results=tex, echo=FALSE>>=
+perf_col = round(prop.table(confianzaJUstcia_filtrado, margin = 2),3)
+perf_col = perf_col[order(-perf_col[,1]),]
+perf_col = rbind(perf_col, Suma = round(colSums(perf_col)))
+kable(perf_col, "latex", booktabs = T, 
+      caption = "Perfiles por modalidades de confianza en la justicia respecto a los países encuestados, ordenados por la opción muchísimo", label = "percol_Cofjust" ) %>%
+kable_styling(latex_options = c("striped", 
+                                "hold_position"))
+@
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\begin{figure}[H]
+	\centering
+<<fig=TRUE, echo=FALSE>>=
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# Tabla completa (sin fila Suma)
+tabla <- data.frame(
+  Pais = c("Brasil","Mexico","Colombia","Ecuador","Chile","Peru","Argentina"),
+  muchis   = c(0.356,0.180,0.164,0.154,0.074,0.043,0.029),
+  mucho    = c(0.339,0.140,0.052,0.197,0.129,0.055,0.088),
+  no_mucho = c(0.113,0.155,0.249,0.129,0.124,0.109,0.120),
+  nada     = c(0.123,0.234,0.131,0.071,0.071,0.259,0.110)
+)
+
+# Formato largo + control de orden (modalidades y países)
+datos_long <- tabla |>
+  pivot_longer(
+    cols = -Pais,
+    names_to = "Modalidad",
+    values_to = "Perfil"
+  ) |>
+  mutate(
+    Modalidad = factor(
+      Modalidad,
+      levels = c("muchis", "mucho", "no_mucho", "nada"),
+      labels = c("Muchísimo", "Mucho", "No mucho", "Nada")
+    ),
+    Pais = factor(
+      Pais,
+      levels = c("Brasil", "Mexico", "Colombia", "Ecuador",
+                 "Chile", "Peru", "Argentina")
+    )
+  )
+
+# Faceteado
+ggplot(datos_long, aes(x = Modalidad, y = Perfil)) +
+  geom_col(fill = "lightblue", width = 0.8) +
+  geom_text(
+    aes(label = sprintf("%.3f", Perfil)),
+    vjust = -0.35,
+    size = 2.8
+  ) +
+  facet_wrap(~ Pais, ncol = 3) +
+  scale_y_continuous(
+    limits = c(0, max(datos_long$Perfil) * 1.15),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  labs(
+    title = "Frecuencias condicionales por modalidad y país",
+    x = "Modalidad de respuesta",
+    y = "Perfil condicional"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(
+      angle = 30,        # ← ángulo razonable
+      hjust = 1,
+      size = 9
+    )
+  )
+
+@
+\caption{Comparación de países por proporción de respuestas a la percepción de la justicia}
+\label{fig:EMV_2}
+\end{figure}
+
+\end{ejem}
+\end{frame}
+% 
+<<echo=FALSE>>=
+require(FactoMineR)
+confpaises = CA(confianzaJUstcia_filtrado, graph = F)
+@
+
+\begin{frame}[fragile]{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tamaño de los graficos
+\begin{figure}[H]
+	\centering
+<<fig=TRUE,echo=FALSE>>=
+fviz_ca_biplot(confpaises)
+@
+\caption{Plano de correspondencias simples que muestra tendencias de los países en cuanto a percepciones sobre confianza en la justicia}
+\label{fig:EMV_2}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+
+\begin{frame}{Correspondencias múltiples: Tablas de tablas de contingencia \textcolor{yellow}{(ECC)}}
+
+\begin{ejem}
+
+\textbf{Encuesta de Cultura Ciudadana}
+
+\vspace{2mm}
+
+La \textbf{Encuesta de Cultura Ciudadana (ECC)} fue realizada por la Corporación
+Visionarios en varias ciudades latinoamericanas con cierta periodicidad.
+Constituye un instrumento de observación y análisis de distintos aspectos
+relacionados con la cultura ciudadana y el comportamiento social.
+
+\end{ejem}
+
+\end{frame}
+% 
+\begin{frame}{Correspondencias múltiples: Tablas de tablas de contingencia \textcolor{yellow}{(ECC)}}
+
+\begin{ejem}
+
+\textbf{Encuesta de Cultura Ciudadana}
+
+\vspace{2mm}
+
+La encuesta incluye, por ejemplo, preguntas sobre
+
+\begin{itemize}
+\item los sentimientos de los encuestados frente a palabras como normas o reglas
+(Ley, Moral y Cultura),
+\item la facilidad con que pueden actuar conforme a la ley,
+\item las capacidades para celebrar y cumplir acuerdos y las reacciones ante su
+incumplimiento,
+\item pluralismo (aceptación de las diferencias e inclusión),
+\item seguridad,
+\item confianza interpersonal,
+\item confianza en instituciones,
+\item victimización, entre otros aspectos.
+\end{itemize}
+
+\end{ejem}
+
+\end{frame}
+% 
+
+\begin{frame}[fragile]{Correspondencias múltiples: Tablas de tablas de contingencia \textcolor{yellow}{(ECC)}}
+\tiny
+\begin{ejem}
+\newcommand{\ansbox}[1]{\fbox{\rule{0pt}{1.6ex}\hspace{1.2ex}#1\hspace{1.2ex}}}
+
+\begin{table}[H]
+\noindent\centering
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+% (1) Encabezado
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}X|}
+\hline
+\textit{20. Dígame si en su opinión se justifica o no desobedecer la ley:} \\
+\hline
+\end{tabularx}
+
+\vspace{1.5mm}
+
+% (2) Ítems reordenados
+\begin{tabularx}{\linewidth}{|
+>{\raggedright\arraybackslash}X
+>{\centering\arraybackslash}p{1.4cm}
+>{\centering\arraybackslash}p{1.4cm}|
+>{\raggedright\arraybackslash}X
+>{\centering\arraybackslash}p{1.4cm}
+>{\centering\arraybackslash}p{1.4cm}|}
+\hline
+ & \textbf{Sí} & \textbf{No} &  & \textbf{Sí} & \textbf{No} \\
+\hline
+a.\ Cuando es la única manera de alcanzar sus objetivos
+& \ansbox{1} & \ansbox{2}
+& g.\ Cuando es bastante seguro que uno no será castigado
+& \ansbox{1} & \ansbox{2} \\
+\hline
+b.\ Cuando es la única manera de ayudarle a la familia
+& \ansbox{1} & \ansbox{2}
+& h.\ Cuando alguien lo ha hecho y le ha ido bien
+& \ansbox{1} & \ansbox{2} \\
+\hline
+c.\ Cuando es la única manera de luchar públicamente contra una ley o un régimen injusto
+& \ansbox{1} & \ansbox{2}
+& i.\ Cuando es lo acostumbrado
+& \ansbox{1} & \ansbox{2} \\
+\hline
+d.\ Cuando es muy provechoso económicamente
+& \ansbox{1} & \ansbox{2}
+& j.\ Para pagar un favor
+& \ansbox{1} & \ansbox{2} \\
+\hline
+e.\ Cuando la creencia religiosa lo permite
+& \ansbox{1} & \ansbox{2}
+& k.\ Para defender propiedades o bienes
+& \ansbox{1} & \ansbox{2} \\
+\hline
+f.\ Cuando se hace para responder a una ofensa al honor
+& \ansbox{1} & \ansbox{2}
+&  &  &  \\
+\hline
+\end{tabularx}
+\end{table}
+\end{ejem}
+\end{frame}
+% 
+<<LeeMuestra_CC, echo=F>>=
+require(xtable)
+CCLatin<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/Muestra_CC.csv", sep = ";")
+@
+
+<<echo=FALSE>>=
+cclat = CCLatin
+# Selección de la pregunta 20
+cclat_p20 <- cclat[, c("city",paste0("P20_", letters[1:11]))]
+@
+
+\begin{frame}\textcolor{yellow}{(ECC)}
+\begin{ejem}
+\setkeys{Gin}{width=0.8\textwidth} % redefinir el tamaño graficos
+\begin{figure}[H]
+	\centering
+<<echo=FALSE, fig=TRUE>>=
+# 1) Largo: city + P20_a ... P20_k
+datos_long <- cclat_p20 %>%
+  select(city, paste0("P20_", letters[1:11])) %>%
+  pivot_longer(
+    cols = starts_with("P20_"),
+    names_to = "Item",
+    values_to = "Valor"
+  )
+
+# 2) Recodificar Sí/No desde el texto (p20x_...=1_si / =2_no)
+datos_freq <- datos_long %>%
+  mutate(
+    Respuesta = case_when(
+      grepl("=1_", Valor) ~ "Sí",
+      grepl("=2_", Valor) ~ "No",
+      TRUE ~ NA_character_
+    ),
+    Respuesta = factor(Respuesta, levels = c("Sí","No")),
+    # Etiqueta bonita del ítem (P20a, P20b, ...)
+    Item = factor(Item,
+                  levels = paste0("P20_", letters[1:11]),
+                  labels = paste0("P20", letters[1:11]))
+  ) %>%
+  filter(!is.na(Respuesta), !is.na(city)) %>%
+  count(city, Item, Respuesta, name = "Frecuencia")
+
+# 3) Gráfico facetado (un panel por ítem)
+ggplot(datos_freq, aes(x = city, y = Frecuencia, fill = Respuesta)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  facet_wrap(~ Item) +
+  labs(
+    title = "P20 (a–k). Frecuencias de respuesta Sí/No por ciudad",
+    x = "Ciudad",
+    y = "Frecuencia",
+    fill = "Respuesta"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+@
+	\caption{Frecuencias de respuesta por países. Se observa una tendencia general a no justificar la dsobediencia de la ley: Barras azules mayores que las rojas. Sin embargo, las preguntas P20b, P20c y P20k, muestran mayor cercanía entre Sí y No}\label{fig:justifica_desobe_ley}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{\textcolor{yellow}{(ECC)}}
+\begin{ejem}
+\setkeys{Gin}{width=0.7\textwidth} % redefinir el tamaño graficos
+\begin{figure}[H]
+	\centering
+<<fig=TRUE, echo=FALSE>>=
+res.mca.jdl = MCA(cclat_p20, quali.sup = 1, graph = F)
+fviz_mca_var(res.mca.jdl, repel = T)
+@
+	\caption{Tendencias a justificar la desobediencia de la ley por ciudades}\label{fig:Tendencias_just_des_ley}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{\textcolor{yellow}{(ECC)}}
+\begin{ejem}
+\setkeys{Gin}{width=1\textwidth} % redefinir el tamaño graficos
+\begin{figure}[H]
+	\centering
+<<mca_var_conexiones, echo=F, fig=TRUE, width=7.2, height=4.6>>=
+  library(FactoMineR)
+library(factoextra)
+library(ggplot2)
+library(dplyr)
+
+# MCA (ciudad como suplementaria: quali.sup = 1)
+res.mca.jdl <- MCA(cclat_p20, quali.sup = 1, graph = FALSE)
+
+# Base plot
+p <- fviz_mca_var(res.mca.jdl, repel = TRUE)
+
+# --- Coordenadas de modalidades activas (Dim 1 y Dim 2) ---
+coord <- as.data.frame(res.mca.jdl$var$coord[, 1:2])
+coord$mod <- rownames(coord)
+names(coord)[1:2] <- c("x", "y")
+
+# --- Ítems a conectar: h, i, j ---
+# Ajuste estos "base" si sus prefijos/códigos difieren
+bases <- c("p20h_RDL_IB", "p20i_RDL_LA", "p20j_RDL_PF")
+
+# Construir pares Sí/No con los nombres exactos usados por exams/Moodle
+pairs <- data.frame(
+  base = bases,
+  si   = paste0(bases, "=1_si"),
+  no   = paste0(bases, "=2_no"),
+  stringsAsFactors = FALSE
+)
+
+# Extraer coords para sí/no
+df_si <- coord %>% filter(mod %in% pairs$si) %>% rename(x_si = x, y_si = y)
+df_no <- coord %>% filter(mod %in% pairs$no) %>% rename(x_no = x, y_no = y)
+
+# Unir por el "base" (haciendo match con los nombres)
+df_lines <- pairs %>%
+  left_join(df_si, by = c("si" = "mod")) %>%
+  left_join(df_no, by = c("no" = "mod"))
+
+# Verificación rápida: si faltan filas es porque los nombres no coinciden
+if (any(!complete.cases(df_lines[, c("x_si","y_si","x_no","y_no")]))) {
+  warning("No se encontraron todas las modalidades si/no. Revise los nombres en rownames(res.mca.jdl$var$coord).")
+}
+
+# --- Agregar conexiones punteadas suaves ---
+p +
+  geom_curve(
+    data = df_lines,
+    aes(x = x_si, y = y_si, xend = x_no, yend = y_no),
+    inherit.aes = FALSE,
+    linetype = "dashed",
+    linewidth = 0.6,
+    curvature = 0.25
+  ) +
+  geom_point(
+    data = df_lines,
+    aes(x = x_si, y = y_si),
+    inherit.aes = FALSE,
+    size = 2
+  ) +
+  geom_point(
+    data = df_lines,
+    aes(x = x_no, y = y_no),
+    inherit.aes = FALSE,
+    size = 2
+  )
+@
+	\caption{Las líneas punteadas representan las formas sinuosas que se mostraron en los histogramas}\label{fig:Tendencias_just_des_ley_1}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Métodos de agrupamiento (Clustering) Sistema universitario estatal (SUE)}
+\begin{ejem}
+El \textbf{Sistema Universitario Estatal} (SUE) es una red de universidades públicas colombianas, orientada hacia la colaboración académica, la investigación y la gestión conjunta de recursos entre estas ellas. Datos de éstas universidades se recolectan en una tabla que contiene 32 indicadores de educación superior para 32 universidades estatales entre 2003 y 2012.
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Métodos de agrupamiento (Clustering) Sistema universitario estatal (SUE)}
+\begin{ejem}
+Para este ejemplo se utilizan seis indicadores:
+
+\begin{itemize}
+\item Docentes de tiempo completo o equivalente (DCTC2012),
+\item gastos en personal administrativo (GPA2012),
+\item matrícula de pregrado (MPRE2012),
+\item matrícula de posgrado (MPOS2012),
+\item graduados de pregrado (GrPre2012),
+\item graduados de posgrado (GrPos2012).
+\end{itemize}
+
+En la Tabla~\ref{tab:sue} se presentan los valores de estos indicadores para las 32 universidades públicas.
+\end{ejem}
+\end{frame}
+% 
+<<LeeSUEsolo2012, echo=F>>=
+SUEsolo2012<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/SUEsolo2012.csv", sep = ";")
+@
+
+<<echo=FALSE>>=
+rownames(SUEsolo2012)<-SUEsolo2012$Universidades
+xsue<-SUEsolo2012
+xsue$Universidades<-NULL
+@
+
+% 
+\begin{frame}{Métodos de agrupamiento (Clustering) Sistema universitario estatal (SUE)}
+\begin{ejem}
+<<lessen, results=tex, echo=FALSE>>=
+require(kableExtra)
+require(magrittr)
+# df = SUEsolo2012[1:6,] # primeras 6 filas del archivo de trabjo
+df = SUEsolo2012
+kable(df[,-1], "latex", booktabs = T, 
+      caption = "Indicadores del SUE para 32 universidades públicas en el año 2012", label = "sue") %>%
+kable_styling(latex_options = c("striped", "scale_down", 
+                                "hold_position"))
+@
+
+\end{ejem}
+\end{frame}
+% 
+
+<<echo=FALSE>>=
+library(ggplot2)
+library(ggrepel)
+library(tidyr)
+library(purrr)
+df = SUEsolo2012
+# Variables numéricas
+vars <- names(df)[-1]   # quita "Universidades"
+
+# Todas las combinaciones pares
+pares <- combn(vars, 2, simplify = FALSE)
+
+# Función para cada gráfico
+plot_pair <- function(v1, v2){
+
+  ymax <- max(df[[v2]], na.rm = TRUE)
+
+  ggplot(df, aes_string(x = v1, y = v2, label = "Universidades")) +
+    geom_point(size = 1.1, color = "steelblue") +
+    geom_text_repel(size = 2.3) +
+    ylim(0, ymax * 1.3) +
+    labs(
+      title = paste(v1, "vs", v2),
+      x = v1,
+      y = v2
+    ) +
+    theme_minimal()
+}
+
+
+# Crear los 15 gráficos
+graficos <- map(pares, ~ plot_pair(.x[1], .x[2]))
+
+# Mostrar uno por uno
+# graficos
+# 
+library(patchwork)
+wrap_plots(graficos, ncol = 3)
+
+pa_dtc_1 <- wrap_plots(graficos[1:3], ncol = 1)
+pa_dtc_2 <- wrap_plots(graficos[4:5], ncol = 1)
+pa_gpa_1 <- wrap_plots(graficos[6:7], ncol = 1)
+pa_gpa_2 <- wrap_plots(graficos[8:9], ncol = 1)
+pa_3 <- wrap_plots(graficos[10:12], ncol = 1)
+pa_4 <- wrap_plots(graficos[13:14], ncol = 1)
+pa_5 <- wrap_plots(graficos[15], ncol = 1)
+@
+% ======================================
+%========================================
+\begin{frame}{DCTC (1/2)}
+
+
+\setkeys{Gin}{width=\textwidth}
+\begin{figure}[H]
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_dtc_1
+@
+\caption{Docentes de tiempo completo o equiv. vs. los otros indicadores del SUE}
+\label{dtce_1}
+\end{figure}
+\end{frame}
+
+%========================================
+\begin{frame}{DCTC (2/2)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_dtc_2
+@
+\end{frame}
+
+%========================================
+\begin{frame}{GPA (1/2)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_gpa_1
+@
+\end{frame}
+
+%========================================
+\begin{frame}{GPA (2/2)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_gpa_2
+@
+\end{frame}
+
+%========================================
+\begin{frame}{Indicadores (10--12)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_3
+@
+\end{frame}
+
+%========================================
+\begin{frame}{Indicadores (13--14)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_4
+@
+\end{frame}
+
+%========================================
+\begin{frame}{Indicador (15)}
+\centering
+<<echo=FALSE, fig=TRUE, fig.width=11, fig.height=7>>=
+pa_5
+@
+\end{frame}
+
+<<clus1, echo=F>>=
+hsue<-hclust(dist(xsue), "ward.D")
+@
+% 
+\begin{frame}
+\begin{ejem}
+\setkeys{Gin}{width=0.6\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tama?o de los graficos
+\begin{figure}[H]
+\centering
+<<fig=TRUE,echo=FALSE>>=
+par(mfrow = c(1,2))
+plot(hsue, cex=0.6, main = "Agrupamiento en tres clases")
+rect.hclust(hsue, k=3, border = "green")
+plot(hsue, cex=0.6, main = "Agrupamiento en cuatro clases")
+rect.hclust(hsue, k=4, border = "green")
+@
+\caption{Agrupamiento de universidades del SUE en cuatro grupos}\label{fig:dendroUnis4G}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+% Plano 1-2
+\begin{frame}
+\begin{ejem}
+\setkeys{Gin}{width=0.6\textwidth, height=0.5\textheight,keepaspectratio} % para redefinir el tama?o de los graficos
+\begin{figure}[H]
+\centering
+<<echo=FALSE, fig=TRUE>>=
+# paso 1 componentes principales
+pca <- prcomp(xsue, scale. = TRUE)
+
+coord <- as.data.frame(pca$x[,1:2])
+colnames(coord) <- c("PC1","PC2")
+# paso 2. corte arbol
+cl <- cutree(hsue, k = 3)
+coord$cluster <- factor(cl)
+# Paso 3. gráfico
+library(ggplot2)
+library(ggrepel)
+
+coord$Universidad <- rownames(xsue)
+
+ggplot(coord, aes(PC1, PC2, color = cluster, label = Universidad)) +
+  geom_point(size = 3) +
+  geom_text_repel(size = 3) +
+  stat_ellipse(level = 0.9) +
+  labs(title = "Clusters jerárquicos (Ward) en el plano PC1–PC2") +
+  theme_minimal()
+@
+\caption{Agrupamiento de universidades del SUE en tres grupos}\label{fig:plano_1_2}
+\end{figure}
+\end{ejem}
+\end{frame}
+
+%------------------------------------------------
+% Diapositiva: IQR y detección de atípicos (1 variable)
+%------------------------------------------------
+\begin{frame}{Datos atípicos en una variable: Rango intercuartílico \textcolor{yellow}{(IQR)}}
+
+\textbf{Definición (medida de dispersión).}
+El \textbf{rango intercuartílico} es una medida robusta de dispersión definida por:
+\[
+IQR = Q_{0.75} - Q_{0.25}.
+\]
+
+\textbf{Construcción del rango para detectar atípicos.}
+A partir del IQR se define el intervalo:
+\[
+\left( Q_{0.25} - 1.5\,IQR,\;\; Q_{0.75} + 1.5\,IQR \right),
+\]
+y una observación se considera \textbf{atípica} si cae por fuera de este rango.
+\end{frame}
+% 
+\begin{frame}{Datos atípicos en una variable: Rango intercuartílico \textcolor{yellow}{(IQR)}}
+\textbf{Motivación (referencia normal).}
+Esta regla es coherente con la idea de concentración de probabilidad en la
+distribución normal $N(\mu,\sigma^2)$: aproximadamente 
+
+el 68\% de las obs. se encuentran en el intervalo $\mu \pm \sigma$, 
+
+el 95\% \hspace{4.5cm} en el intervalo $\mu \pm 2\sigma$ 
+
+el 99\% \hspace{4.5cm} en el intervalo $\mu \pm 3\sigma$.
+\end{frame}
+% 
+\begin{frame}{Indicadores de educación y número de habitantes ciudades colombianas}
+\begin{ejem}
+El archivo ciudades contiene datos del número de habitantes y cuatro indicadores de educación en 22 ciudades colombianas. Tabla \ref{tab:edu_ciudades_col}.
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Indicadores de educación y número de habitantes ciudades colomhbianas}
+\begin{ejem}
+
+<<results=tex, echo=FALSE>>=
+ciudades<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/ciudades.csv", sep=";")
+kable(ciudades, "latex", booktabs = TRUE, digits = 2,
+      caption = "Indicadores de educación y número de habitantes para 22 ciudades colombianas",
+      label = "edu_ciudades_col") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
+@
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Ciudades atípicas}
+\begin{ejem}
+<<results=tex, echo=FALSE>>=
+library(knitr)
+library(kableExtra)
+library(magrittr)
+
+# Inicializando vectores
+Limite_inferior <- vector()
+Limite_superior <- vector()
+q1  <- vector()
+q3  <- vector()
+iqr <- vector()
+
+# Cuartiles e IQR
+for (i in 2:6) {
+  q1[i]  <- quantile(ciudades[, i], 0.25, na.rm = TRUE)
+  q3[i]  <- quantile(ciudades[, i], 0.75, na.rm = TRUE)
+  iqr[i] <- q3[i] - q1[i]
+}
+
+# Límites
+for (i in 2:6) {
+  Limite_inferior[i] <- q1[i] - 1.5 * iqr[i]
+  Limite_superior[i] <- q3[i] + 1.5 * iqr[i]
+}
+
+# Copia para resaltar atípicos
+ciudades_highlight <- ciudades
+
+# Marcar atípicos con "*"
+for (i in 2:6) {
+  ciudades_highlight[
+    ciudades[, i] < Limite_inferior[i] | ciudades[, i] > Limite_superior[i],
+    i
+  ] <- "*"
+}
+
+# Renombrar columna de ciudades (opcional pero recomendable)
+names(ciudades_highlight)[1] <- "Ciudad"
+
+# Imprimir tabla COMPLETA (sin quitar la columna 1)
+kable(ciudades_highlight, "latex", booktabs = TRUE, digits = 2,
+      caption = "Ciudades atípicas por cada variable",
+      label = "CiudAtipicas2") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
+@
+
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Ciudades atípicas por número de habitantes}
+\begin{ejem}
+\setkeys{Gin}{width=0.6\textwidth} % redefinir el tamaño graficos
+\begin{figure}[H]
+	\centering
+<<fig=TRUE, echo=FALSE>>=
+
+par(
+  mar = c(15, 10, 4, 2) + 0.1,   # más espacio a la izquierda
+  mgp = c(6, 2.5, 0)           # separa etiqueta del eje y
+)
+
+boxplot(
+  ciudades$Num.Hab ~ ciudades$CIUDADES,
+  las = 2,
+  col = heat.colors(7),
+  xlab = "",
+  ylab = "Número de habitantes"
+)
+@
+	\caption{Número de habitantes por ciudades}\label{Ciudad_x_Numhab}
+	\label{hab_X_ciudad}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{Datos atípicos en dos variables - Distancia de Mahalanobis}
+\begin{ejem}Problema
+\vskip-1.5cm
+\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
+\begin{figure}[H]
+\centering
+<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
+cities <- ciudades[,1]
+
+# Índice de Riohacha
+i_rio <- which(cities == "Riohacha")
+
+plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
+     xlab = "Relación alumno profesor",
+     ylab = "Analfabetismo",
+     xlim = c(19,27),
+     xaxt = "n")
+
+axis(side = 1, at = 19:27)
+
+# Todas las ciudades en negro
+text(ciudades$Rel.al.prof,
+     ciudades$Analfabetismo,
+     cities,
+     cex = 0.5,
+     pos = 2,
+     col = "black")
+
+# Riohacha en rojo (encima)
+text(ciudades$Rel.al.prof[i_rio],
+     ciudades$Analfabetismo[i_rio],
+     cities[i_rio],
+     cex = 0.6,
+     pos = 2,
+     col = "red",
+     font = 2)   # opcional: negrilla
+@
+
+\caption{Relación alumno profesor vs. Analfabetismo en 10 ciudades colombianas (r=0.76). Se distinguen en los extremos las ciudades de San Andrés y Riohacha.}\label{ciudadesDispersion1}
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}
+\begin{ejem}Problema
+\vskip-1.5cm
+\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
+\begin{figure}[H]
+\centering
+<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
+cities <- as.character(ciudades[,1])
+
+norm <- function(x){
+  x <- trimws(x)
+  x <- tolower(x)
+  iconv(x, from = "", to = "ASCII//TRANSLIT")
+}
+cities_n <- norm(cities)
+
+i_rio <- which(cities_n == norm("Riohacha"))
+
+blue_cities <- c("Medellín", "Montería", "Villavicencio",
+                 "Sincelejo", "Valledupar", "Cartagena")
+i_blue <- which(cities_n %in% norm(blue_cities))
+
+i_black <- setdiff(seq_along(cities), union(i_blue, i_rio))
+
+plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
+     xlab = "Relación alumno profesor",
+     ylab = "Analfabetismo",
+     xlim = c(19,27),
+     xaxt = "n")
+axis(side = 1, at = 19:27)
+
+# Negras (solo no destacadas)
+text(ciudades$Rel.al.prof[i_black],
+     ciudades$Analfabetismo[i_black],
+     cities[i_black],
+     cex = 0.5, pos = 2, col = "black")
+
+# Índices de las que quiere mover
+i_villa <- which(cities_n == norm("Villavicencio"))
+i_sinc  <- which(cities_n == norm("Sincelejo"))
+
+# Azules "base": todas menos Villavicencio y Sincelejo (para no duplicar)
+i_blue_base <- setdiff(i_blue, c(i_villa, i_sinc))
+
+text(ciudades$Rel.al.prof[i_blue_base],
+     ciudades$Analfabetismo[i_blue_base],
+     cities[i_blue_base],
+     cex = 0.6, pos = 2, col = "blue", font = 2)
+
+# Villavicencio (una sola vez) con desplazamiento
+text(ciudades$Rel.al.prof[i_villa] + 0.15,
+     ciudades$Analfabetismo[i_villa] - 0.004,
+     cities[i_villa],
+     cex = 0.6, col = "blue", font = 2)
+
+# Sincelejo (una sola vez) con desplazamiento
+text(ciudades$Rel.al.prof[i_sinc] - 0.15,
+     ciudades$Analfabetismo[i_sinc] + 0.004,
+     cities[i_sinc],
+     cex = 0.6, col = "blue", font = 2)
+
+# Riohacha en rojo
+text(ciudades$Rel.al.prof[i_rio],
+     ciudades$Analfabetismo[i_rio],
+     cities[i_rio],
+     cex = 0.65, pos = 2, col = "red", font = 2)
+@
+
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}
+\begin{ejem}Otro problema
+\vskip-1.5cm
+\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
+\begin{figure}[H]
+\centering
+<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
+cities <- as.character(ciudades[,1])
+
+# Índices de ciudades destacadas
+i_rio <- which(cities == "Riohacha")
+i_bog <- which(cities == "Bogota" | cities == "Bogotá")
+
+# Índices que SÍ van en negro (todas menos Bogotá y Riohacha)
+i_black <- setdiff(seq_along(cities), c(i_rio, i_bog))
+
+plot(ciudades$Num.Hab, ciudades$Analfabetismo,
+     xlab = "Número de Habitantes",
+     ylab = "Analfabetismo",
+     ylim = c(0, 0.3))
+
+# Etiquetas negras (excepto Bogotá y Riohacha)
+text(ciudades$Num.Hab[i_black],
+     ciudades$Analfabetismo[i_black],
+     cities[i_black],
+     cex = 0.5,
+     pos = 3,
+     col = "black")
+
+# Riohacha en rojo
+text(ciudades$Num.Hab[i_rio],
+     ciudades$Analfabetismo[i_rio],
+     cities[i_rio],
+     cex = 0.6,
+     pos = 3,
+     col = "red",
+     font = 2)
+
+# Bogotá en azul
+text(ciudades$Num.Hab[i_bog],
+     ciudades$Analfabetismo[i_bog],
+     cities[i_bog],
+     cex = 0.6,
+     pos = 3,
+     col = "blue",
+     font = 2)
+@
+\end{figure}
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}{\textcolor{yellow}{Distancia de Mahalanobis en dos variables}}
+Es una medida de la distancia entre observaciones multivariadas con la propiedad de que incluye tanto las distancias euclidianas entre las variables, como el grado de correlación entre ellas. 
+\end{frame}
+% 
+\begin{frame}{\textcolor{yellow}{Distancia de Mahalanobis entre observaciones de dos variables}}
+Asumiendo que hay $n$ observaciones para dos variables $X_1$ y $X_2$:
+\footnotesize
+$$
+\left[
+\begin{array}{cc}
+x_{11}& x_{12}\\
+\vdots& \vdots\\
+x_{i1}& x_{i2}\\
+\vdots& \vdots\\
+x_{i^\prime 1}& x_{i^\prime 2}\\
+\vdots& \vdots\\
+x_{n1}& x_{n2}
+\end{array}
+\right]
+$$
+
+\begin{align}\label{mahalanobis2var}
+d_M^2(i,i^\prime)
+&=\frac{1}{(1-r_{12} ^2)}
+\left[
+\frac{(x_{i1}-x_{x_{i^\prime 1}})^2}{s_1^2}
++ \frac{(x_{i2}-x_{i^\prime 2})^2}{s_2^2}
+- 2r_{12}\frac{(x_{i1}-x_{i^\prime 1})(x_{i2}-x_{i^\prime 2})}{s_1s_2}
+\right]
+\end{align}
+$\frac{(x_{i1}-x_{i^\prime 1})^2}{s_1^2}$ y $\frac{(x_{i2}-x_{i^\prime 2})^2}{s_2^2}$ son las distancias euclidianas estandarizadas entre los dos puntos y $r_{12}$ es el coeficiente de correlación entre $X_1$ y $X_2$.
+\end{frame}
+% 
+\begin{frame}{Interpretación de la distancia de Mahalanobis en dos variables}
+
+\begin{itemize}
+\item \textbf{Cuando $r_{12} \to 0$:}  
+las variables son aproximadamente incorrelacionadas y la distancia de Mahalanobis
+se reduce esencialmente a una suma de distancias euclidianas estandarizadas.
+
+\item \textbf{Cuando $r_{12} \to 1$:}  
+las variables están fuertemente correlacionadas de forma positiva; las diferencias
+en la dirección común de variación aportan poco a la distancia, mientras que las
+desviaciones ortogonales se amplifican.
+
+\item \textbf{Cuando $r_{12} \to -1$:}  
+existe una correlación negativa fuerte; las diferencias opuestas entre $X_1$ y $X_2$
+se penalizan menos, y las discrepancias fuera de esa relación lineal incrementan la
+distancia.
+\end{itemize}
+\end{frame}
+% 
+\begin{frame}{Distancia de Mahalanobis y estimación de la varianza}
+
+\begin{itemize}
+
+\item \textbf{Distancia a la media multivariada}
+
+La distancia de Mahalanobis de la observación $i$ al centro de los datos se obtiene
+reemplazando $x_{i^\prime}$ por la media
+\[
+\bar{\mathbf{x}}=(\bar{x}_1,\bar{x}_2),
+\]
+lo que permite cuantificar la separación de cada individuo respecto a la estructura
+global de las variables.
+
+\vspace{0.15cm}
+
+\item \textbf{Estimación de las varianzas}
+
+Para cada variable se utiliza usualmente el estimador insesgado
+\[
+s_j^2=\frac{1}{n-1}\sum_{i=1}^n (x_{ij}-\bar{x}_j)^2,\qquad j=1,2.
+\]
+En contextos poblacionales o para tamaños muestrales grandes puede emplearse el
+denominador $n$, ya que la diferencia entre $n$ y $n-1$ resulta despreciable.
+\end{itemize}
+\end{frame}
+ %
+ \begin{frame}{Caso particular: dos observaciones y dos variables}
+
+\begin{itemize}
+
+\item \textbf{Matriz de datos reducida}
+
+Cuando solo se dispone de dos observaciones, la matriz de datos es
+\[
+\begin{bmatrix}
+x_{11} & x_{12}\\
+x_{21} & x_{22}
+\end{bmatrix}.
+\]
+
+\vspace{0.15cm}
+
+\item \textbf{Varianzas como sumas de cuadrados}
+
+Dado que $n=2$, las varianzas se reducen a
+\[
+s_j^2=\sum_{i=1}^2 (x_{ij}-\bar{x}_j)^2,\qquad j=1,2.
+\]
+
+\vspace{0.15cm}
+
+\item \textbf{Interpretación}
+
+Este caso es fundamentalmente ilustrativo y tiene escaso interés práctico, debido a la
+inestabilidad inherente a trabajar con un número extremadamente pequeño de observaciones.
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\begin{ejem}
+
+\end{ejem}
+\end{frame} 
+% 
+\begin{frame}
+\begin{ejem}
+
+\end{ejem}
+\end{frame}
+% 
+\begin{frame}
+\begin{ejem}
+
+\end{ejem}
+\end{frame} 
+% 
+\begin{frame}
+\begin{ejem}
+
+\end{ejem}
+\end{frame}
+
+\begin{frame}
+\LARGE FIN DEL CAPÍTULO
+\end{frame}
+% 
+\begin{frame}
+\begin{ejem}
+
+\end{ejem}
+\end{frame}
+
+\end{document}
