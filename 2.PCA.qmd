@@ -28,7 +28,131 @@ library(pacman)
 p_load(here)
 ```
 
+## Panorama de la Estadística Descriptiva Multivariada \ en el moderno contexto del aprendizaje estadístico no supervisado
+
+## **Objetivo.** Predecir una variable respuesta $Y$ a partir de predictores $X_1, \ldots, X_p$ mediante un modelo
+
+$$Y = f(X_1, \ldots, X_p)$$
+**Evaluación.** La calidad del modelo se mide con un *criterio externo de error*
+que compara predicciones $\hat{y}_i$ con observaciones reales $y_i$.
+```{r}
+#| label: fig-simulacion
+#| fig-cap: "Relación entre el predictor y la variable respuesta"
+#| message: false
+#| warning: false
+
+set.seed(123)
+n  <- 120
+x  <- runif(n, -3, 3)
+fx <- 1.2 + 0.9*x - 0.25*x^2
+y  <- fx + rnorm(n, sd=0.6)
+
+par(mar=c(4,4,1,1))
+
+# Modificado: ylab ahora muestra hat(y)
+plot(x, y, pch=19, cex=0.7,
+     xlab=expression(X[1]),
+     ylab=expression(hat(y)), 
+     main="")
+
+xx <- seq(min(x), max(x), length.out=200)
+lines(xx, 1.2 + 0.9*xx - 0.25*xx^2, lwd=2)
+
+# Modificado: La leyenda ahora muestra hat(y) = f(X[1])
+legend("topleft",
+       legend=c("Datos observados", expression(hat(y) == f(X[1]))),
+       pch=c(19, NA), lty=c(NA, 1), bty="n", pt.cex=0.8, lwd=2)
+```
+
+## ¿Qué es lo supervisado?
+**Idea clave.** Al observar $Y$, el aprendizaje se puede *supervisar*:
+
+* **Entrenamiento:** ajustar $f$ usando una parte de los datos.
+* **Prueba/validación:** evaluar en datos independientes comparando $\hat{y}_i$ vs. $y_i$ con una medida de error.
+
+::: {.center}
+```{r}
+#| echo: false
+#| fig-width: 6.5
+#| fig-height: 3.1
+#| message: false
+#| warning: false
+
+par(mar=c(0,0,0,0))
+plot(0:1, 0:1, type="n", axes=FALSE, xlab="", ylab="")
+
+# Cajas
+rect(0.05, 0.20, 0.45, 0.80)
+rect(0.55, 0.20, 0.95, 0.80)
+
+text(0.25, 0.70, "Conjunto\nde entrenamiento", cex=0.95)
+text(0.75, 0.70, "Conjunto\nde prueba", cex=0.95)
+
+text(0.25, 0.48, expression(paste("Ajustar ", hat(f))), cex=1.05)
+
+# Corrección de la expresión para que reconozca los saltos de línea y símbolos
+text(0.75, 0.48, 
+     expression(atop("Evaluar error", (hat(y) ~ "vs" ~ y))), 
+     cex = 0.95)
+
+# Flecha
+arrows(0.45, 0.50, 0.55, 0.50, length=0.10, lwd=2)
+text(0.50, 0.58, "modelo", cex=0.9)
+```
+:::
+
 \newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+## Métodos típicos en la categoría supervisados
+**Regresión**
+: Regresión lineal, polinómica y regularizada (ridge/lasso).
+
+**Clasificación**
+: Regresión logística, árboles, k-NN, SVM y redes neuronales.
+
+**Modelos extendidos**
+: Modelos lineales generalizados (GLM) y aditivos generalizados (GAM).
+
+## Contraste: Aprendizaje Supervisado vs No Supervisado 1
+**Idea central.** En el **Aprendizaje Estadístico No Supervisado** solo se observan variables explicativas $X_1, \ldots, X_p$; no existe una variable respuesta $Y$ que permita supervisar el aprendizaje ni evaluar el ajuste mediante un criterio externo de error.
+
+* No hay una respuesta observable que se desee predecir.
+* El problema no se formula en términos de predicción supervisada.
+* La evaluación del resultado es interna al método y de carácter exploratorio.
+
+## Contraste: Aprendizaje Supervisado vs No Supervisado 2
+
+::: {.center}
+```{r}
+#| label: fig-contraste-aprendizaje
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 6.5
+#| fig-height: 3.2
+
+# Configuración de márgenes nulos
+par(mar = c(0, 0, 0, 0))
+plot(0:1, 0:1, type = "n", axes = FALSE, xlab = "", ylab = "")
+
+# Caja Supervisado
+rect(0.05, 0.20, 0.45, 0.80)
+text(0.25, 0.70, "Supervisado", font = 2)
+text(0.25, 0.55, expression(X %->% Y))
+text(0.25, 0.40, "Error externo", cex = 0.9)
+
+# Caja No supervisado
+rect(0.55, 0.20, 0.95, 0.80)
+text(0.75, 0.70, "No supervisado", font = 2)
+# Ajuste de la expresión para mostrar X1, X2, ..., Xp
+text(0.75, 0.55, expression(X[1] * ", " * X[2] * ", " * dots * ", " * X[p]))
+text(0.75, 0.40, "Sin Y observable", cex = 0.9)
+
+# Flecha de contraste
+arrows(0.45, 0.50, 0.55, 0.50, lwd = 2, length = 0.10)
+## Proceso de analítica
+```
+:::
 
 ## Proceso de analítica
 
