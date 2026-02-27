@@ -244,6 +244,47 @@ ggplot(df, aes(pc1, pc2)) +
 
 ![](images/kmeans_demo.gif){fig-align="center" width="100%"}
 
+## Elementos de álgebra lineal requeridos en análisis multivariado
+
+::: {.incremental}
+
+- **Espacios vectoriales:** vectores, subespacios, bases y dimensión.
+
+- **Producto interno:** norma, ángulos y ortogonalidad.
+
+- **Proyección ortogonal** y mínimos cuadrados.
+
+- **Matrices:** operaciones matriciales, rango, traza e inversa (cuando existe).
+
+- **Matrices simétricas** y definidas positivas.
+
+- **Valores y vectores propios.**
+
+- **Teorema de la descomposición espectral (TDE).**
+
+- **Teorema de la descomposición en valores singulares (TDVS).**
+
+:::
+
+
+## Naturaleza de los conjuntos de datos del curso
+
+A lo largo del desarrollo del curso se trabajará exclusivamente con **conjuntos de datos reales** del **contexto colombiano**, sobre los siguientes ámbitos:
+
+- 🎓 **Educación**
+- 📊 **Calidad de vida**
+- 🏛 **Rankings universitarios**
+- 🛍 **Investigación de mercados**
+- 📚 **Otros contextos aplicados**
+
+
+## Tipos de variables
+
+
+![](images/tipovars.png){fig-align="center" width="100%"}
+
+
+
 ## Proceso de analítica
 
 
@@ -251,6 +292,18 @@ ggplot(df, aes(pc1, pc2)) +
 knitr::include_graphics(here::here("images/Ciclo.png"))
 ```
 [Wickham, H. y otros (2023)](https://r4ds.hadley.nz/)
+
+
+## Proceso de analítica
+
+
+![](images/EleccMetodo.png){fig-align="center" width="100%"}
+
+
+# PANORAMA GENERAL {background-color="#0077b6"}
+
+
+
 
 ## Métodos de reducción de la dimensionalidad 
 
