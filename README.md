@@ -29,7 +29,7 @@ El repositorio está diseñado como un recurso de aprendizaje tanto para estudia
 |------|---------------------|-------------------|
 | Bienvenida | — | — |
 | Panorama | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/1.Panorama.html)|
-| Análisis de Componentes Principales | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/2.PCA.html) |
+| Análisis de Componentes Principales | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/3.PCA.html) |
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Estadística Descriptiva Multivariada"
-subtitle: "Análisis de Componentes Principales"
+subtitle: "Medidas Descriptivas Multivariadas"
 author:
   - name: Jimmy A Corzo S, PhD
     email: jacorzos@unal.edu.co
@@ -132,8 +132,8 @@ $$\bar{x} = \begin{bmatrix}
 
 library(kableExtra)
 
-# Nota: Asegúrate de que la ruta del archivo sea accesible desde este documento
-# ciudades <- read.csv2("ciudades.csv", sep=";") 
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") 
 
 # Simulación de carga para que el render funcione si no encuentra el archivo:
 # rownames(ciudades) <- ciudades[,1]
@@ -143,5 +143,6 @@ knitr::kable(head(ciudades[,-1]), digits = 2) %>%
     font_size = 18,
     latex_options = c("striped", "scale_down")
   )
+```
 
 
