@@ -1,0 +1,147 @@
+---
+title: "Estadística Descriptiva Multivariada"
+subtitle: "Análisis de Componentes Principales"
+author:
+  - name: Jimmy A Corzo S, PhD
+    email: jacorzos@unal.edu.co
+  - name: Giovany Babativa-Márquez, PhD
+    email: jgbabativam@unal.edu.co
+format: 
+  gbabativa-revealjs:
+    footer: "Diapositivas disponibles en [GitHub](https://github.com/jgbabativam)."
+    logo: "images/UNAL.png"
+incremental: false
+embed-resources: true
+highlight-style: dracula
+execute: 
+  echo: false
+  eval: true
+filters:
+  - webr
+revealjs-plugins:
+  - drop
+---
+
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+```{r}
+library(pacman)
+
+p_load(here)
+```
+
+# Medidas descriptivas multivariadas {background-color="#0077b6"}
+
+---
+
+## Contenido
+
+Para tener una tabla de contenido automática en Revealjs, usualmente se configura en el YAML, pero puedes usar este espacio para organizar tus secciones.
+
+# Observaciones multivariadas
+
+## Observaciones multivariadas
+
+Para la construcción de los análogos multivariados de las medidas descriptivas univariadas primero se requiere definir las observaciones multivariadas.
+
+En el contexto multivariado, en lugar de una, se observan $p$ variables $X_1,\ldots,X_p$ simultáneamente sobre el mismo objeto $i$ (ciudad, universidad, persona, etc.), y por tanto una observación para el objeto $i$ es un vector de $p$ componentes:
+
+$$x_i = \left(x_{i1},\ldots,x_{ij},\ldots,x_{ip}\right)^\prime,$$
+
+donde $x_{ij}$ es la observación de la variable $j$ sobre el objeto $i$.
+
+# Datos
+
+## Tabla de datos
+
+Para $n$ objetos, las observaciones se arreglan en una tabla de datos como la siguiente:
+
+| Objeto | $X_1$ | $X_2$ | $\cdots$ | $X_p$ |
+|:------:|:-----:|:-----:|:--------:|:-----:|
+| 1 | $x_{11}$ | $x_{12}$ | $\cdots$ | $x_{1p}$ |
+| $\vdots$ | $\vdots$ | $\vdots$ | $\ddots$ | $\vdots$ |
+| n | $x_{n1}$ | $x_{n2}$ | $\cdots$ | $x_{np}$ |
+
+## Media, Varianza y Correlación
+
+$$
+\begin{aligned}
+\bar{x}_j &= \frac{1}{n} \sum_{i=1}^{n} x_{ij} && \text{media de } X_j \\
+s_j^2 &= \frac{1}{n} \sum_{i=1}^{n} (x_{ij}-\bar{x}_j)^2 && \text{varianza de } X_j \\
+s_{jk} &= \frac{1}{n} \sum_{i=1}^{n} (x_{ij}-\bar{x}_j)(x_{ik}-\bar{x}_k) && \text{covarianza} \\
+r_{jk} &= \frac{s_{jk}}{s_j s_k} && \text{correlación}
+\end{aligned}
+$$
+
+## Tabla vs. Matriz
+
+- **Tabla:** Para referirse a los datos con nombres en filas y columnas.
+- **Matriz:** Cuando se van a utilizar las propiedades algebraicas de la tabla.
+
+$$X = \{x_{ij}\} = \begin{bmatrix}
+x_{11} & x_{12} & \cdots & x_{1p} \\
+x_{21} & x_{22} & \cdots & x_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{n1} & x_{n2} & \cdots & x_{np}
+\end{bmatrix}$$
+
+*Se asume que $n \ge p$.*
+
+## Columna de la tabla de datos
+
+En esta matriz, la columna $j$ representa las observaciones de la variable $X_j$ sobre los $n$ objetos y se denota como un vector columna:
+
+$$X_j = \begin{bmatrix}
+x_{1j} \\
+x_{2j} \\
+\vdots \\
+x_{nj}
+\end{bmatrix}, \quad j=1,\ldots,p$$
+
+## Fila de la tabla de datos
+
+Análogamente, la fila $i$, o el punto objeto $i$, representa las observaciones de las $p$ variables sobre el objeto $i$ que se denota como un vector columna:
+
+$$
+x_i = (x_{i1}, \ldots, x_{ip})' = \begin{bmatrix}
+x_{i1} \\
+x_{i2} \\
+\vdots \\
+x_{ip}
+\end{bmatrix}, \quad i=1,\ldots,n.
+$$
+
+## Vector de medias
+
+El vector de medias contiene los promedios de cada una de las $p$ variables:
+
+$$\bar{x} = \begin{bmatrix}
+\bar{x}_1 \\
+\bar{x}_2 \\
+\vdots \\
+\bar{x}_p
+\end{bmatrix}$$
+
+## Ejemplo: Ciudades Colombianas
+
+```{r}
+#| label: tbl-ciudades
+#| tbl-cap: "Tabla de datos multivariados de ciudades colombianas"
+#| echo: false
+#| message: false
+
+library(kableExtra)
+
+# Nota: Asegúrate de que la ruta del archivo sea accesible desde este documento
+# ciudades <- read.csv2("ciudades.csv", sep=";") 
+
+# Simulación de carga para que el render funcione si no encuentra el archivo:
+# rownames(ciudades) <- ciudades[,1]
+
+knitr::kable(head(ciudades[,-1]), digits = 2) %>%
+  kable_styling(
+    font_size = 18,
+    latex_options = c("striped", "scale_down")
+  )
+
+
