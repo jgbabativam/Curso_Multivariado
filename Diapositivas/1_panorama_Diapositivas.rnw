@@ -488,7 +488,7 @@ arrows(0.50, 0.12, 0.50, 0.05, length=0.07, lwd=1.0)
   \item \textbf{K-means.} 
   Algoritmo particional que asigna cada observacion al centroide mas cercano, 
   minimizando la suma de distancias cuadraticas dentro de cada grupo. 
-  Requiere fijar el numero de clusters y es sensible a valores atipicos.
+  Requiere fijar el numero de clusters y es sensible a valores atípicos.
 
   \item \textbf{K-medoids (PAM).} 
   Variante robusta de k-means que utiliza medoids (observaciones reales) en lugar de centroides, 
@@ -545,6 +545,7 @@ arrows(0.50, 0.12, 0.50, 0.05, length=0.07, lwd=1.0)
 % 
 \begin{frame}{Elementos de álgebra lineal requeridos en análisis multivariado}
 
+\small
 \begin{itemize}
 \item \textbf{Espacios vectoriales}: vectores, subespacios, bases y dimensión.
 \item \textbf{Producto interno}: norma, ángulos y ortogonalidad.
@@ -690,7 +691,7 @@ Conjuntos de variables \textbf{mixtas} o \textbf{estructuradas en grupos}
 \end{frame}
 
 % 
-\begin{frame}{Motivación: ¿por qué componentes principales?}
+\begin{frame}{Motivación: El papel de las componentes principales}
 
 \begin{itemize}
 \item Los \textbf{gráficos de dispersión} permiten explorar relaciones entre pares de
@@ -750,7 +751,7 @@ plot(Z[,1], Z[,2],
 @
 \end{frame}
 % 
-\begin{frame}{ARWU Cont.}
+\begin{frame}{Rankings universitarios}
 
 \begin{ejem}
 
@@ -774,7 +775,7 @@ plot(Z[,1], Z[,2],
 
 \end{frame}
 % 
-\begin{frame}{ARWU Cont.}
+\begin{frame}{Rankings universitarios}
 
 \begin{ejem}
 
@@ -1172,6 +1173,81 @@ p4
 
 \end{frame}
 % 
+\begin{frame}{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
+
+Una \textbf{tabla de contingencia} es un arreglo de las frecuencias de ocurrencia simultánea de las opciones de respuesta de dos variables cualitativas, $X$ con $I$ modalidades en las filas y $Y$ con $J$ modalidades en las columnas. Formalmente se escribe como
+
+\[
+G=\{n_{ij}\}=
+\left(
+\begin{array}{cccc}
+n_{11}& n_{12}& \cdots& n_{1J}\\
+n_{21}& n_{22}& \cdots& n_{2J}\\
+\vdots& \vdots& \ddots& \vdots\\
+n_{I1}& n_{I2}& \cdots& n_{IJ}
+\end{array}
+\right),
+\]
+
+donde $n_{ij}$ representa el número de individuos que simultáneamente presentan la modalidad $i$ de $X$ y la modalidad $j$ de $Y$. El tamaño muestral total es
+
+\[
+n=\sum_{i=1}^{I}\sum_{j=1}^{J} n_{ij}.
+\]
+
+\end{frame}
+% 
+\begin{frame}{Perfiles fila y perfiles columna}
+
+El análisis de una tabla de contingencia permite estudiar la 
+\textbf{asociación entre variables cualitativas}. El análisis se hace por medio de los perfiles fila y columna 
+
+Cada fila de la tabla puede interpretarse como un \textbf{perfil fila}, es decir,
+una distribución condicional de $Y$ dada la modalidad $i$ de $X$:
+
+\[
+f_{ij}=\frac{n_{ij}}{n_{i\cdot}},\quad \text{donde}\, n_{i\cdot}=\sum_{j=1}^J n_{ij}
+\qquad j=1,\ldots,J.
+\]
+
+Análogamente, cada columna define un \textbf{perfil columna}, correspondiente a
+la distribución condicional de $X$ dada la modalidad $j$ de $Y$:
+
+\[
+c_{ij}=\frac{n_{ij}}{n_{\cdot j}}, \text{donde}\quad n_{\cdot j}=\sum_{i=1}^I n_{ij}.
+\qquad i=1,\ldots,I.
+\]
+
+\end{frame}
+% 
+\begin{frame}{Conexión con la teoría de probabilidad}
+En el contexto de teoría de probabilidad, si dos variables aleatorias $X$ y $Y$ son independientes, entonces:
+$$P(X=i,Y=j) = P(X=i)P(Y=j), \quad i=1,\ldots, I, \, j=1,\ldots, J  $$
+Empíricamente, esta relación de independencia entre $X$ y $Y$ se traduce en que aproximadamente.
+
+$$
+\frac{n_{ij}}{n} \approx \frac{n_{i\cdot}}{n}\frac{n_{\cdot j}}{n},
+$$
+entonces las desviaciones respecto a esta estructura de independencia contienen toda la información sobre la asociación entre modalidades.
+\end{frame}
+% 
+\begin{frame}{Distancia Chi-cuadrado}
+Para cuantificar la proximidad entre perfiles se introduce naturalmente la \textbf{distancia $\chi^2$}. Entre dos perfiles fila $i$ y $i'$ se define como
+
+$$
+d_{\chi^2}^2(i,i')=
+\sum_{j=1}^J
+\frac{1}{n_{\cdot j}/n}
+\left(
+\frac{n_{ij}}{n_{i\cdot}}-
+\frac{n_{i'j}}{n_{i'\cdot}}
+\right)^2.
+$$
+
+Análogamente, puede definirse una distancia $\chi^2$ entre perfiles columna.
+
+Esta métrica pondera las diferencias entre perfiles según la importancia de cada modalidad, medida por su frecuencia marginal, y constituye el fundamento geométrico del \textbf{Análisis de Correspondencias Simples}, que busca representar estas nubes de perfiles en espacios de baja dimensión conservando, en lo posible, dichas distancias.
+\end{frame}
 
 \begin{frame}{Correspondencias simples y análisis de tablas de contingencia \textcolor{magenta}{(EMV)}}
 
@@ -1662,81 +1738,81 @@ fviz_mca_var(res.mca.jdl, repel = T)
 \end{ejem}
 \end{frame}
 % 
-\begin{frame}{\textcolor{yellow}{(ECC)}}
-\begin{ejem}
-\setkeys{Gin}{width=1\textwidth} % redefinir el tamaño graficos
-\begin{figure}[H]
-	\centering
-<<mca_var_conexiones, echo=F, fig=TRUE, width=7.2, height=4.6>>=
-  library(FactoMineR)
-library(factoextra)
-library(ggplot2)
-library(dplyr)
-
-# MCA (ciudad como suplementaria: quali.sup = 1)
-res.mca.jdl <- MCA(cclat_p20, quali.sup = 1, graph = FALSE)
-
-# Base plot
-p <- fviz_mca_var(res.mca.jdl, repel = TRUE)
-
-# --- Coordenadas de modalidades activas (Dim 1 y Dim 2) ---
-coord <- as.data.frame(res.mca.jdl$var$coord[, 1:2])
-coord$mod <- rownames(coord)
-names(coord)[1:2] <- c("x", "y")
-
-# --- Ítems a conectar: h, i, j ---
-# Ajuste estos "base" si sus prefijos/códigos difieren
-bases <- c("p20h_RDL_IB", "p20i_RDL_LA", "p20j_RDL_PF")
-
-# Construir pares Sí/No con los nombres exactos usados por exams/Moodle
-pairs <- data.frame(
-  base = bases,
-  si   = paste0(bases, "=1_si"),
-  no   = paste0(bases, "=2_no"),
-  stringsAsFactors = FALSE
-)
-
-# Extraer coords para sí/no
-df_si <- coord %>% filter(mod %in% pairs$si) %>% rename(x_si = x, y_si = y)
-df_no <- coord %>% filter(mod %in% pairs$no) %>% rename(x_no = x, y_no = y)
-
-# Unir por el "base" (haciendo match con los nombres)
-df_lines <- pairs %>%
-  left_join(df_si, by = c("si" = "mod")) %>%
-  left_join(df_no, by = c("no" = "mod"))
-
-# Verificación rápida: si faltan filas es porque los nombres no coinciden
-if (any(!complete.cases(df_lines[, c("x_si","y_si","x_no","y_no")]))) {
-  warning("No se encontraron todas las modalidades si/no. Revise los nombres en rownames(res.mca.jdl$var$coord).")
-}
-
-# --- Agregar conexiones punteadas suaves ---
-p +
-  geom_curve(
-    data = df_lines,
-    aes(x = x_si, y = y_si, xend = x_no, yend = y_no),
-    inherit.aes = FALSE,
-    linetype = "dashed",
-    linewidth = 0.6,
-    curvature = 0.25
-  ) +
-  geom_point(
-    data = df_lines,
-    aes(x = x_si, y = y_si),
-    inherit.aes = FALSE,
-    size = 2
-  ) +
-  geom_point(
-    data = df_lines,
-    aes(x = x_no, y = y_no),
-    inherit.aes = FALSE,
-    size = 2
-  )
-@
-	\caption{Las líneas punteadas representan las formas sinuosas que se mostraron en los histogramas}\label{fig:Tendencias_just_des_ley_1}
-\end{figure}
-\end{ejem}
-\end{frame}
+% \begin{frame}{\textcolor{yellow}{(ECC)}}
+% \begin{ejem}
+% \setkeys{Gin}{width=1\textwidth} % redefinir el tamaño graficos
+% \begin{figure}[H]
+% 	\centering
+% <<mca_var_conexiones, echo=F, fig=TRUE, width=7.2, height=4.6>>=
+%   library(FactoMineR)
+% library(factoextra)
+% library(ggplot2)
+% library(dplyr)
+% 
+% # MCA (ciudad como suplementaria: quali.sup = 1)
+% res.mca.jdl <- MCA(cclat_p20, quali.sup = 1, graph = FALSE)
+% 
+% # Base plot
+% p <- fviz_mca_var(res.mca.jdl, repel = TRUE)
+% 
+% # --- Coordenadas de modalidades activas (Dim 1 y Dim 2) ---
+% coord <- as.data.frame(res.mca.jdl$var$coord[, 1:2])
+% coord$mod <- rownames(coord)
+% names(coord)[1:2] <- c("x", "y")
+% 
+% # --- Ítems a conectar: h, i, j ---
+% # Ajuste estos "base" si sus prefijos/códigos difieren
+% bases <- c("p20h_RDL_IB", "p20i_RDL_LA", "p20j_RDL_PF")
+% 
+% # Construir pares Sí/No con los nombres exactos usados por exams/Moodle
+% pairs <- data.frame(
+%   base = bases,
+%   si   = paste0(bases, "=1_si"),
+%   no   = paste0(bases, "=2_no"),
+%   stringsAsFactors = FALSE
+% )
+% 
+% # Extraer coords para sí/no
+% df_si <- coord %>% filter(mod %in% pairs$si) %>% rename(x_si = x, y_si = y)
+% df_no <- coord %>% filter(mod %in% pairs$no) %>% rename(x_no = x, y_no = y)
+% 
+% # Unir por el "base" (haciendo match con los nombres)
+% df_lines <- pairs %>%
+%   left_join(df_si, by = c("si" = "mod")) %>%
+%   left_join(df_no, by = c("no" = "mod"))
+% 
+% # Verificación rápida: si faltan filas es porque los nombres no coinciden
+% if (any(!complete.cases(df_lines[, c("x_si","y_si","x_no","y_no")]))) {
+%   warning("No se encontraron todas las modalidades si/no. Revise los nombres en rownames(res.mca.jdl$var$coord).")
+% }
+% 
+% # --- Agregar conexiones punteadas suaves ---
+% p +
+%   geom_curve(
+%     data = df_lines,
+%     aes(x = x_si, y = y_si, xend = x_no, yend = y_no),
+%     inherit.aes = FALSE,
+%     linetype = "dashed",
+%     linewidth = 0.6,
+%     curvature = 0.25
+%   ) +
+%   geom_point(
+%     data = df_lines,
+%     aes(x = x_si, y = y_si),
+%     inherit.aes = FALSE,
+%     size = 2
+%   ) +
+%   geom_point(
+%     data = df_lines,
+%     aes(x = x_no, y = y_no),
+%     inherit.aes = FALSE,
+%     size = 2
+%   )
+% @
+% 	\caption{Las líneas punteadas representan las formas sinuosas que se mostraron en los histogramas}\label{fig:Tendencias_just_des_ley_1}
+% \end{figure}
+% \end{ejem}
+% \end{frame}
 % 
 \begin{frame}{Métodos de agrupamiento (Clustering) Sistema universitario estatal (SUE)}
 \begin{ejem}
@@ -1951,446 +2027,6 @@ ggplot(coord, aes(PC1, PC2, color = cluster, label = Universidad)) +
 @
 \caption{Agrupamiento de universidades del SUE en tres grupos}\label{fig:plano_1_2}
 \end{figure}
-\end{ejem}
-\end{frame}
-
-%------------------------------------------------
-% Diapositiva: IQR y detección de atípicos (1 variable)
-%------------------------------------------------
-\begin{frame}{Datos atípicos en una variable: Rango intercuartílico \textcolor{yellow}{(IQR)}}
-
-\textbf{Definición (medida de dispersión).}
-El \textbf{rango intercuartílico} es una medida robusta de dispersión definida por:
-\[
-IQR = Q_{0.75} - Q_{0.25}.
-\]
-
-\textbf{Construcción del rango para detectar atípicos.}
-A partir del IQR se define el intervalo:
-\[
-\left( Q_{0.25} - 1.5\,IQR,\;\; Q_{0.75} + 1.5\,IQR \right),
-\]
-y una observación se considera \textbf{atípica} si cae por fuera de este rango.
-\end{frame}
-% 
-\begin{frame}{Datos atípicos en una variable: Rango intercuartílico \textcolor{yellow}{(IQR)}}
-\textbf{Motivación (referencia normal).}
-Esta regla es coherente con la idea de concentración de probabilidad en la
-distribución normal $N(\mu,\sigma^2)$: aproximadamente 
-
-el 68\% de las obs. se encuentran en el intervalo $\mu \pm \sigma$, 
-
-el 95\% \hspace{4.5cm} en el intervalo $\mu \pm 2\sigma$ 
-
-el 99\% \hspace{4.5cm} en el intervalo $\mu \pm 3\sigma$.
-\end{frame}
-% 
-\begin{frame}{Indicadores de educación y número de habitantes ciudades colombianas}
-\begin{ejem}
-El archivo ciudades contiene datos del número de habitantes y cuatro indicadores de educación en 22 ciudades colombianas. Tabla \ref{tab:edu_ciudades_col}.
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}{Indicadores de educación y número de habitantes ciudades colomhbianas}
-\begin{ejem}
-
-<<results=tex, echo=FALSE>>=
-ciudades<-read.csv2("G:/Mi unidad/Multivariado/Multivariado 2018 II/Notas de clase 2023/ciudades.csv", sep=";")
-kable(ciudades, "latex", booktabs = TRUE, digits = 2,
-      caption = "Indicadores de educación y número de habitantes para 22 ciudades colombianas",
-      label = "edu_ciudades_col") %>%
-  kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
-@
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}{Ciudades atípicas}
-\begin{ejem}
-<<results=tex, echo=FALSE>>=
-library(knitr)
-library(kableExtra)
-library(magrittr)
-
-# Inicializando vectores
-Limite_inferior <- vector()
-Limite_superior <- vector()
-q1  <- vector()
-q3  <- vector()
-iqr <- vector()
-
-# Cuartiles e IQR
-for (i in 2:6) {
-  q1[i]  <- quantile(ciudades[, i], 0.25, na.rm = TRUE)
-  q3[i]  <- quantile(ciudades[, i], 0.75, na.rm = TRUE)
-  iqr[i] <- q3[i] - q1[i]
-}
-
-# Límites
-for (i in 2:6) {
-  Limite_inferior[i] <- q1[i] - 1.5 * iqr[i]
-  Limite_superior[i] <- q3[i] + 1.5 * iqr[i]
-}
-
-# Copia para resaltar atípicos
-ciudades_highlight <- ciudades
-
-# Marcar atípicos con "*"
-for (i in 2:6) {
-  ciudades_highlight[
-    ciudades[, i] < Limite_inferior[i] | ciudades[, i] > Limite_superior[i],
-    i
-  ] <- "*"
-}
-
-# Renombrar columna de ciudades (opcional pero recomendable)
-names(ciudades_highlight)[1] <- "Ciudad"
-
-# Imprimir tabla COMPLETA (sin quitar la columna 1)
-kable(ciudades_highlight, "latex", booktabs = TRUE, digits = 2,
-      caption = "Ciudades atípicas por cada variable",
-      label = "CiudAtipicas2") %>%
-  kable_styling(latex_options = c("striped", "scale_down", "hold_position"))
-@
-
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}{Ciudades atípicas por número de habitantes}
-\begin{ejem}
-\setkeys{Gin}{width=0.6\textwidth} % redefinir el tamaño graficos
-\begin{figure}[H]
-	\centering
-<<fig=TRUE, echo=FALSE>>=
-
-par(
-  mar = c(15, 10, 4, 2) + 0.1,   # más espacio a la izquierda
-  mgp = c(6, 2.5, 0)           # separa etiqueta del eje y
-)
-
-boxplot(
-  ciudades$Num.Hab ~ ciudades$CIUDADES,
-  las = 2,
-  col = heat.colors(7),
-  xlab = "",
-  ylab = "Número de habitantes"
-)
-@
-	\caption{Número de habitantes por ciudades}\label{Ciudad_x_Numhab}
-	\label{hab_X_ciudad}
-\end{figure}
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}{Datos atípicos en dos variables - Distancia de Mahalanobis}
-\begin{ejem}Problema
-\vskip-1.5cm
-\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
-\begin{figure}[H]
-\centering
-<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
-cities <- ciudades[,1]
-
-# Índice de Riohacha
-i_rio <- which(cities == "Riohacha")
-
-plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
-     xlab = "Relación alumno profesor",
-     ylab = "Analfabetismo",
-     xlim = c(19,27),
-     xaxt = "n")
-
-axis(side = 1, at = 19:27)
-
-# Todas las ciudades en negro
-text(ciudades$Rel.al.prof,
-     ciudades$Analfabetismo,
-     cities,
-     cex = 0.5,
-     pos = 2,
-     col = "black")
-
-# Riohacha en rojo (encima)
-text(ciudades$Rel.al.prof[i_rio],
-     ciudades$Analfabetismo[i_rio],
-     cities[i_rio],
-     cex = 0.6,
-     pos = 2,
-     col = "red",
-     font = 2)   # opcional: negrilla
-@
-
-\caption{Relación alumno profesor vs. Analfabetismo en 10 ciudades colombianas (r=0.76). Se distinguen en los extremos las ciudades de San Andrés y Riohacha.}\label{ciudadesDispersion1}
-\end{figure}
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}
-\begin{ejem}Problema
-\vskip-1.5cm
-\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
-\begin{figure}[H]
-\centering
-<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
-cities <- as.character(ciudades[,1])
-
-norm <- function(x){
-  x <- trimws(x)
-  x <- tolower(x)
-  iconv(x, from = "", to = "ASCII//TRANSLIT")
-}
-cities_n <- norm(cities)
-
-i_rio <- which(cities_n == norm("Riohacha"))
-
-blue_cities <- c("Medellín", "Montería", "Villavicencio",
-                 "Sincelejo", "Valledupar", "Cartagena")
-i_blue <- which(cities_n %in% norm(blue_cities))
-
-i_black <- setdiff(seq_along(cities), union(i_blue, i_rio))
-
-plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
-     xlab = "Relación alumno profesor",
-     ylab = "Analfabetismo",
-     xlim = c(19,27),
-     xaxt = "n")
-axis(side = 1, at = 19:27)
-
-# Negras (solo no destacadas)
-text(ciudades$Rel.al.prof[i_black],
-     ciudades$Analfabetismo[i_black],
-     cities[i_black],
-     cex = 0.5, pos = 2, col = "black")
-
-# Índices de las que quiere mover
-i_villa <- which(cities_n == norm("Villavicencio"))
-i_sinc  <- which(cities_n == norm("Sincelejo"))
-
-# Azules "base": todas menos Villavicencio y Sincelejo (para no duplicar)
-i_blue_base <- setdiff(i_blue, c(i_villa, i_sinc))
-
-text(ciudades$Rel.al.prof[i_blue_base],
-     ciudades$Analfabetismo[i_blue_base],
-     cities[i_blue_base],
-     cex = 0.6, pos = 2, col = "blue", font = 2)
-
-# Villavicencio (una sola vez) con desplazamiento
-text(ciudades$Rel.al.prof[i_villa] + 0.15,
-     ciudades$Analfabetismo[i_villa] - 0.004,
-     cities[i_villa],
-     cex = 0.6, col = "blue", font = 2)
-
-# Sincelejo (una sola vez) con desplazamiento
-text(ciudades$Rel.al.prof[i_sinc] - 0.15,
-     ciudades$Analfabetismo[i_sinc] + 0.004,
-     cities[i_sinc],
-     cex = 0.6, col = "blue", font = 2)
-
-# Riohacha en rojo
-text(ciudades$Rel.al.prof[i_rio],
-     ciudades$Analfabetismo[i_rio],
-     cities[i_rio],
-     cex = 0.65, pos = 2, col = "red", font = 2)
-@
-
-\end{figure}
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}
-\begin{ejem}Otro problema
-\vskip-1.5cm
-\setkeys{Gin}{width=1\textwidth} % redefinir tamaño de los graficos graficos
-\begin{figure}[H]
-\centering
-<<fig=TRUE, width=5.5, height=4, echo=FALSE>>=
-cities <- as.character(ciudades[,1])
-
-# Índices de ciudades destacadas
-i_rio <- which(cities == "Riohacha")
-i_bog <- which(cities == "Bogota" | cities == "Bogotá")
-
-# Índices que SÍ van en negro (todas menos Bogotá y Riohacha)
-i_black <- setdiff(seq_along(cities), c(i_rio, i_bog))
-
-plot(ciudades$Num.Hab, ciudades$Analfabetismo,
-     xlab = "Número de Habitantes",
-     ylab = "Analfabetismo",
-     ylim = c(0, 0.3))
-
-# Etiquetas negras (excepto Bogotá y Riohacha)
-text(ciudades$Num.Hab[i_black],
-     ciudades$Analfabetismo[i_black],
-     cities[i_black],
-     cex = 0.5,
-     pos = 3,
-     col = "black")
-
-# Riohacha en rojo
-text(ciudades$Num.Hab[i_rio],
-     ciudades$Analfabetismo[i_rio],
-     cities[i_rio],
-     cex = 0.6,
-     pos = 3,
-     col = "red",
-     font = 2)
-
-# Bogotá en azul
-text(ciudades$Num.Hab[i_bog],
-     ciudades$Analfabetismo[i_bog],
-     cities[i_bog],
-     cex = 0.6,
-     pos = 3,
-     col = "blue",
-     font = 2)
-@
-\end{figure}
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}{\textcolor{yellow}{Distancia de Mahalanobis en dos variables}}
-Es una medida de la distancia entre observaciones multivariadas con la propiedad de que incluye tanto las distancias euclidianas entre las variables, como el grado de correlación entre ellas. 
-\end{frame}
-% 
-\begin{frame}{\textcolor{yellow}{Distancia de Mahalanobis entre observaciones de dos variables}}
-Asumiendo que hay $n$ observaciones para dos variables $X_1$ y $X_2$:
-\footnotesize
-$$
-\left[
-\begin{array}{cc}
-x_{11}& x_{12}\\
-\vdots& \vdots\\
-x_{i1}& x_{i2}\\
-\vdots& \vdots\\
-x_{i^\prime 1}& x_{i^\prime 2}\\
-\vdots& \vdots\\
-x_{n1}& x_{n2}
-\end{array}
-\right]
-$$
-
-\begin{align}\label{mahalanobis2var}
-d_M^2(i,i^\prime)
-&=\frac{1}{(1-r_{12} ^2)}
-\left[
-\frac{(x_{i1}-x_{x_{i^\prime 1}})^2}{s_1^2}
-+ \frac{(x_{i2}-x_{i^\prime 2})^2}{s_2^2}
-- 2r_{12}\frac{(x_{i1}-x_{i^\prime 1})(x_{i2}-x_{i^\prime 2})}{s_1s_2}
-\right]
-\end{align}
-$\frac{(x_{i1}-x_{i^\prime 1})^2}{s_1^2}$ y $\frac{(x_{i2}-x_{i^\prime 2})^2}{s_2^2}$ son las distancias euclidianas estandarizadas entre los dos puntos y $r_{12}$ es el coeficiente de correlación entre $X_1$ y $X_2$.
-\end{frame}
-% 
-\begin{frame}{Interpretación de la distancia de Mahalanobis en dos variables}
-
-\begin{itemize}
-\item \textbf{Cuando $r_{12} \to 0$:}  
-las variables son aproximadamente incorrelacionadas y la distancia de Mahalanobis
-se reduce esencialmente a una suma de distancias euclidianas estandarizadas.
-
-\item \textbf{Cuando $r_{12} \to 1$:}  
-las variables están fuertemente correlacionadas de forma positiva; las diferencias
-en la dirección común de variación aportan poco a la distancia, mientras que las
-desviaciones ortogonales se amplifican.
-
-\item \textbf{Cuando $r_{12} \to -1$:}  
-existe una correlación negativa fuerte; las diferencias opuestas entre $X_1$ y $X_2$
-se penalizan menos, y las discrepancias fuera de esa relación lineal incrementan la
-distancia.
-\end{itemize}
-\end{frame}
-% 
-\begin{frame}{Distancia de Mahalanobis y estimación de la varianza}
-
-\begin{itemize}
-
-\item \textbf{Distancia a la media multivariada}
-
-La distancia de Mahalanobis de la observación $i$ al centro de los datos se obtiene
-reemplazando $x_{i^\prime}$ por la media
-\[
-\bar{\mathbf{x}}=(\bar{x}_1,\bar{x}_2),
-\]
-lo que permite cuantificar la separación de cada individuo respecto a la estructura
-global de las variables.
-
-\vspace{0.15cm}
-
-\item \textbf{Estimación de las varianzas}
-
-Para cada variable se utiliza usualmente el estimador insesgado
-\[
-s_j^2=\frac{1}{n-1}\sum_{i=1}^n (x_{ij}-\bar{x}_j)^2,\qquad j=1,2.
-\]
-En contextos poblacionales o para tamaños muestrales grandes puede emplearse el
-denominador $n$, ya que la diferencia entre $n$ y $n-1$ resulta despreciable.
-\end{itemize}
-\end{frame}
- %
- \begin{frame}{Caso particular: dos observaciones y dos variables}
-
-\begin{itemize}
-
-\item \textbf{Matriz de datos reducida}
-
-Cuando solo se dispone de dos observaciones, la matriz de datos es
-\[
-\begin{bmatrix}
-x_{11} & x_{12}\\
-x_{21} & x_{22}
-\end{bmatrix}.
-\]
-
-\vspace{0.15cm}
-
-\item \textbf{Varianzas como sumas de cuadrados}
-
-Dado que $n=2$, las varianzas se reducen a
-\[
-s_j^2=\sum_{i=1}^2 (x_{ij}-\bar{x}_j)^2,\qquad j=1,2.
-\]
-
-\vspace{0.15cm}
-
-\item \textbf{Interpretación}
-
-Este caso es fundamentalmente ilustrativo y tiene escaso interés práctico, debido a la
-inestabilidad inherente a trabajar con un número extremadamente pequeño de observaciones.
-
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-\begin{ejem}
-
-\end{ejem}
-\end{frame} 
-% 
-\begin{frame}
-\begin{ejem}
-
-\end{ejem}
-\end{frame}
-% 
-\begin{frame}
-\begin{ejem}
-
-\end{ejem}
-\end{frame} 
-% 
-\begin{frame}
-\begin{ejem}
-
-\end{ejem}
-\end{frame}
-
-\begin{frame}
-\LARGE FIN DEL CAPÍTULO
-\end{frame}
-% 
-\begin{frame}
-\begin{ejem}
-
 \end{ejem}
 \end{frame}
 
