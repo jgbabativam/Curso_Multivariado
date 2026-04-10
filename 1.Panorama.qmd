@@ -244,6 +244,72 @@ ggplot(df, aes(pc1, pc2)) +
 
 ![](images/kmeans_demo.gif){fig-align="center" width="100%"}
 
+## Métodos de reducción de dimensión
+
+### Basados en descomposición SVD
+
+::: {.incremental style="font-size: 0.88em;"}
+
+- **PCA** (Análisis de Componentes Principales): Método lineal para variables numéricas que busca direcciones de máxima varianza. Basado en la **SVD** de la matriz centrada (y estandarizada).
+
+- **CA** (Análisis de Correspondencias): Analiza la asociación entre dos variables cualitativas en tablas de contingencia a través de perfiles centrados y ponderados. Utiliza una **SVD ponderada** para obtener coordenadas principales.
+
+- **MCA** (Análisis de Correspondencias Múltiples): Extensión del CA a múltiples variables cualitativas mediante la matriz indicatoria o de Burt. Fundamentado en una **SVD en el espacio chi-cuadrado**.
+
+:::
+
+## Métodos de reducción de dimensión
+
+::: {.incremental style="font-size: 0.88em;"}
+
+- **MFA** (Análisis Factorial Múltiple): Permite analizar múltiples tablas de variables cuantitativas y/o cualitativas; normaliza cada bloque y aplica una **SVD global** para extraer factores comunes.
+
+- **STATIS** (incluye DiSTATIS): Método para tablas estructuradas en tres vías; construye una *compromise matrix* y aplica descomposición espectral para obtener configuraciones y compromisos.
+
+- **MDS clásico** (CMDS): Recupera coordenadas en espacio euclidiano mediante la **descomposición espectral** de la matriz de distancias doblemente centrada; algebraicamente equivalente a una SVD.
+
+:::
+
+## Métodos no lineales de reducción
+
+::: {.incremental style="font-size: 0.88em;"}
+
+- **t-SNE** (*t-distributed Stochastic Neighbor Embedding*): Minimiza la divergencia de Kullback–Leibler entre distribuciones de vecinos. No utiliza SVD salvo como opción para inicialización.
+
+- **UMAP** (*Uniform Manifold Approximation and Projection*): Aprendizaje de variedades basado en grafos *fuzzy* y optimización de atracción-repulsión. No utiliza SVD excepto cuando se inicializa con PCA.
+
+- **Isomap**: Aprendizaje de manifolds basado en distancias geodésicas; aplica MDS al final pero no es un método basado en SVD.
+
+- **NMF** (*Nonnegative Matrix Factorization*): Factorización iterativa de matrices no negativas mediante algoritmos multiplicativos o ALS. No utiliza SVD, aunque puede inicializarse con ella.
+
+:::
+
+## Métodos de agrupamiento (*Clustering*)
+
+::: {.incremental style="font-size: 0.88em;"}
+
+- **K-means**: Asigna cada observación al centroide más cercano minimizando la suma de distancias cuadráticas intra-grupo. Requiere fijar el número de *clusters* y es sensible a valores atípicos.
+
+- **K-medoids (PAM)**: Variante robusta de K-means que utiliza medoids (observaciones reales) en lugar de centroides; adecuada para diferentes métricas de distancia.
+
+- **Clustering jerárquico** (aglomerativo o divisivo): Construye un dendrograma secuencialmente. No requiere especificar el número de *clusters* a priori; permite distintos criterios de enlace (single, complete, average, Ward).
+
+:::
+
+## Métodos de agrupamiento (*Clustering*)
+
+::: {.incremental style="font-size: 0.88em;"}
+
+- **DBSCAN**: Método basado en densidad que identifica regiones densas separadas por zonas de baja densidad. Detecta ruido y produce *clusters* de formas arbitrarias sin necesidad de fijar el número de grupos.
+
+- **HDBSCAN**: Extensión jerárquica de DBSCAN que permite densidades variables; produce *clusters* más estables con mejor detección de ruido en datos heterogéneos.
+
+- **GMM** (*Gaussian Mixture Models*): Modelo probabilístico que representa los datos como mezcla de distribuciones normales. Ofrece pertenencias suaves (probabilidades) mediante el algoritmo EM.
+
+- **Clustering espectral**: Utiliza los autovectores del Laplaciano de un grafo de similitudes para representar los datos en espacio reducido donde luego aplica K-means. Detecta *clusters* no lineales.
+
+:::
+
 ## Elementos de álgebra lineal requeridos en análisis multivariado
 
 ::: {.incremental}
@@ -283,7 +349,72 @@ A lo largo del desarrollo del curso se trabajará exclusivamente con **conjuntos
 
 ![](images/tipovars.png){fig-align="center" width="100%"}
 
+## Variables cualitativas
 
+::: {.incremental}
+
+- Describen **cualidades, categorías o clases** de los objetos.
+- No admiten operaciones aritméticas directas.
+- **Nominales**: funcionan como códigos sin orden implícito.
+  - Ejemplos: ciudades, países, identificadores.
+- **Categóricas (u ordinales)**: representan categorías con **orden o jerarquía**.
+  - Ejemplos: niveles educativos, estratos socioeconómicos, posiciones en rankings.
+- Sus valores se denominan **modalidades** u **opciones de respuesta**.
+
+:::
+
+## Variables cuantitativas
+
+::: {.incremental}
+
+- Se expresan en una **escala numérica** y admiten comparaciones métricas.
+- Permiten definir distancias y aplicar operaciones aritméticas.
+- **Continuas**: toman valores en un intervalo continuo.
+  - Ejemplos: altura, edad, ingresos, longitud.
+- **Discretas**: toman valores enteros.
+  - Ejemplos: número de habitantes, conteos de eventos.
+  - Los promedios pueden producir valores no directamente interpretables (p. ej., 4.6 aviones por minuto).
+
+:::
+
+## Tipos de variables y métodos multivariados
+
+<div style="text-align:center; font-size:1.25em; line-height:1.6;">
+
+<strong>Las variables son de tipo...</strong>
+
+<div style="display:flex; justify-content:space-around; align-items:center;">
+
+<div>
+🔢<br>
+<strong>Cuantitativas</strong><br>
+<small>continuas o discretas numéricas</small><br>
+⬇️<br>
+<h3>PCA</h3>
+</div>
+
+<div>
+🏷️<br>
+<strong>Cualitativas</strong><br>
+<small>nominales u ordinales</small><br>
+⬇️<br>
+<h3>MCA</h3>
+</div>
+
+<div>
+🧩<br>
+<strong>Mixtas / por grupos</strong><br>
+<small>bloques de variables</small><br>
+⬇️<br>
+<h3>MFA</h3>
+</div>
+
+</div>
+</div>
+
+<p style="text-align:center; font-style:italic; opacity:0.8;">
+El tipo de variable define la geometría del espacio y la métrica del análisis.
+</p>
 
 ## Proceso de analítica
 
@@ -907,4 +1038,486 @@ p
 Los dos vectores que representan los ranking SC y WEB reflejan su grado de asociación visualizado en la gráfica b). El vector QS muestra el grado de independencia de éste con los otros dos rankings, ya identificada en los gráficos a) y c).
 
 </div>
+
+## Resultados recientes
+
+::: columns
+::: {.column width="50%"}
+
+**Ranking QS**
+
+![](images/rankQS.jpeg){width=80%}
+
+:::
+::: {.column width="50%"}
+
+**Ranking SCImago**
+
+![](images/rankSc.jpeg){width=80%}
+
+:::
+:::
+
+
+# Análisis de Correspondencias Simples - ACS {background-color="#0077b6"}
+
+---
+
+## Tablas de contingencia - TC
+
+Una **TC** organiza las frecuencias de las modalidades de dos variables cualitativas, $X$ con $I$ filas e $Y$ con $J$ columnas:
+
+$$G=\{n_{ij}\}=\begin{pmatrix} n_{11}& n_{12}& \cdots& n_{1J}\\ n_{21}& n_{22}& \cdots& n_{2J}\\ \vdots& \vdots& \ddots& \vdots\\ n_{I1}& n_{I2}& \cdots& n_{IJ} \end{pmatrix}$$
+
+$n_{ij}$ es el número de individuos que presentan simultáneamente la modalidad $i$ de $X$ y la modalidad $j$ de $Y$, con tamaño muestral total
+
+<div style="margin-top:-35px;">
+
+$$
+n=\sum_{i=1}^{I}\sum_{j=1}^{J} n_{ij}.
+$$
+
+</div>
+
+## Perfiles fila y perfiles columna
+
+El análisis de una tabla de contingencia permite estudiar la **asociación entre variables cualitativas** a través de los perfiles fila y columna.
+
+Cada fila define un **perfil fila**: distribución condicional de $Y$ dada la modalidad $i$ de $X$:
+
+$$f_{ij}=\frac{n_{ij}}{n_{i\cdot}},\quad n_{i\cdot}=\sum_{j=1}^J n_{ij}$$
+
+Cada columna define un **perfil columna**: distribución condicional de $X$ dada la modalidad $j$ de $Y$:
+
+$$c_{ij}=\frac{n_{ij}}{n_{\cdot j}},\quad n_{\cdot j}=\sum_{i=1}^I n_{ij}$$
+
+## Conexión con la teoría de probabilidad
+
+Si dos variables $X$ e $Y$ son **independientes**, entonces:
+
+$$P(X=i,Y=j) = P(X=i)\,P(Y=j)$$
+
+. . .
+
+Empíricamente, esta independencia se traduce en:
+
+$$\frac{n_{ij}}{n} \approx \frac{n_{i\cdot}}{n}\,\frac{n_{\cdot j}}{n}$$
+
+. . .
+
+Las **desviaciones respecto a esta estructura de independencia** contienen toda la información sobre la asociación entre modalidades y constituyen el objeto de análisis del **Análisis de Correspondencias Simples (ACS)**.
+
+## Distancia chi-cuadrado
+
+Para cuantificar la proximidad entre perfiles se introduce la **distancia $\chi^2$**. Entre dos perfiles fila $i$ e $i'$:
+
+$$d_{\chi^2}^2(i,i')=\sum_{j=1}^J \frac{1}{n_{\cdot j}/n} \left(\frac{n_{ij}}{n_{i\cdot}}-\frac{n_{i'j}}{n_{i'\cdot}}\right)^2$$
+
+. . .
+
+Esta métrica **pondera las diferencias entre perfiles** según la importancia de cada modalidad, medida por su frecuencia marginal. Constituye el fundamento geométrico del **Análisis de Correspondencias Simples**, que busca representar las nubes de perfiles en espacios de baja dimensión conservando dichas distancias.
+
+## Ejemplo: Encuesta Mundial de Valores (EMV)
+
+La  **Encuesta Mundial de Valores** es un estudio internacional comparativo que se realiza periódicamente desde 1981. Su objetivo es medir **valores, creencias y actitudes** de la población sobre múltiples temas sociales y culturales.
+
+Una de sus preguntas indaga por la **confianza en la justicia** en países latinoamericanos:
+
+> *¿Cree usted que la justicia en este país se aplica de manera justa para todos, independientemente de su origen social o económico?*
+
+| Muchísimo | Mucho | No mucho | Nada |
+|:---------:|:-----:|:--------:|:----:|
+
+
+## EMV: Carga de datos
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+library(pacman)
+p_load(here, tidyr, dplyr, ggplot2, FactoMineR, factoextra, gt)
+
+confianzaJUstcia <- read.csv2(here::here("datos/ConfianzaJusticia.csv"))
+rownames(confianzaJUstcia) <- confianzaJUstcia$Pais
+confianzaJUstcia$Pais <- NULL
+confianzaJUstcia <- confianzaJUstcia[order(-confianzaJUstcia[, 1]), -c(5, 6)]
+
+paises_interes <- c("Mexico", "Colombia", "Ecuador", "Chile",
+                    "Peru", "Argentina", "Brasil")
+confianzaJUstcia_filtrado <- confianzaJUstcia[
+  rownames(confianzaJUstcia) %in% paises_interes, ]
+```
+
+## EMV: Tabla de contingencia
+
+Resultados de la confianza en la justicia en países seleccionados.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| prefer-html: true
+
+conf_tot <- cbind(confianzaJUstcia_filtrado,
+                  Total = rowSums(confianzaJUstcia_filtrado))
+conf_tot <- rbind(conf_tot, Total = colSums(conf_tot))
+
+conf_tot |>
+  as.data.frame() |>
+  tibble::rownames_to_column("País") |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(rows = nrow(conf_tot))) |>
+  tab_options(table.font.size = px(14),
+              data_row.padding = px(4),
+              table.width = pct(100))
+```
+
+## EMV: Perfiles fila
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 13
+#| fig-height: 5
+#| out-width: 100%
+
+perf_fil <- round(prop.table(as.matrix(confianzaJUstcia_filtrado), margin = 1), 3)
+perf_fil <- perf_fil[order(-perf_fil[, 1]), ]
+
+perf_df <- as.data.frame(perf_fil) |>
+  tibble::rownames_to_column("Pais") |>
+  pivot_longer(cols = -Pais, names_to = "Modalidad", values_to = "Perfil") |>
+  mutate(Pais = factor(Pais, levels = rownames(perf_fil)))
+
+ggplot(perf_df, aes(x = Modalidad, y = Perfil)) +
+  geom_col(fill = "#1F3B73", width = 0.8) +
+  geom_text(aes(label = sprintf("%.3f", Perfil)),
+            vjust = -0.35, size = 2.9) +
+  facet_wrap(~ Pais, ncol = 4) +
+  scale_y_continuous(limits = c(0, max(perf_df$Perfil) * 1.18),
+                     expand = expansion(mult = c(0, 0))) +
+  labs(x = "Modalidad de respuesta", y = "Perfil condicional (frecuencia relativa)") +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 30, hjust = 1, size = 9)
+  )
+```
+
+## EMV: Plano de correspondencias simples
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| fig-align: center
+
+confpaises <- CA(as.matrix(confianzaJUstcia_filtrado), graph = FALSE)
+
+fviz_ca_biplot(confpaises, repel = TRUE) +
+  theme_classic(base_size = 14) +
+  labs(title = "Plano de correspondencias — Confianza en la justicia (EMV)")
+```
+
+<div style="font-size: 0.75em;">
+
+Los países en la misma dirección de una modalidad muestran mayor afinidad con esa percepción de confianza. Los países en la misma dirección de una modalidad muestran mayor afinidad con esa percepción.
+
+</div>
+
+# Correspondencias Múltiples {background-color="#0077b6"}
+
+---
+
+## Encuesta de Cultura Ciudadana (ECC)
+
+::: columns
+::: {.column width="55%"}
+
+La **Encuesta de Cultura Ciudadana (ECC)** fue realizada por la Corporación Visionarios en varias ciudades latinoamericanas. Es un instrumento de observación y análisis de distintos aspectos relacionados con la cultura ciudadana y el comportamiento social.
+
+:::
+::: {.column width="45%"}
+
+**Entre sus temas se incluyen:**
+
+- Sentimientos frente a normas (Ley, Moral, Cultura)
+- Capacidades para cumplir acuerdos
+- Pluralismo e inclusión
+- Seguridad y confianza interpersonal
+- Confianza en instituciones
+
+:::
+:::
+
+## ECC: Pregunta sobre desobediencia de la ley
+
+</br>
+
+**Pregunta 20.** *¿En su opinión se justifica o no desobedecer la ley en los siguientes casos?*
+
+</br>
+
+::: columns
+::: {.column width="50%"}
+
+a. Cuando es la única manera de alcanzar sus objetivos
+b. Cuando es la única manera de ayudarle a la familia
+c. Para luchar públicamente contra una ley o régimen injusto
+d. Cuando es muy provechoso económicamente
+e. Cuando la creencia religiosa lo permite
+f. Para responder a una ofensa al honor
+
+:::
+::: {.column width="50%"}
+
+g. Cuando es bastante seguro que uno no será castigado
+h. Cuando alguien lo ha hecho y le ha ido bien
+i. Cuando es lo acostumbrado
+j. Para pagar un favor
+k. Para defender propiedades o bienes
+
+:::
+:::
+
+## ECC: Frecuencias de respuesta Sí/No por ciudad
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+library(pacman)
+p_load(here, tidyr, dplyr, ggplot2)
+
+CCLatin <- read.csv2(here::here("datos/Muestra_CC.csv"), sep = ";")
+cclat_p20 <- CCLatin[, c("city", paste0("P20_", letters[1:11]))]
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 12
+#| fig-height: 5
+#| out-width: 100%
+
+datos_long_cc <- cclat_p20 |>
+  select(city, paste0("P20_", letters[1:11])) |>
+  pivot_longer(cols = starts_with("P20_"),
+               names_to = "Item", values_to = "Valor") |>
+  mutate(
+    Respuesta = case_when(
+      grepl("=1_", Valor) ~ "Sí",
+      grepl("=2_", Valor) ~ "No",
+      TRUE ~ NA_character_
+    ),
+    Respuesta = factor(Respuesta, levels = c("Sí","No")),
+    Item = factor(Item,
+                  levels = paste0("P20_", letters[1:11]),
+                  labels = paste0("P20", letters[1:11]))
+  ) |>
+  filter(!is.na(Respuesta), !is.na(city)) |>
+  count(city, Item, Respuesta, name = "Frecuencia")
+
+ggplot(datos_long_cc, aes(x = city, y = Frecuencia, fill = Respuesta)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  facet_wrap(~ Item) +
+  scale_fill_manual(values = c("Sí" = "#C0392B", "No" = "#1F3B73")) +
+  labs(title = "P20 (a–k). Frecuencias de respuesta Sí/No por ciudad",
+       x = "Ciudad", y = "Frecuencia", fill = "Respuesta") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## ECC: Plano de correspondencias múltiples
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| fig-align: center
+
+res_mca <- MCA(cclat_p20, quali.sup = 1, graph = FALSE)
+
+fviz_mca_var(res_mca, repel = TRUE) +
+  theme_classic(base_size = 13) +
+  labs(title = "ACM — Tendencias a justificar la desobediencia de la ley por ciudades")
+```
+
+<div style="font-size: 0.75em;">
+
+Las modalidades cercanas en el plano presentan patrones de respuesta similares entre las ciudades encuestadas. La tendencia general es no justificar la desobediencia, pero ítems como P20b, P20c y P20k muestran mayor cercanía entre Sí y No.
+
+</div>
+
+# Agrupamiento (*Clustering*) {background-color="#0077b6"}
+
+---
+
+## Sistema Universitario Estatal (SUE)
+
+El **Sistema Universitario Estatal (SUE)** es una red de universidades públicas colombianas, orientada hacia la colaboración académica, la investigación y la gestión conjunta de recursos.
+
+Para este ejemplo se utilizan **seis indicadores** del año 2012 para **32 universidades estatales**:
+
+::: columns
+::: {.column width="50%"}
+
+- Docentes de tiempo completo o equivalente (**DCTC2012**)
+- Gastos en personal administrativo (**GPA2012**)
+- Matrícula de pregrado (**MPRE2012**)
+
+:::
+::: {.column width="50%"}
+
+- Matrícula de posgrado (**MPOS2012**)
+- Graduados de pregrado (**GrPre2012**)
+- Graduados de posgrado (**GrPos2012**)
+
+:::
+:::
+
+## SUE: Datos
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+library(pacman)
+p_load(here, janitor)
+
+SUE <- read.csv2(here::here("datos/SUEsolo2012.csv"), sep = ";")
+rownames(SUE) <- SUE$Universidades
+xsue <- SUE[, -1]
+```
+
+<div style="height:380px; overflow-y:auto;">
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| prefer-html: true
+
+library(gt)
+
+SUE |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  fmt_number(columns = where(is.numeric), decimals = 0, sep_mark = ".") |>
+  tab_options(table.font.size = px(13),
+              data_row.padding = px(3),
+              table.width = pct(100))
+```
+</div>
+
+## SUE: Dispersogramas entre indicadores
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 13
+#| fig-height: 7
+#| out-width: 100%
+
+library(ggplot2)
+library(ggrepel)
+library(purrr)
+library(patchwork)
+
+vars <- names(xsue)
+pares <- combn(vars, 2, simplify = FALSE)
+
+plot_pair <- function(v1, v2) {
+  df_p <- data.frame(x = xsue[[v1]], y = xsue[[v2]],
+                     Universidad = rownames(xsue))
+  ggplot(df_p, aes(x = x, y = y, label = Universidad)) +
+    geom_point(size = 1.2, color = "steelblue") +
+    geom_text_repel(size = 2.2, max.overlaps = 10) +
+    labs(title = paste(v1, "vs", v2), x = v1, y = v2) +
+    theme_minimal(base_size = 10)
+}
+
+graficos <- map(pares, ~ plot_pair(.x[1], .x[2]))
+wrap_plots(graficos, ncol = 5)
+```
+
+## SUE: Dendrograma jerárquico (Ward)
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 13
+#| fig-height: 6
+#| out-width: 100%
+
+library(ggdendro)
+library(ggplot2)
+
+hsue <- hclust(dist(scale(xsue)), method = "ward.D2")
+
+# Comparación de cortes en 3 y 4 grupos
+par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
+plot(hsue, cex = 0.6, main = "Agrupamiento en 3 clases",
+     xlab = "", sub = "", ylab = "Altura")
+rect.hclust(hsue, k = 3, border = "#C0392B")
+plot(hsue, cex = 0.6, main = "Agrupamiento en 4 clases",
+     xlab = "", sub = "", ylab = "Altura")
+rect.hclust(hsue, k = 4, border = "#1F3B73")
+```
+
+## SUE: Clusters en el plano PCA
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 10
+#| fig-height: 6
+#| out-width: 100%
+#| fig-align: center
+
+library(ggplot2)
+library(ggrepel)
+
+pca_sue <- prcomp(xsue, scale. = TRUE)
+coord_sue <- as.data.frame(pca_sue$x[, 1:2])
+colnames(coord_sue) <- c("PC1", "PC2")
+
+cl <- cutree(hsue, k = 3)
+coord_sue$Cluster   <- factor(cl, labels = paste0("Grupo ", 1:3))
+coord_sue$Universidad <- rownames(xsue)
+
+ggplot(coord_sue, aes(PC1, PC2, color = Cluster, label = Universidad)) +
+  geom_point(size = 2.5) +
+  geom_text_repel(size = 2.8, max.overlaps = 20) +
+  stat_ellipse(level = 0.85, linewidth = 0.8, alpha = 0.15,
+               aes(fill = Cluster), geom = "polygon") +
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  labs(title = "Clusters jerárquicos (Ward) en el plano PC1–PC2",
+       color = "Cluster", fill = "Cluster") +
+  theme_classic(base_size = 13) +
+  theme(legend.position = "right")
+```
 
