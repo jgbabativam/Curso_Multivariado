@@ -1582,14 +1582,6 @@ ggplot(coord_sue, aes(PC1, PC2, color = Cluster, label = Universidad)) +
 
 # GRACIAS! {background-color="#ddf3ff"}
 
-# Referencias
-
--	Corzo, J. (2026). Aprendizaje estadístico no supervisado con aplicaciones en R. Notas de clase. 
-
-- Husson, F., Lê, S., & Pagès, J. (2017). Exploratory multivariate analysis by example using R. CRC press.
-
-- Hair, J. F., Black, W. C., Babin, B. J., Anderson, R. E., & Tatham, R. L. (2006). Multivariate data analysis 6th Edition.  https://doi.org/10.1201/9780367409913
-
  
 # Citación y derechos de autor
 
