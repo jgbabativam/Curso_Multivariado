@@ -36,13 +36,19 @@ p_load(here)
 
 ## Contenido
 
-Para tener una tabla de contenido automática en Revealjs, usualmente se configura en el YAML, pero puedes usar este espacio para organizar tus secciones.
+1. Observaciones multivariadas
+2. Datos: tabla, vector de medias, matrices de covarianzas y correlación
+3. Combinaciones lineales (Ejemplo: ARWU)
+4. Componentes Principales
+5. Teorema de la Descomposición Espectral (TDE)
+6. Teorema de la Descomposición en Valores Singulares (TDVS)
+7. Datos atípicos: Distancia de Mahalanobis
+8. Distancias entre observaciones multivariadas
+9. Laboratorio
 
 # Observaciones multivariadas
 
 ## Observaciones multivariadas
-
-Para la construcción de los análogos multivariados de las medidas descriptivas univariadas primero se requiere definir las observaciones multivariadas.
 
 En el contexto multivariado, en lugar de una, se observan $p$ variables $X_1,\ldots,X_p$ simultáneamente sobre el mismo objeto $i$ (ciudad, universidad, persona, etc.), y por tanto una observación para el objeto $i$ es un vector de $p$ componentes:
 
@@ -59,7 +65,9 @@ Para $n$ objetos, las observaciones se arreglan en una tabla de datos como la si
 | Objeto | $X_1$ | $X_2$ | $\cdots$ | $X_p$ |
 |:------:|:-----:|:-----:|:--------:|:-----:|
 | 1 | $x_{11}$ | $x_{12}$ | $\cdots$ | $x_{1p}$ |
-| $\vdots$ | $\vdots$ | $\vdots$ | $\ddots$ | $\vdots$ |
+| $\vdots$ | $\vdots$ | $\vdots$ | $\cdots$ | $\vdots$ |
+| $\vdots$ | $\vdots$ | $x_{ij}$ | $\ddots$ | $\vdots$ |
+| $\vdots$ | $\vdots$ | $\vdots$ | $\cdots$ | $\vdots$ |
 | n | $x_{n1}$ | $x_{n2}$ | $\cdots$ | $x_{np}$ |
 
 ## Media, Varianza y Correlación
@@ -73,10 +81,16 @@ r_{jk} &= \frac{s_{jk}}{s_j s_k} && \text{correlación}
 \end{aligned}
 $$
 
+<p style="font-size:0.75em; opacity:0.8; text-align:left; margin-top:20px;">
+Nótese que para el cálculo de la varianza se utilizó como denominador <em>n</em>,
+debido a que en datos multivariados se considera suficientemente grande como
+para que <em>s</em><sup>2</sup> siga siendo un estimador insesgado de la varianza poblacional.
+</p>
+
 ## Tabla vs. Matriz
 
 - **Tabla:** Para referirse a los datos con nombres en filas y columnas.
-- **Matriz:** Cuando se van a utilizar las propiedades algebraicas de la tabla.
+- **Matriz:** Para utilizar las propiedades algebraicas de la tabla.
 
 $$X = \{x_{ij}\} = \begin{bmatrix}
 x_{11} & x_{12} & \cdots & x_{1p} \\
@@ -91,7 +105,7 @@ x_{n1} & x_{n2} & \cdots & x_{np}
 
 En esta matriz, la columna $j$ representa las observaciones de la variable $X_j$ sobre los $n$ objetos y se denota como un vector columna:
 
-$$X_j = \begin{bmatrix}
+$$X_{\cdot j} = \begin{bmatrix}
 x_{1j} \\
 x_{2j} \\
 \vdots \\
@@ -103,7 +117,7 @@ x_{nj}
 Análogamente, la fila $i$, o el punto objeto $i$, representa las observaciones de las $p$ variables sobre el objeto $i$ que se denota como un vector columna:
 
 $$
-x_i = (x_{i1}, \ldots, x_{ip})' = \begin{bmatrix}
+x_{i \cdot} = (x_{i1}, \ldots, x_{ip})' = \begin{bmatrix}
 x_{i1} \\
 x_{i2} \\
 \vdots \\
@@ -124,30 +138,75 @@ $$\bar{x} = \begin{bmatrix}
 
 ## Ejemplo: Ciudades Colombianas
 
-```{r}
-#| label: tbl-ciudades
-#| tbl-cap: "Tabla de datos multivariados de ciudades colombianas"
-#| echo: false
-#| message: false
+</br></br></br>
 
-library(kableExtra)
+```{r}
+#| echo: true
+library(pacman)
+p_load(tidyverse, janitor, corrplot, gt)
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
-ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") 
+ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") |> clean_names()
+```
 
-# Simulación de carga para que el render funcione si no encuentra el archivo:
-# rownames(ciudades) <- ciudades[,1]
-
-knitr::kable(head(ciudades[,-1]), digits = 2) %>%
-  kable_styling(
-    font_size = 18,
-    latex_options = c("striped", "scale_down")
+--- 
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| prefer-html: true
+ciudades |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  
+  # Línea superior e inferior de toda la fila
+  tab_style(
+    style = cell_borders(
+      sides = c("top", "bottom"),
+      color = "#1F3B73",
+      weight = px(2)
+    ),
+    locations = cells_body(rows = 5)
+  ) |>
+  
+  # Borde izquierdo (primera columna)
+  tab_style(
+    style = cell_borders(
+      sides = "left",
+      color = "#1F3B73",
+      weight = px(2)
+    ),
+    locations = cells_body(rows = 5, columns = 1)
+  ) |>
+  
+  # Borde derecho (última columna)
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#1F3B73",
+      weight = px(2)
+    ),
+    locations = cells_body(rows = 5, columns = ncol(ciudades))
+  ) |>
+  
+  tab_options(
+    table.font.size = px(14),
+    data_row.padding = px(4),
+    table.width = pct(100)
   )
 ```
 
 ## Fila de la tabla de datos
 
-La fila 5 de la Tabla @tab-CiuIndEdu es la observación de las cinco variables para la ciudad de Cali (objeto 5):
+</br>
+
+La fila 5 de la Tabla es la observación de las cinco variables para la ciudad de Cali (objeto 5):
+
+</br>
 
 $$x_{5}=(2169801, 0.08, 1.02, 0.22, 22)^\prime=
 \begin{bmatrix}
@@ -162,7 +221,11 @@ $$x_{5}=(2169801, 0.08, 1.02, 0.22, 22)^\prime=
 
 ## Columna de la tabla de datos
 
+</br>
+
 La variable $X_4$ (Cobertura en educación superior) es la columna:
+
+</br>
 
 $$X_4=
 \begin{bmatrix}
@@ -176,6 +239,8 @@ $$X_4=
 ## Vector de medias o centroide
 
 **Vector de medias o centroide**
+
+</br>
 
 $$
 \text{med}(X) = \bar{x}=
@@ -192,35 +257,29 @@ $$
 1
 \end{bmatrix}
 $$
+
 ---
 
 ## Ejemplo: Vector de medias
 
-El vector de medias de las variables de la tabla de ciudades expresado como un vector es: $\bar{x}^\prime = (888021.77, 0.12, 1.09, 0.21, 23.27)^\prime$, el cual se muestra en la @tbl-VecMedias:
+</br>
 
 ```{r}
-#| label: tbl-VecMedias
-#| tbl-cap: "Vector de medias para variables de educación de la tabla de ciudades"
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
-library(knitr)
-library(kableExtra)
-
-# Cálculo de las medias
-med <- as.data.frame(round(colMeans(ciudades[, 2:6]), 2))
-colnames(med) <- c("Media")
-
-# Generación de la tabla
-kable(med, booktabs = TRUE) %>%
-  kable_styling(
-    latex_options = c("striped", "hold_position"),
-    bootstrap_options = c("striped", "hover")
-  )
+(med <- round(colMeans(ciudades[, 2:6]), 2))
 ```
 
+</br>
+
+El vector de medias de las variables de la tabla de ciudades expresado como un vector es: $\bar{x}^\prime = (888021.77, 0.12, 1.09, 0.21, 23.27)^\prime$:
+
+
 ## Matriz de datos centrados
+
+</br>
 
 $$ \tilde{X} = \left\{\tilde{x}_{ij} \right\} = 
 \left\{ {x_{ij}- \bar{x}_j} \right\} = \left[ \begin{array}{cccc}
@@ -230,34 +289,70 @@ $$ \tilde{X} = \left\{\tilde{x}_{ij} \right\} =
 {x_{n1}-\bar{x}_1} & {x_{n2}-\bar{x}_2} & \cdots& {x_{np}-\bar{x}_p}
 \end{array} \right] $$
 
-## Matriz de datos centrados: Propiedades
+Oberve que:
 
-Se puede comprobar fácilmente que todas las variables tienen media cero. El resultado se muestra en la @tbl-DatosCent:
+$$\operatorname{med}(\tilde{X}) =
+\frac{1}{n}\,\tilde{X}^{\prime}\mathbf{1}_n
+=
+\left(
+\frac{1}{n}X^{\prime}\mathbf{1}_n
+-
+\frac{1}{n}\bar{x}^{\prime}\mathbf{1}_n^{\prime}\mathbf{1}_n
+\right)
+= 0$$
+
+## Matriz de datos centrados
+
+Se puede comprobar fácilmente que todas las variables tienen media cero:
 
 ```{r}
-#| label: tbl-DatosCent
-#| tbl-cap: "Matriz de datos centrados"
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
-library(knitr)
-library(kableExtra)
+Xtil <- ciudades |> 
+        column_to_rownames("ciudades") |> 
+        mutate(across(where(is.numeric), ~ . - mean(.)))
+```
 
-# Cálculo de la matriz centrada
-# Nota: Asegúrese de que el objeto 'ciudades' esté cargado previamente
-Xtil <- scale(ciudades[, 2:6], scale = FALSE)
+<div style="height:400px; overflow-y:auto;">
 
-# Generación de la tabla optimizada para Quarto
-kable(Xtil, booktabs = TRUE, digits = 3) %>%
-  kable_styling(
-    latex_options = c("striped", "hold_position", "scale_down"),
-    bootstrap_options = c("striped", "hover", "condensed")
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| prefer-html: true
+Xtil |> as.data.frame() |> rownames_to_column("ciudades") |> 
+  gt() |>
+  opt_row_striping() |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  
+  # Línea superior e inferior de toda la fila
+  tab_style(
+    style = cell_borders(
+      sides = c("top", "bottom"),
+      color = "#1F3B73",
+      weight = px(2)
+    ),
+    locations = cells_body(rows = 5)
+  ) |> 
+  tab_options(
+    table.font.size = px(14),
+    data_row.padding = px(4),
+    table.width = pct(100)
   )
 ```
+
+</div>
+
 ## Matriz de covarianzas
 
 La matriz de covarianzas se define a partir de la matriz de datos centrados $\tilde{X}$:
+
+</br>
 
 $$ S = \frac{1}{n} \tilde{X}^\prime \tilde{X} =  \left[ \begin{array}{cccc}
 s_1^2 & s_{12} & \cdots & s_{1p} \\
@@ -270,9 +365,13 @@ s_{p1} & s_{p2} & \cdots & s_p^2
 
 ## Otras medidas de variabilidad multivariada
 
-**Varianza generalizada:** definida como el determinante de la matriz de covarianzas $|S|$.
+</br> 
 
-**Varianza total:** definida como $Tr(S)$ (la traza de la matriz).
+* **Varianza generalizada:** definida como el determinante de la matriz de covarianzas $|S|$.
+
+* **Varianza total:** definida como $traza(S)$.
+
+</br> 
 
 Estas medidas se pueden expresar en términos de los **valores propios** de $S$, los cuales, como se verá más adelante, representan las varianzas de las componentes principales (factores).
 
@@ -282,33 +381,37 @@ Estas medidas se pueden expresar en términos de los **valores propios** de $S$,
 
 A continuación se presenta la matriz de covarianzas calculada para las variables del conjunto de datos de ciudades:
 
+```{r, echo=TRUE, eval=FALSE}
+(mat_cov <- round(var(ciudades[, 2:6]), 2))
+```
+
+</br>
+
+
 ```{r}
-#| label: tbl-MatCov
-#| tbl-cap: "Matriz de covarianzas de las variables del archivo de ciudades"
-#| echo: false
-#| message: false
-#| warning: false
+library(gt)
 
-library(knitr)
-library(kableExtra)
+mat_cov <- round(var(ciudades[, 2:6]), 2)
 
-# Cálculo de la matriz de covarianza
-# Se asume que el objeto 'ciudades' ya está cargado
-MC <- round(var(ciudades[, 2:6]), 3)
-
-# Renderizado de la tabla
-kable(MC, booktabs = TRUE) %>%
-  kable_styling(
-    latex_options = c("striped", "hold_position", "scale_down"),
-    bootstrap_options = c("striped", "hover", "condensed")
+as.data.frame(mat_cov) |>
+  tibble::rownames_to_column(" ") |>
+  gt() |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  cols_align(align = "center") |>
+  tab_options(
+    table.font.size = px(20),
+    data_row.padding = px(6),
+    table.width = pct(70)
   )
 ```
 
+
 ## Matriz de datos centrados y estandarizados
 
-Contiene las observaciones centradas y estandarizadas:
-
-$$y_{ij} = \frac{x_{ij}- \bar{x}_j}{s_j}$$
+Contiene las observaciones centradas y estandarizadas: $y_{ij} = \frac{x_{ij}- \bar{x}_j}{s_j}$
 
 $$ Y = \left\{y_{ij} \right\} = \left[ \begin{array}{cccc}
 \frac{x_{11}-\bar{x}_1}{s_1} & \frac{x_{12}-\bar{x}_2}{s_2} & \cdots &\frac{x_{1p}-\bar{x}_p}{s_p} \\
@@ -317,11 +420,31 @@ $$ Y = \left\{y_{ij} \right\} = \left[ \begin{array}{cccc}
 \frac{x_{n1}-\bar{x}_1}{s_1} & \frac{x_{n2}-\bar{x}_2}{s_2} & \cdots& \frac{x_{np}-\bar{x}_p}{s_p}
 \end{array} \right] $$
 
-De esta manera, se cumple que para cada variable $j$: $media(Y_j) = 0$ y $var(Y_j) = 1$.
+De esta manera $\bar{Y_j} = 0$ y $Var(Y_j) = 1$.
+
+## Propiedades {.incremental}
+
+- La matriz de datos centrados estandarizados se obtiene al estandarizar la matriz de datos centrados $\tilde{X}$:
+
+$$
+\tilde{Y} = \tilde{X} D^{-1/2}, 
+\qquad
+D = \operatorname{diag}\{s_j^2\}, 
+\qquad
+D^{-1/2} = \operatorname{diag}\!\left(\frac{1}{s_j}\right).
+$$
 
 
+- El vector de medias de $\tilde{Y}$ es nulo:
 
----
+$$
+\operatorname{med}(\tilde{Y})
+= \tilde{Y}^{\prime}\mathbf{1}_n
+= D^{-1/2}\tilde{X}^{\prime}\mathbf{1}_n
+= D^{-1/2}\cdot 0
+= 0.
+$$
+
 
 ## Matriz de correlación
 
@@ -334,44 +457,145 @@ r_{21} & 1 & \cdots & r_{2p} \\
 r_{p1} & r_{p2} & \cdots & 1
 \end{array} \right], \quad r_{ij} = \frac{s_{ij}}{s_i s_j} $$ {#eq-matCor}
 
-## Ejemplo: Matriz de correlación
+---
+
+Matricialmente:
+
+$$
+R = D^{-1/2} S  D^{-1/2}
+$$
+Nótese que la matriz de covarianzas de $\tilde{Y}$ es también $R$, puesto que
+
+$$
+S_{\tilde{Y}}
+= \frac{1}{n}\,\tilde{Y}^{\top}\tilde{Y}
+= \frac{1}{n}\,D^{-1/2}\tilde{X}^{\top}\tilde{X}\,D^{-1/2}
+= D^{-1/2} S D^{-1/2}
+= R.
+$$
+
+## Ejemplo: Matriz de correlación 
 
 Matriz de correlación entre las variables del archivo de ciudades:
 
+::: {.panel-tabset}
+
+### Matriz
+
+```{r, echo=TRUE, eval=FALSE}
+(mat_cor <- round(cor(ciudades[, 2:6]), 2))
+```
+
 ```{r}
-#| label: tbl-MatCor
-#| tbl-cap: "Matriz de correlación de las variables del archivo de ciudades"
 #| echo: false
 #| warning: false
 #| message: false
 
-library(knitr)
-library(kableExtra)
+mat_cor <- round(cor(ciudades[, 2:6]), 2)
 
-# Cálculo de la matriz de correlación
-# Se asume que el objeto 'ciudades' ya ha sido cargado en el entorno
-MCor <- round(cor(ciudades[, 2:6]), 2)
-
-# Generación de la tabla con soporte multiformato (PDF/HTML)
-kable(MCor, booktabs = TRUE) %>%
-  kable_styling(
-    latex_options = c("striped", "hold_position", "scale_down"),
-    bootstrap_options = c("striped", "hover", "condensed")
+as.data.frame(mat_cor) |> 
+  tibble::rownames_to_column(" ") |>
+  gt() |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |>
+  cols_align(align = "center") |>
+  tab_options(
+    table.font.size = px(20),
+    data_row.padding = px(6),
+    table.width = pct(70)
   )
 ```
 
-# Combinaciones lineales
+### Gráfico
 
-## Definición de Combinación Lineal
+```{r, echo=TRUE}
+corrplot(mat_cor, method = "color",  type = "upper",  addCoef.col = "black", tl.col = "black", tl.srt = 45, col = colorRampPalette(c("#2c7bb6", "white", "#d7191c"))(200), diag = FALSE, number.cex = 0.8)
+```
 
-Una combinación lineal es una suma ponderada de los valores de una variable observada en varios objetos. Algunos ejemplos fundamentales son:
+:::
 
-* **La media:** Es la suma de los valores de la variable ponderados por $1/n$.
-* **La varianza:** Es la suma de los desvíos de los valores de la variable respecto a la media $(x_i - \bar{x})^2$ ponderados por $1/n$.
+## Matriz de datos centrados, estandarizados y normados {.incremental}
+
+Sea $Y$ la matriz de datos centrados, estandarizados y normados
+
+$$
+Y = \frac{1}{\sqrt{n}}\,\tilde{Y}
+= \frac{1}{\sqrt{n}}\,\tilde{X}\,D^{-1/2}
+$$
+
+::: {.fragment}
+
+Esta matriz también está centrada puesto que
+
+$$
+\mathrm{med}(Y)
+= \frac{1}{\sqrt{n}}\,\mathrm{med}(\tilde{Y})
+= 0.
+$$
+
+:::
+
+::: {.fragment}
+Al estar autoponderada por $\sqrt{\frac{1}{n}}$, se produce:
+
+$$
+S_Y = Y^{\top}Y
+= \frac{1}{n}\,\tilde{Y}^{\top}\tilde{Y}
+= R.
+$$
+:::
+
+## Varianza total
+
+::: {.fragment}
+La varianza total es un indicador de la variabilidad global de una matriz de datos.  
+
+Se define como la suma de las varianzas de las variables:
+
+$$
+V_T = \sum_{j=1}^{p} s_j^2
+$$
+</br> 
+
+donde $s_j^2$ es la varianza de la variable $X_j$.
+:::
 
 ---
 
-## Combinaciones lineales de múltiples variables
+::: {.fragment}
+En particular, para las matrices de datos centrados y estandarizados se tiene
+
+$$
+S_{\tilde{Y}} = S_Y = R
+$$
+
+donde $R$ es la matriz de correlaciones.
+:::
+
+</br> 
+
+::: {.fragment}
+Como la diagonal de $R$ está compuesta por unos, se obtiene
+
+$$
+V_T(\tilde{Y}) = V_T(Y) = \operatorname{tr}(R) = p.
+$$
+:::
+
+# Combinaciones lineales
+
+## Definición de Combinación Lineal {.incremental}
+
+Una combinación lineal es una suma ponderada de los valores de una variable observada en varios objetos. Algunos ejemplos fundamentales son:
+
+- **La media:** Es la suma de los valores de la variable ponderados por $1/n$.
+- **La varianza:** Es la suma de los desvíos de los valores de la variable respecto a la media $(x_i - \bar{x})^2$ ponderados por $1/n$.
+
+---
+
+## Combinaciones lineales de múltiples variables {.incremental}
 
 También se define como combinación lineal a la suma ponderada de los valores de **varias variables** observadas en un mismo objeto. Por ejemplo:
 
@@ -390,6 +614,8 @@ Las combinaciones lineales son herramientas esenciales en el análisis de datos 
 
 Un caso destacado son las **Componentes Principales**, las cuales:
 
+</br> 
+
 ::: {.re-blue}
 > Son combinaciones lineales de los valores de las variables cuyas ponderaciones se construyen para que contengan la mayor cantidad posible de la varianza de las variables originales.
 :::
@@ -398,15 +624,17 @@ Un caso destacado son las **Componentes Principales**, las cuales:
 
 Para la variable cuyas observaciones están en la columna $j$ de la matriz de datos, se define la combinación de los $n$ valores de la variable con constantes de ponderación $a^\prime = (a_1, \ldots, a_n)$ como:
 
-$$ X^\star_j = \sum_{i=1}^n a_i x_{ij}, \quad j=1,\ldots,p \quad \text{vectorialmente: } (a^\prime X_j) $$ {#eq-CoLin1}
+$$ X^\star_j = \sum_{i=1}^n a_i x_{ij}, \quad j=1,\ldots,p \quad \text{vectorialmente: } (a^\prime X_{\cdot j}) $$ 
 
 ---
 
 ## Ejemplo: El promedio
 
+</br> 
+
 En particular, el promedio de la variable $j$ es una combinación lineal con constantes de ponderación $p^\prime = (\frac{1}{n}, \ldots, \frac{1}{n})$:
 
-$$ \bar{x}_j = \sum_{i=1}^n \frac{1}{n} x_{ij} \quad \text{vectorialmente: } (p^\prime X_j) $$ {#eq-promedio}
+$$ \bar{x}_j = \sum_{i=1}^n \frac{1}{n} x_{ij} \quad \text{vectorialmente: } (p^\prime X_j) $$ 
 
 ---
 
@@ -414,14 +642,14 @@ $$ \bar{x}_j = \sum_{i=1}^n \frac{1}{n} x_{ij} \quad \text{vectorialmente: } (p^
 
 Para el objeto $i$ de la matriz de datos, cuyas observaciones están en la fila $x_i^\prime = (x_{i1}, \ldots, x_{ip})^\prime$, se define la combinación lineal de los valores de las $p$ variables con ponderaciones $b^\prime = (b_1, \ldots, b_p)$ como:
 
-$$ z_i = \sum_{j=1}^p b_j x_{ij}, \quad i=1,\ldots,n, \quad \text{vectorialmente: } (b^\prime x_i) $$ {#eq-CoLin2}
+$$ z_i = \sum_{j=1}^p b_j x_{ij}, \quad i=1,\ldots,n, \quad \text{vectorialmente: } (b^\prime x_{i \cdot}) $$ 
 
 ::: {.callout-warning}
 ### Nota importante
 Este tipo de combinaciones lineales solo tienen sentido si las variables están **estandarizadas**, o cuando todas vienen medidas en las mismas escalas.
 :::
 
-## Ejemplo: Academic Rank of World Universities (ARWU)
+## Ejemplo: Academic Rank of World Universities (ARWU) {style="font-size: 90%;"}
 
 Uno de los más exigentes rankings del mundo es el *Academic Rank of World Universities* (ARWU), que utiliza los siguientes seis criterios de actividad académica e investigativa (entre paréntesis las ponderaciones):
 
@@ -434,51 +662,66 @@ Uno de los más exigentes rankings del mundo es el *Academic Rank of World Unive
 
 ---
 
-## Puntajes de las 10 primeras universidades
+## Puntajes de las universidades
 
-Los valores de los rankings para las primeras 10 universidades en el año 2013 se presentan en la @tbl-RankArwu:
+```{r, echo=TRUE}
+library(pacman)
+p_load(tidyverse, janitor)
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+arwu <- read.csv2(paste0(url, "ARWU_100_top.csv")) |> clean_names()
+```
+
+
+<div style="height:430px; overflow-y:auto;">
 
 ```{r}
-#| label: tbl-RankArwu
-#| tbl-cap: "Puntajes de las diez primeras universidades del ARWU"
 #| echo: false
 #| message: false
 #| warning: false
+#| prefer-html: true
 
-library(knitr)
-library(kableExtra)
-
-# Nota: Ajusta la ruta a la ubicación de tu archivo
-# arwu <- read.csv2("data/ARWU_100_top.csv") 
-
-# Simulando la estructura para que el código sea reproducible:
-arwu <- data.frame(
-  Universidad = c("Harvard", "Stanford", "Berkeley", "MIT", "Cambridge", 
-                  "Caltech", "Princeton", "Columbia", "Chicago", "Oxford"),
-  Alumni = c(100, 95.5, 90.1, 88.5, 92.0, 85.0, 87.2, 86.4, 84.1, 89.0),
-  Award = c(100, 92.3, 88.4, 85.1, 90.4, 82.2, 85.0, 83.1, 81.5, 87.2),
-  HiCi = c(100, 98.1, 94.2, 92.5, 95.0, 89.4, 91.2, 90.5, 88.3, 93.1),
-  NS = c(100, 96.4, 92.3, 90.1, 93.2, 87.1, 89.5, 88.2, 86.4, 91.0),
-  PUB = c(100, 94.2, 91.5, 89.3, 92.1, 84.5, 88.0, 87.1, 85.3, 90.2),
-  PCP = c(69.2, 65.1, 62.4, 60.2, 64.1, 58.3, 61.2, 60.1, 59.4, 63.2)
-)
-rownames(arwu) <- arwu$Universidad
-arwu$Universidad <- NULL
-
-kable(arwu[1:10,], booktabs = TRUE, digits = 1) %>%
-  kable_styling(
-    latex_options = c("striped", "hold_position", "scale_down"),
-    bootstrap_options = c("striped", "hover", "condensed")
+arwu |> select(institution,
+               Alumni=alumni,
+               Award = award,
+               HiCi = hi_ci,
+               N.S = n_s,
+               PUB = pub,
+               PCP = pcp,
+               Total = total_score) |> 
+  gt() |>
+  opt_row_striping() |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) |> 
+  tab_options(
+    table.font.size = px(18),
+    data_row.padding = px(4),
+    table.width = pct(100)
   )
 ```
 
----
+</div>
 
 ## Cálculo del Puntaje Total
 
-El puntaje del ranking es una **combinación lineal** de los puntajes obtenidos por una universidad, con ponderaciones $b^\prime = (0.1, 0.2, 0.2, 0.2, 0.2, 0.1)$.
+El puntaje del ranking es una **combinación lineal** de los puntajes obtenidos por una universidad, con ponderaciones 
 
-Para la **Universidad de Harvard**, cuyos puntajes son $x_1 = (100, 100, 100, 100, 100, 69.2)$, el valor de su puntaje total es:
+$$b^\prime = (0.1, 0.2, 0.2, 0.2, 0.2, 0.1)$$
+donde $\sum_{j=1}^p b_j = 1$ y 
+
+$$y_i = \sum_{j=1}^p b_j x_{ij} = b^\prime x_{i \cdot}$$
+
+## Cálculo del Puntaje Total
+
+:::{.fragment}
+Para la **Universidad de Harvard**, cuyos puntajes son 
+$$x_1 = (100, 100, 100, 100, 100, 69.2)$$
+:::
+
+:::{.fragment}
+El valor de su puntaje total es:
 
 $$
 \begin{aligned}
@@ -488,21 +731,21 @@ y_i &= 96.92
 $$
 
 Este valor se ajusta a **100** en la tabla final como el máximo valor de referencia.
+:::
 
 ## Ejemplo: Ajuste del Ranking ARWU
 
-Para obtener los valores finales de la tabla, es necesario ajustar los resultados de la combinación lineal respecto al máximo obtenido (Harvard). 
-
-Por ejemplo, para la **Universidad de Cambridge**, el cálculo de la combinación lineal es:
+Para la **Universidad de Cambridge**, el cálculo de la combinación lineal es:
 
 $$
 \begin{aligned}
-z_5 &= 0.1(88.5) + 0.2(92.6) + 0.2(53.9) + 0.2(54.3) + 0.2(65.7) + 0.1(53.1) \\
-z_5 &= 67.46
+y_5 &= 0.1(88.5) + 0.2(92.6) + 0.2(53.9) + 0.2(54.3) + 0.2(65.7) + 0.1(53.1) \\
+y_5 &= 67.46
 \end{aligned}
 $$
 
 Considerando que el valor máximo de referencia (Harvard) fue $96.92$, el puntaje ajustado para Cambridge es:
+
 $$67.46 / 0.9692 = 69.6$$
 
 # Componentes Principales
@@ -511,46 +754,66 @@ $$67.46 / 0.9692 = 69.6$$
 
 El Análisis de Componentes Principales (ACP) se basa en la construcción de nuevas variables mediante combinaciones lineales de las originales, con las siguientes propiedades:
 
+::: {.fragment}
+
 * **Maximización de varianza:** Se orientan en las direcciones que acumulan la mayor cantidad posible de varianza de la tabla de datos $X$, lo que permite reducir la dimensionalidad.
-* **No correlación:** Son ortogonales (incorrelacionadas) entre sí, lo que facilita enormemente la representación gráfica y evita la redundancia de información.
+
+:::
+
+::: {.fragment}
+
+* **No correlación:** Son ortogonales (incorrelacionadas) entre sí, lo que facilita la representación gráfica y evita la redundancia de información.
+
+:::
 
 ---
 
 ## Construcción de las Componentes Principales
 
-Asumiendo que los datos están centrados y estandarizados: $y_{ij} = (x_{ij} - \bar{x}_j)/s_j$.
+Asumiendo que los datos están centrados y estandarizados, se utilizan ponderaciones $u_1^\prime = (u_{11}, \ldots, u_{p1})$ para definir la **primera componente**. Para cada objeto $i$, el valor de la componente se calcula como:
 
-Se utilizan ponderaciones $u_1^\prime = (u_{11}, \ldots, u_{p1})$ para definir la **primera componente**. Para cada objeto $i$, el valor de la componente se calcula como:
-
-$$ z_{i1} = u_{11}y_{i1} + u_{21}y_{i2} + \cdots + u_{p1}y_{ip} = \sum_{j=1}^p u_{j1}y_{ij}, \qquad i=1,\dots,n $$ {#eq-primeraCP}
+$$ z_{i1} = u_{11}y_{i1} + u_{21}y_{i2} + \cdots + u_{p1}y_{ip} = \sum_{j=1}^p u_{j1}y_{ij}, \qquad i=1,\dots,n $$ 
 
 De esta manera, cada uno de los $n$ puntos resultantes es un **promedio ponderado** de las variables observadas para cada objeto.
 
 # Teorema de la Descomposición Espectral
 
-## TDE y Componentes Principales (1)
+## TDE y Componentes Principales
 
-Este teorema garantiza que una matriz simétrica $B_{p \times p}$ (generalmente la matriz de correlación $R$ o la matriz de covarianzas $S$) se puede reconstruir o factorizar a partir de sus **valores** y **vectores propios**:
+Una matriz simétrica $B_{p \times p}$ (como $R$ o $S$) se puede reconstruir o factorizar a partir de sus **valores** y **vectores propios**:
 
-$$B = U \Lambda U^\prime$$ {#eq-TDespectr}
+$$B = U \Lambda U^\prime$$ 
 
 Donde:
 
 * $U$ es una **matriz ortogonal** cuyas columnas son los vectores propios estandarizados de $B$.
-* $\Lambda = \text{diag}\{\lambda_\alpha\}$ con $\lambda_1 \ge \cdots \ge \lambda_p$ son los **valores propios** de $B$ dispuestos en orden descendente.
-* Referencia: @MardiaKentBibby (p. 469).
+* $\Lambda = \text{diag}\{\lambda_\alpha\}$ con $\lambda_1 \ge \cdots \ge \lambda_p$ son los **valores propios** de $B$ en orden descendente.
 
 ---
 
-## TDE y Componentes Principales (2)
+## TDE y Componentes Principales
 
-Dependiendo de la matriz de entrada $B$, tenemos dos casos principales:
+Casos particulares:
 
 ### Caso 1: $B = R$ (Matriz de correlación)
-Es el caso más común. Se descompone como $R = U \Lambda U^\prime$. La multiplicación de cada columna de $U$ por cada fila de la matriz de datos centrada y estandarizada $Y$ produce una componente principal.
+
+Es el caso más común. Se descompone como 
+
+$$R = U \Lambda U^\prime$$ 
+
+La multiplicación de cada columna de $U$ por cada fila de la matriz de datos centrada y estandarizada $Y$ produce una componente principal.
+
+## TDE y Componentes Principales
+
+Casos particulares:
 
 ### Caso 2: $B = S$ (Matriz de covarianzas)
-Caso menos frecuente: $S = U \Lambda U^\prime$, donde $U$ y $\Lambda$ contienen los vectores y valores propios de $S$ respectivamente.
+
+Caso menos frecuente: 
+
+$$S = U \Lambda U^\prime,$$
+
+donde $U$ y $\Lambda$ contienen los vectores y valores propios de $S$ respectivamente.
 
 
 
@@ -576,13 +839,15 @@ z_{ij} \\
 \vdots \\
 z_{nj} 
 \end{bmatrix}, \quad j = 1, \ldots, p
-$$ {#eq-componentes}
+$$ 
 
-Para $j=1$, este resultado corresponde a la primera componente principal definida anteriormente en @eq-primeraCP.
+Para $j=1$, este resultado corresponde a la primera componente principal.
 
 ## Ejemplo: Ranking ARWU
 
-Aunque en la práctica no se justifica un Análisis de Componentes Principales (ACP) con solo dos variables —ya que el coeficiente de correlación y una gráfica de dispersión bastan para representar las relaciones entre ellas—, realizaremos un ACP de los rankings regional y mundial con el único objetivo de ilustrar cómo funcionan las componentes y el tipo de información que contienen.
+</br></br>
+
+Aunque en la práctica no se justifica un Análisis de Componentes Principales (ACP) con solo dos variables ya que el coeficiente de correlación y una gráfica de dispersión bastan para representar las relaciones entre ellas, realizaremos un ACP de los rankings regional y mundial con el único objetivo de ilustrar cómo funcionan las componentes y el tipo de información que contienen.
 
 ---
 
@@ -590,58 +855,74 @@ Aunque en la práctica no se justifica un Análisis de Componentes Principales (
 
 A continuación se presenta la distribución de las instituciones según su posición en los rankings:
 
-```{r}
-#| label: fig-arwu
-#| fig-cap: "Dispersión de Rankings Regional y Mundial (ARWU) por país"
+::: {.panel-tabset}
+
+### Gráfica
+
+```{r, fig.align='center'}
 #| echo: false
 #| message: false
 #| warning: false
 #| fig-width: 6
 #| fig-height: 4
-#| out-width: "80%"
+#| out-width: "60%"
 
-library(ggplot2)
+library(pacman)
+p_load(tidyverse, janitor, FactoMineR)
 
-# Nota: Asegúrate de que el archivo arwu.csv esté accesible en la ruta indicada
-# Se recomienda usar rutas relativas si compartes el documento
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 arwu <- read.csv2(paste0(url, "arwu.csv")) 
 
 rownames(arwu) <- arwu$Institution
 
-# Generación del gráfico con ggplot2
-g1 <- ggplot(arwu, aes(x = Regional.Rank, y = World.Rank, color = Country, label = Country)) +
+(g1 <- ggplot(arwu, aes(x = Regional.Rank, y = World.Rank, color = Country, label = Country)) +
   geom_text() +
   theme_bw() +
   labs(title = "Rankings ARWU",
        x = "Ranking Regional",
-       y = "Ranking Mundial")
-
-print(g1)
+       y = "Ranking Mundial"))
 ```
 
-## Análisis de Componentes Principales (PCA): Rankings ARWU
+### Código
 
-A continuación se presenta el biplot del PCA para los rankings regional y mundial. Este gráfico permite visualizar la dirección de máxima varianza y cómo se agrupan los países en relación con estas nuevas dimensiones.
+```{r, echo=TRUE, eval=FALSE}
+library(pacman)
+p_load(tidyverse, janitor, FactoMineR)
 
-```{r}
-#| label: fig-pca-arwu
-#| fig-cap: "Biplot del Análisis de Componentes Principales para Rankings ARWU"
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+arwu <- read.csv2(paste0(url, "arwu.csv")) 
+
+rownames(arwu) <- arwu$Institution
+
+(g1 <- ggplot(arwu, aes(x = Regional.Rank, y = World.Rank, color = Country, label = Country)) +
+  geom_text() +
+  theme_bw() +
+  labs(title = "Rankings ARWU",
+       x = "Ranking Regional",
+       y = "Ranking Mundial"))
+```
+
+
+:::
+
+
+## ACP de los rankings ARWU
+
+Biplot para los rankings regional y mundial. Permite visualizar la dirección de máxima varianza y cómo se agrupan los países en relación con estas nuevas dimensiones.
+
+```{r, fig.align='center'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 4
-#| fig-height: 2.5
+#| fig-width: 6
+#| fig-height: 4
+#| out-width: "60%"
 
 library(ggfortify)
 
-# Selección de las columnas 4 y 5 (Regional.Rank y World.Rank)
 df <- arwu[, 4:5]
-
-# Ejecución del PCA con escalamiento (importante para rankings)
 pca_res <- prcomp(df, scale. = TRUE)
 
-# Generación del gráfico automático
 autoplot(pca_res, data = arwu, colour = "Country") +
   theme_bw() +
   labs(title = "PCA: Regional vs World Rank")
@@ -811,6 +1092,101 @@ ggplot(ciudades, aes(x = Rel.al.prof, y = Analfabetismo)) +
     subtitle = "Rojo: PC1 (Máxima varianza) | Azul: PC2 (Ortogonal)",
     x = "Relación Alumnos por Profesor",
     y = "Analfabetismo (%)"
+  )
+```
+
+# Teorema de la Descomposición en Valores Singulares {background-color="#0077b6"}
+
+## TDVS (1)
+
+La descomposición en valores singulares es más general que el TDE, pues **no requiere que la matriz sea simétrica**, lo que garantiza que también la matriz de datos puede ser descompuesta.
+
+El **TDVS** garantiza que una matriz $C_{n \times p}$, con $n \ge p$ y rango $r$ (equivalentemente, con $r$ columnas linealmente independientes, como la matriz de datos $X$ o la estandarizada $Y$), se puede factorizar como:
+
+$$C = U L V^\prime$$ {#eq-tdvs}
+
+---
+
+## TDVS (2)
+
+Donde los componentes de la factorización $C = ULV'$ son:
+
+* $U_{n \times r}$ y $V_{p \times r}$ son matrices con **columnas ortonormales**: $U^\prime U = V^\prime V = I_r$.
+* $L_{r \times r} = \mathrm{diag}(\sqrt{\lambda_1}, \ldots, \sqrt{\lambda_r})$, con $\sqrt{\lambda_1} \ge \cdots \ge \sqrt{\lambda_r} > 0$.
+* $\sqrt{\lambda_j}$ son los **valores singulares** de $C$.
+* $V_{p \times r} = (v_1, \ldots, v_r)$ contiene en sus columnas los **vectores propios de** $C^\prime C$.
+* $U_{n \times r} = (u_1, \ldots, u_r)$ contiene en sus columnas los **vectores propios de** $CC^\prime$.
+
+La equivalencia con los valores propios no nulos de $CC^\prime$ se establece tomando
+$$L = \mathrm{diag}(\sqrt{\mu_1}, \ldots, \sqrt{\mu_r}),$$
+donde $\mu_\alpha$ es el $\alpha$-ésimo valor propio no nulo de $CC^\prime$.
+
+---
+
+## Reconstrucción a partir del TDVS
+
+**Reconstrucción de la matriz de puntajes del ranking ARWU mediante el TDVS**
+
+El ejercicio implica los siguientes pasos:
+
+::: {.incremental}
+1. **Lectura de los datos** y construcción de la matriz $C \in \mathbb{R}^{n \times p}$.
+2. **Cálculo** de $C'C$ y $CC'$.
+3. **Valores y vectores propios** de $C'C$: obtener $\lambda_\alpha$ y $V$.
+4. **Selección** de los valores propios estrictamente positivos; construir la submatriz $V_r$.
+5. **Valores singulares**: $\sigma_\alpha = \sqrt{\lambda_\alpha}$; construir $L = \mathrm{diag}(\sigma_1, \ldots, \sigma_r)$.
+6. **Cálculo de** $U = C V_r L^{-1}$, verificando que $U'U = I_r$.
+7. **Reconstrucción**: $C = U L V_r'$.
+8. **Evaluación del error**: $\| C - U L V_r' \|_F \approx 0$.
+:::
+
+---
+
+## Ejemplo: Reconstrucción SVD del ARWU
+
+```{r}
+#| label: fig-svd-arwu
+#| fig-cap: "Error de reconstrucción del ARWU mediante TDVS (norma de Frobenius por rango truncado)"
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+#| fig-width: 7
+#| fig-height: 4
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+arwu_svd <- read.csv2(paste0(url, "ARWU_100_top.csv"))[, -c(2:6)]
+rownames(arwu_svd) <- arwu_svd[, 1]
+C <- as.matrix(arwu_svd[, -1])
+
+# Descomposición SVD
+svd_C <- svd(C)
+U <- svd_C$u
+L <- diag(svd_C$d)
+V <- svd_C$v
+
+# Reconstrucción completa y error
+C_rec <- U %*% L %*% t(V)
+error_total <- norm(C - C_rec, type = "F")
+
+# Error por rango truncado r = 1, ..., ncol(C)
+r_max <- ncol(C)
+errores <- sapply(1:r_max, function(r) {
+  C_r <- svd_C$u[, 1:r, drop = FALSE] %*%
+         diag(svd_C$d[1:r], r, r) %*%
+         t(svd_C$v[, 1:r, drop = FALSE])
+  norm(C - C_r, type = "F")
+})
+
+library(ggplot2)
+ggplot(data.frame(r = 1:r_max, error = errores), aes(x = r, y = error)) +
+  geom_line(color = "#0077b6", linewidth = 1.2) +
+  geom_point(color = "#0077b6", size = 2.5) +
+  theme_bw() +
+  labs(
+    title = "Error de reconstrucción TDVS (ARWU)",
+    x = "Rango r",
+    y = expression(paste("||C - ULV'||"[F]))
   )
 ```
 
@@ -1320,9 +1696,9 @@ kable(tabla_final, booktabs = TRUE, row.names = FALSE) %>%
                 bootstrap_options = c("striped", "hover", "condensed")) %>%
   add_header_above(c("a) Más lejanas" = 3, "b) Más cercanas" = 3))
 ```
+## Distancia de Mahalanobis: Análisis de Proximidad
+
 ```{r}
-
-
 #| label: tbl-mahalanobis-ciudades
 #| tbl-cap: "Parejas de ciudades más distantes y más cercanas bajo la métrica de Mahalanobis"
 #| echo: false
@@ -1365,6 +1741,75 @@ kable(ciud_lej_cerca_mh, booktabs = TRUE, row.names = FALSE) %>%
   kable_styling(latex_options = c("striped", "hold_position", "scale_down"),
                 bootstrap_options = c("striped", "hover", "condensed")) %>%
   add_header_above(c("a) Más lejanas (Mahalanobis)" = 3, "b) Más cercanas (Mahalanobis)" = 3))
-  
 ```
-  
+
+# Laboratorio {background-color="#0077b6"}
+
+## Laboratorio (1/4)
+
+Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos grupos de variables asignados en el ejercicio de datos atípicos, junto con la subtabla de indicadores de Recursos Humanos del mismo archivo de ciudades, para conformar una nueva tabla que contenga los dos conjuntos de variables.
+
+::: {.incremental}
+1. Calcular el **vector de medias** de todas las variables del conjunto asignado al grupo.
+2. Calcular la **matriz de datos centrados** $\tilde{X}$.
+3. Calcular la **matriz de covarianzas** a partir de la matriz de datos centrados: $S = \frac{1}{n}\tilde{X}'\tilde{X}$.
+:::
+
+---
+
+## Laboratorio (2/4)
+
+::: {.incremental}
+4. Calcular la matriz de covarianzas con el comando `cov()` de R. ¿Coincide con la obtenida en el punto 3? ¿Por qué?
+
+5. Calcular la matriz $Y$ de **datos centrados estandarizados** a partir del vector de medias y las desviaciones estándar del punto 1.
+
+6. Calcular la **matriz de correlación** a partir de $\frac{1}{n}Y'Y$. Calcular también la matriz de correlación con el comando `cor()` de R. ¿Coinciden? ¿Por qué?
+:::
+
+---
+
+## Laboratorio (3/4)
+
+::: {.incremental}
+7. Calcular la **matriz de covarianzas** $S$ e identificar las dos variables con **mayor covarianza** y las dos con **menor covarianza**.
+
+8. Calcular la **matriz de correlación** $R$ e identificar las dos variables con **mayor correlación** y las dos con **menor correlación**. ¿Son las mismas que las identificadas en el punto 7?
+
+9. Calcular el producto $\frac{1}{n}Y'Y$ y verificar que coincide exactamente con la matriz $R$ obtenida en el punto 8. ¿Por qué?
+:::
+
+---
+
+## Laboratorio (4/4)
+
+::: {.incremental}
+10. Comprobar que la matriz de covarianzas se obtiene con $\frac{1}{n}\tilde{X}'\tilde{X}$.
+
+11. Comprobar que la matriz de correlación se obtiene con $\frac{1}{n}Y'Y$.
+
+12. Construir una matriz de datos con los **puntajes en los seis criterios del ranking ARWU** para las universidades del grupo asignado y comprobar que con el **TDVS** se puede reconstruir.
+:::
+
+. . .
+
+| Grupo | Universidades |
+|:-----:|:-------------:|
+| Grupo 1 | Puestos 91 a 100 |
+| Grupo 2 | Puestos 81 a 90 |
+| Grupo 3 | Puestos 71 a 80 |
+| Grupo 4 | Puestos 61 a 70 |
+| Grupo 5 | Puestos 51 a 60 |
+| Grupo 6 | Puestos 41 a 50 |
+
+# GRACIAS! {background-color="#ddf3ff"}
+
+
+# Citación y derechos de autor
+
+Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+Cualquier copia parcial o total de este material, debe citar la fuente como:
+
+> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/
+

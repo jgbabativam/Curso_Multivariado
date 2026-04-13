@@ -238,12 +238,6 @@ ggplot(df, aes(pc1, pc2)) +
 * **k-medoids** (Partitioning Around Medoids - PAM)
 * **Clustering jerarquico** (aglomerativo o divisivo).
 
----
-
-### Proceso iterativo no jerárquico
-
-![](images/kmeans_demo.gif){fig-align="center" width="100%"}
-
 ## Métodos de reducción de dimensión
 
 ### Basados en descomposición SVD
@@ -295,6 +289,12 @@ ggplot(df, aes(pc1, pc2)) +
 - **Clustering jerárquico** (aglomerativo o divisivo): Construye un dendrograma secuencialmente. No requiere especificar el número de *clusters* a priori; permite distintos criterios de enlace (single, complete, average, Ward).
 
 :::
+
+---
+
+### Proceso iterativo no jerárquico
+
+![](images/kmeans_demo.gif){fig-align="center" width="100%"}
 
 ## Métodos de agrupamiento (*Clustering*)
 
@@ -355,10 +355,10 @@ A lo largo del desarrollo del curso se trabajará exclusivamente con **conjuntos
 
 - Describen **cualidades, categorías o clases** de los objetos.
 - No admiten operaciones aritméticas directas.
-- **Nominales**: funcionan como códigos sin orden implícito.
-  - Ejemplos: ciudades, países, identificadores.
-- **Categóricas (u ordinales)**: representan categorías con **orden o jerarquía**.
-  - Ejemplos: niveles educativos, estratos socioeconómicos, posiciones en rankings.
+  - **Nominales**: funcionan como códigos sin orden implícito.
+    - Ejemplos: ciudades, países, identificadores.
+  - **Categóricas (u ordinales)**: representan categorías con **orden o jerarquía**.
+    - Ejemplos: niveles educativos, estratos socioeconómicos, posiciones en rankings.
 - Sus valores se denominan **modalidades** u **opciones de respuesta**.
 
 :::
@@ -1215,7 +1215,7 @@ perf_df <- as.data.frame(perf_fil) |>
     locations = cells_body(rows = nrow(perf_fil))
   ) |>
   tab_options(
-    table.font.size = px(14),
+    table.font.size = px(18),
     data_row.padding = px(4),
     table.width = pct(100)
   )
