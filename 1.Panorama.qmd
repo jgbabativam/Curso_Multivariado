@@ -300,14 +300,13 @@ ggplot(df, aes(pc1, pc2)) +
 
 ::: {.incremental style="font-size: 0.88em;"}
 
-- **DBSCAN**: Método basado en densidad que identifica regiones densas separadas por zonas de baja densidad. Detecta ruido y produce *clusters* de formas arbitrarias sin necesidad de fijar el número de grupos.
+- **DBSCAN**: Método basado en densidad que identifica regiones densas separadas por zonas de baja densidad. Detecta ruido y produce *clusters* de formas arbitrarias sin necesidad de fijar el número de grupos - [visualización](https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/). 
 
 - **HDBSCAN**: Extensión jerárquica de DBSCAN que permite densidades variables; produce *clusters* más estables con mejor detección de ruido en datos heterogéneos.
 
 - **GMM** (*Gaussian Mixture Models*): Modelo probabilístico que representa los datos como mezcla de distribuciones normales. Ofrece pertenencias suaves (probabilidades) mediante el algoritmo EM.
 
 - **Clustering espectral**: Utiliza los autovectores del Laplaciano de un grafo de similitudes para representar los datos en espacio reducido donde luego aplica K-means. Detecta *clusters* no lineales.
-
 :::
 
 ## Elementos de álgebra lineal requeridos en análisis multivariado
