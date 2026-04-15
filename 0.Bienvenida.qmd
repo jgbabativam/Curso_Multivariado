@@ -84,7 +84,7 @@ p_load(here)
 |-------------------------|:--------:|-------------|:-----------:|:------------:|
 | Laboratorios            |    4     | En grupo    |      6%     |     24%      |
 | Presentación pública*   |    2     | En grupo    |      8%     |     16%      |
-| Exámenes parciales      |    4     | Individual  |     20%     |     60%      |
+| Exámenes parciales      |    4     | Individual  |     15%     |     60%      |
 
 </br>
 
