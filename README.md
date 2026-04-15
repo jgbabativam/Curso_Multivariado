@@ -1,6 +1,6 @@
-# 📊 Curso de Métodos Estadísticos Multivariados
+# 📊 Curso de Estadística Descriptiva Multivariada
 
-Este repositorio reúne los materiales del curso de **Métodos Estadísticos Multivariados**, abarcando desde los fundamentos teóricos hasta la implementación práctica en software estadístico.
+Este repositorio reúne los materiales del curso de **Estadística Descriptiva Multivariada**, abarcando desde los fundamentos teóricos hasta la implementación práctica en software estadístico.
 
 A lo largo del contenido se exploran técnicas como:
 
