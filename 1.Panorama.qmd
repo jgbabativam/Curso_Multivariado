@@ -139,6 +139,11 @@ ggplot(df, aes(x = x, y = y)) +
 
 ![](images/sup vs No sup.png){fig-align="center" width="80%"}
 
+## Contraste: Aprendizaje Supervisado vs No Supervisado
+
+
+![](images/Metodos.png){fig-align="center" width="80%"}
+
 ## Métodos en Aprendizaje No Supervisado
 
 Como parte del **Aprendizaje Estadístico No Supervisado** se incluyen, entre otros, los siguientes métodos:
