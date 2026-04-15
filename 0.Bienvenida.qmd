@@ -30,7 +30,22 @@ library(pacman)
 p_load(here)
 ```
 
-# Esquema de evaluación {background-color="#0077b6"}
+# Estadística Descriptiva Multivariada {background-color="#0077b6"}
+
+---
+
+## {background-image="images/intro.png" background-size="cover" background-position="center"}
+
+&nbsp;
+
+## Contenido del curso
+
+- Introducción y panorama de los métodos estadísticos multivariados
+- Medidas descriptivas multivariadas
+- Análisis de componentes principales
+- Análisis de correspondencias simples
+- Análisis de correspondencias múltiples
+- Métodos de agrupamiento (aglomeración)
 
 ---
 
@@ -42,8 +57,8 @@ p_load(here)
 ::: {.incremental}
 
 - Grupo 1:
-  - Lunes, 16:00 hrs., Salón 404-XXX
-  - Jueves, 16:00 hrs., Salón 404-XX
+  - Lunes, 16:00 hrs., Salón 404-208
+  - Jueves, 16:00 hrs., Salón 404-208
 
 - Grupo 2:
   - Lunes, 16:00 hrs., Salón 404-206
@@ -62,36 +77,21 @@ p_load(here)
 
 :::
 
-## Evaluación
+## Evaluación {style="font-size: 85%;"}
 
-::: columns
-::: {.column width="70%"}
+</br>
 
-::: {.incremental}
+| Tipo de evaluación      | # tareas | Modalidad   | % por tarea | % de la nota |
+|-------------------------|:--------:|-------------|:-----------:|:------------:|
+| Laboratorios            |    4     | En grupo    |      6%     |     24%      |
+| Presentación pública*   |    2     | En grupo    |      8%     |     16%      |
+| Exámenes parciales      |    4     | Individual  |     20%     |     60%      |
 
-<br>
+</br>
 
-* Mecanismo de evaluación:
-
-    - **4 Exámenes y 4 laboratorios**:
-      - Panorama y medidas descriptivas multivariadas 
-      - ACP 
-      - ACS y ACM
-      - Clúster
-
-:::
-
-:::
-
-::: {.column width="30%"}
-
-<br><br>
-
-![](images/Rules_img.jpg){fig-align="center" width="100%"}
-
-:::
-
-:::
+> *Observación: El hecho de estar en un grupo no da los ocho
+puntos a todos sus integrantes. Cada integrante debe hacer
+una parte sustantiva de la presentación para obtenerlos
 
 ## Evaluación
 
@@ -119,6 +119,15 @@ p_load(here)
 :::
 
 :::
+
+## Temas de cada evaluación y laboratorio
+
+<br><br>
+
+* E1. Introducción, panorama y medidas descriptivas multivariadas.
+* E2. Análisis de componentes principales.
+* E3. Análisis de correspondencias simples y múltiples.
+* E4. Métodos de agrupamiento (aglomeración).
 
 # Blibliografía relevante
 
