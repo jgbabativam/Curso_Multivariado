@@ -1,0 +1,156 @@
+---
+title: "Estadística Descriptiva Multivariada"
+subtitle: "Análisis de Componentes Principales"
+author:
+  - name: Jimmy A Corzo S, PhD
+    email: jacorzos@unal.edu.co
+  - name: Giovany Babativa-Márquez, PhD
+    email: jgbabativam@unal.edu.co
+format: 
+  gbabativa-revealjs:
+    logo: "images/UNAL.png"
+incremental: false
+embed-resources: true
+highlight-style: dracula
+execute: 
+  echo: false
+  eval: true
+filters:
+  - webr
+revealjs-plugins:
+  - drop
+---
+
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+```{r}
+library(pacman)
+
+p_load(here)
+```
+
+# Estadística Descriptiva Multivariada {background-color="#0077b6"}
+
+---
+
+## {background-image="images/intro.png" background-size="cover" background-position="center"}
+
+&nbsp;
+
+## Contenido del curso
+
+- Introducción y panorama de los métodos estadísticos multivariados
+- Medidas descriptivas multivariadas
+- Análisis de componentes principales
+- Análisis de correspondencias simples
+- Análisis de correspondencias múltiples
+- Métodos de agrupamiento (aglomeración)
+
+---
+
+## Reglas del juego
+
+::: columns
+::: {.column width="70%"}
+
+::: {.incremental}
+
+- Grupo 1:
+  - Lunes, 16:00 hrs., Salón 404-208
+  - Jueves, 16:00 hrs., Salón 404-208
+
+- Grupo 2:
+  - Lunes, 16:00 hrs., Salón 404-206
+  - Jueves, 16:00 hrs., Salón 453-405
+:::
+
+:::
+
+::: {.column width="30%"}
+
+<br><br>
+
+![](images/Rules_img.jpg){fig-align="center" width="100%"}
+
+:::
+
+:::
+
+## Evaluación {style="font-size: 85%;"}
+
+</br>
+
+| Tipo de evaluación      | # tareas | Modalidad   | % por tarea | % de la nota |
+|-------------------------|:--------:|-------------|:-----------:|:------------:|
+| Laboratorios            |    4     | En grupo    |      6%     |     24%      |
+| Presentación pública*   |    2     | En grupo    |      8%     |     16%      |
+| Exámenes parciales      |    4     | Individual  |     15%     |     60%      |
+
+</br>
+
+> *Observación: El hecho de estar en un grupo no da los ocho
+puntos a todos sus integrantes. Cada integrante debe hacer
+una parte sustantiva de la presentación para obtenerlos
+
+## Evaluación
+
+::: columns
+::: {.column width="70%"}
+
+::: {.incremental}
+
+<br>
+
+* Mecanismo de evaluación:
+
+    - Los exámenes son individuales y se realizan en la sala de cómputo.
+    - Los laboratorios se realizan en grupos de 4 personas.
+:::
+
+:::
+
+::: {.column width="30%"}
+
+<br><br>
+
+![](images/Rules_img.jpg){fig-align="center" width="100%"}
+
+:::
+
+:::
+
+## Temas de cada evaluación y laboratorio
+
+<br><br>
+
+* E1. Introducción, panorama y medidas descriptivas multivariadas.
+* E2. Análisis de componentes principales.
+* E3. Análisis de correspondencias simples y múltiples.
+* E4. Métodos de agrupamiento (aglomeración).
+
+# Blibliografía relevante
+
+* Corzo J. (2026). *Notas de clase*: Introducción al Aprendizaje estadístico no supervisado. [Disponible acá](https://github.com/jgbabativam/Curso_Multivariado/tree/main/Notas%20de%20clase) 
+
+* Díaz Monroy, L. G. (2002). Estadística multivariada: inferencia y métodos. [Disponible acá](https://repositorio.unal.edu.co/items/4222e9ea-ba6c-45e0-b719-8108e497cbad)
+
+* Husson, F., Lê, S., & Pagès, J. (2011). Exploratory multivariate analysis by example using R (Vol. 15, pp. 1-60). Boca Raton: CRC press. [Disponible acá](https://api.taylorfrancis.com/content/books/mono/download?identifierName=doi&identifierValue=10.1201/b21874&type=googlepdf)
+
+* Lebart, L., Morineau, A., & Piron, M. (2000). Statistique exploratoire multidimensionnelle. [Disponible acá](https://horizon.documentation.ird.fr/exl-doc/pleins_textes/2022-03/010029478.pdf)
+
+* Pardo, C. E. (2020). Estadística descriptiva multivariada. [Disponible acá](https://repositorio.unal.edu.co/items/283947d9-60fb-478f-a08b-bc6aa13afa6a)
+
+
+
+# GRACIAS! {background-color="#ddf3ff"}
+
+ 
+# Citación y derechos de autor
+
+Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+Cualquier copia parcial o total de este material, debe citar la fuente como:
+
+> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+
+

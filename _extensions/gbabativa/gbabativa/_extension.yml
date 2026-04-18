@@ -5,8 +5,6 @@ contributes:
   formats: 
     revealjs:
       logo: logo.png
-      footer: |
-        Material disponible en [GitHub](https://github.com/jgbabativam).
       theme: GB.scss
       slide-number: c/t
       show-slide-number: all
