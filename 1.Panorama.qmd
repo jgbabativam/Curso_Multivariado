@@ -1179,7 +1179,7 @@ conf_tot |>
             locations = cells_column_labels()) |>
   tab_style(style = cell_text(weight = "bold"),
             locations = cells_body(rows = nrow(conf_tot))) |>
-  tab_options(table.font.size = px(14),
+  tab_options(table.font.size = px(16),
               data_row.padding = px(4),
               table.width = pct(100))
 ```
@@ -1259,7 +1259,7 @@ perf_df <- as.data.frame(perf_fil) |>
 #| message: false
 #| warning: false
 #| fig-width: 13
-#| fig-height: 5
+#| fig-height: 7
 #| out-width: 100%
 
 perf_col <- round(prop.table(as.matrix(confianza_filtrado), margin = 2), 3)
@@ -1270,11 +1270,11 @@ perf_df <- as.data.frame(perf_col) |>
   pivot_longer(cols = -Pais, names_to = "Modalidad", values_to = "Perfil") |>
   mutate(Pais = factor(Pais, levels = rownames(perf_col)))
 
-ggplot(perf_df, aes(x = Modalidad, y = Perfil)) +
+ggplot(perf_df, aes(x = Pais, y = Perfil)) +
   geom_col(fill = "#1F3B73", width = 0.8) +
   geom_text(aes(label = sprintf("%.3f", Perfil)),
             vjust = -0.35, size = 2.9) +
-  facet_wrap(~ Pais, ncol = 4) +
+  facet_wrap(~ Modalidad, ncol = 4) +
   scale_y_continuous(limits = c(0, max(perf_df$Perfil) * 1.18),
                      expand = expansion(mult = c(0, 0))) +
   labs(x = "Modalidad de respuesta", y = "Perfil condicional (frecuencia relativa)") +
