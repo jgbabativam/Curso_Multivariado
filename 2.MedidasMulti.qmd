@@ -571,7 +571,6 @@ donde $s_j^2$ es la varianza de la variable $X_j$.
 
 ---
 
-::: {.fragment}
 En particular, para las matrices de datos centrados y estandarizados se tiene
 
 $$
@@ -579,7 +578,6 @@ S_{\tilde{Y}} = S_Y = R
 $$
 
 donde $R$ es la matriz de correlaciones.
-:::
 
 </br> 
 
@@ -795,16 +793,6 @@ los datos.
 representaciones gráficas de los datos.
 
 :::
-
----
-
-## Construcción de las Componentes Principales
-
-Asumiendo que los datos están centrados y estandarizados, se utilizan ponderaciones $u_1^\prime = (u_{11}, \ldots, u_{p1})$ para definir la **primera componente**. Para cada objeto $i$, el valor de la componente se calcula como:
-
-$$ z_{i1} = u_{11}y_{i1} + u_{21}y_{i2} + \cdots + u_{p1}y_{ip} = \sum_{j=1}^p u_{j1}y_{ij}, \qquad i=1,\dots,n $$ 
-
-De esta manera, cada uno de los $n$ puntos resultantes es un **promedio ponderado** de las variables observadas para cada objeto.
 
 # Teorema de la Descomposición Espectral
 
@@ -1062,12 +1050,7 @@ El ejercicio implica los siguientes pasos:
 
 ## Ejemplo: Reconstrucción SVD del ARWU
 
-```{r}
-#| echo: true
-#| eval: true
-#| message: false
-#| warning: false
-
+```{r, echo=TRUE}
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 arwu_svd <- read.csv2(paste0(url, "ARWU_100_top.csv"))[, -c(2:6)]
 rownames(arwu_svd) <- arwu_svd[, 1]
