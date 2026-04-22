@@ -242,13 +242,13 @@ $$X_4=
 </br>
 
 $$
-\text{med}(X) = \bar{x}=
+\text{med}(X) = \bar{x}= \frac{1}{n} \mathbf{1_n}^\prime X =
 \begin{bmatrix}
 \bar{x}_1\\
 \bar{x}_2\\
 \vdots\\
 \bar{x}_p
-\end{bmatrix} = \frac{1}{n} \mathbf{1_n}^\prime X, \quad \text{donde} \quad
+\end{bmatrix}, \quad \text{donde} \quad
 \mathbf{1_n} = \begin{bmatrix}
 1\\
 1\\
@@ -411,7 +411,7 @@ as.data.frame(mat_cov) |>
 
 Contiene las observaciones centradas y estandarizadas: $y_{ij} = \frac{x_{ij}- \bar{x}_j}{s_j}$
 
-$$ Y = \left\{y_{ij} \right\} = \left[ \begin{array}{cccc}
+$$ \tilde{Y} = \left\{\tilde{y}_{ij} \right\} = \left[ \begin{array}{cccc}
 \frac{x_{11}-\bar{x}_1}{s_1} & \frac{x_{12}-\bar{x}_2}{s_2} & \cdots &\frac{x_{1p}-\bar{x}_p}{s_p} \\
 \frac{x_{21}-\bar{x}_1}{s_1} & \frac{x_{22}-\bar{x}_2}{s_2} & \cdots &\frac{x_{2p}-\bar{x}_p}{s_p}\\
 \vdots & \vdots & \vdots & \vdots \\
@@ -462,7 +462,7 @@ $$ R = \frac{1}{n} \tilde{Y}^\prime \tilde{Y} = \left[ \begin{array}{cccc}
 r_{21} & 1 & \cdots & r_{2p} \\
 \vdots & \vdots & \vdots & \vdots \\
 r_{p1} & r_{p2} & \cdots & 1
-\end{array} \right], \quad r_{ij} = \frac{s_{ij}}{s_i s_j} $$ {#eq-matCor}
+\end{array} \right], \quad r_{ij} = \frac{s_{ij}}{s_i s_j} $$ 
 
 ---
 
