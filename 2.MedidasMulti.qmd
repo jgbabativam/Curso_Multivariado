@@ -276,18 +276,17 @@ $$
 El vector de medias de las variables de la tabla de ciudades expresado como un vector es: $\bar{x}^\prime = (888021.77, 0.12, 1.09, 0.21, 23.27)^\prime$:
 
 
-## Matriz de datos centrados
+## Matriz de datos centrados {style="font-size: 90%;"}
 
 </br>
 
-$$ \tilde{X} = \left\{\tilde{x}_{ij} \right\} = 
-\left\{ {x_{ij}- \bar{x}_j} \right\} = \left[ \begin{array}{cccc}
-{x_{11}-\bar{x}_1} & {x_{12}-\bar{x}_2} & \cdots &{x_{1p}-\bar{x}_p} \\
-{x_{21}-\bar{x}_1} & {x_{22}-\bar{x}_2} & \cdots &{x_{2p}-\bar{x}_p}\\
-\vdots& \vdots                & \vdots& \vdots\\
-{x_{n1}-\bar{x}_1} & {x_{n2}-\bar{x}_2} & \cdots& {x_{np}-\bar{x}_p}
-\end{array} \right] $$
-
+$$\tilde{X} = X - \mathbf{1}_n \, \bar{x}' =
+\begin{bmatrix}
+x_{11}-\bar{x}_1 & x_{12}-\bar{x}_2 & \cdots & x_{1p}-\bar{x}_p \\
+x_{21}-\bar{x}_1 & x_{22}-\bar{x}_2 & \cdots & x_{2p}-\bar{x}_p \\
+\vdots & \vdots & \ddots & \vdots \\
+x_{n1}-\bar{x}_1 & x_{n2}-\bar{x}_2 & \cdots & x_{np}-\bar{x}_p
+\end{bmatrix}, \{\tilde{x}_{ij}\} = \{x_{ij} - \bar{x}_j\} $$
 Oberve que:
 
 $$\operatorname{med}(\tilde{X}) =
@@ -444,12 +443,21 @@ $$
 = 0.
 $$
 
+## Matriz de correlación
+
+Es una matriz **simétrica** que contiene unos en la diagonal,
+correspondientes a las correlaciones de cada variable consigo misma y por fuera de la diagonal aparecen las correlaciones $r_{ij}$ entre pares de variables. Se define como
+
+</br>
+
+$$R = D^{-1/2}\, S \, D^{-1/2}$$
 
 ## Matriz de correlación
 
-Es una matriz simétrica que contiene unos en la diagonal (correlaciones de las variables consigo mismas) y, fuera de ella, las correlaciones $r_{ij}$ entre pares de variables.
+También se obtiene a partir de la matriz de datos centrados
+estandarizados así:
 
-$$ R = \frac{1}{n} Y^\prime Y = \left[ \begin{array}{cccc}
+$$ R = \frac{1}{n} \tilde{Y}^\prime \tilde{Y} = \left[ \begin{array}{cccc}
 1 & r_{12} & \cdots & r_{1p} \\
 r_{21} & 1 & \cdots & r_{2p} \\
 \vdots & \vdots & \vdots & \vdots \\
@@ -621,9 +629,14 @@ Un caso destacado son las **Componentes Principales**, las cuales:
 
 ## Combinación lineal de los valores de una variable en $n$ objetos
 
-Para la variable cuyas observaciones están en la columna $j$ de la matriz de datos, se define la combinación de los $n$ valores de la variable con constantes de ponderación $a^\prime = (a_1, \ldots, a_n)$ como:
+Sea $X_{\cdot j}$ la *j*-ésima columna de la matriz de datos. Se define la combinación de los $n$ valores de la variable $j$ con constantes de ponderación  $a' = (a_1, \ldots, a_n)'$ por:
 
-$$ X^\star_j = \sum_{i=1}^n a_i x_{ij}, \quad j=1,\ldots,p \quad \text{vectorialmente: } (a^\prime X_{\cdot j}) $$ 
+</br>
+
+$$X^{\star}_j = a' X_{\cdot j}
+= \sum_{i=1}^{n} a_i x_{ij},
+\qquad j = 1, \ldots, p.$$
+
 
 ---
 
@@ -633,7 +646,7 @@ $$ X^\star_j = \sum_{i=1}^n a_i x_{ij}, \quad j=1,\ldots,p \quad \text{vectorial
 
 En particular, el promedio de la variable $j$ es una combinación lineal con constantes de ponderación $p^\prime = (\frac{1}{n}, \ldots, \frac{1}{n})$:
 
-$$ \bar{x}_j = \sum_{i=1}^n \frac{1}{n} x_{ij} \quad \text{vectorialmente: } (p^\prime X_j) $$ 
+$$ \bar{x}_j = p^\prime X_{\cdot j} = \sum_{i=1}^n \frac{1}{n} x_{ij}$$ 
 
 ---
 
@@ -641,7 +654,7 @@ $$ \bar{x}_j = \sum_{i=1}^n \frac{1}{n} x_{ij} \quad \text{vectorialmente: } (p^
 
 Para el objeto $i$ de la matriz de datos, cuyas observaciones están en la fila $x_i^\prime = (x_{i1}, \ldots, x_{ip})^\prime$, se define la combinación lineal de los valores de las $p$ variables con ponderaciones $b^\prime = (b_1, \ldots, b_p)$ como:
 
-$$ z_i = \sum_{j=1}^p b_j x_{ij}, \quad i=1,\ldots,n, \quad \text{vectorialmente: } (b^\prime x_{i \cdot}) $$ 
+$$ z_i = b^\prime x_{i \cdot} = \sum_{j=1}^p b_j x_{ij}, \quad i=1,\ldots,n$$ 
 
 ::: {.callout-warning}
 ### Nota importante
@@ -747,21 +760,39 @@ Considerando que el valor máximo de referencia (Harvard) fue $96.92$, el puntaj
 
 $$67.46 / 0.9692 = 69.6$$
 
-# Componentes Principales
+## Combinación lineal que produce las componentes principales {style="font-size: 81%;"}
 
-## Una combinación lineal específica
+Las **componentes principales** son combinaciones lineales de los valores de las variables.  Para su construcción se utilizan ponderaciones $v_1' = (v_{11}, \ldots, v_{p1})$, la primera componente para el objeto $i$, cuyas observaciones para las $p$  variables están en la $i$-ésima fila de $Y$ (matriz de datos centrados y estandarizados),  $y_{i\cdot}$ tiene la forma:
 
-El Análisis de Componentes Principales (ACP) se basa en la construcción de nuevas variables mediante combinaciones lineales de las originales, con las siguientes propiedades:
+$$z_{i1} = y_{i\cdot}' \, v_1= \sum_{j=1}^{p} v_{j1} \, y_{ij},\qquad i = 1, \ldots, n.$$
+
+$z_{i1}$ es un **promedio ponderado** de los valores de las variables observadas en el objeto $i$.
+
+- La primera componente para el objeto $i$ es la **proyección** de los valores de las variables sobre el vector de ponderaciones  $v_1$.
+
+> En el siguiente capítulo se realiza la construcción formal de las componentes y sus ponderaciones.
+
+
+## Combinación lineal que produce las componentes principales {style="font-size: 85%;"}
+
+
+Como se verá en el siguiente capítulo, estas componentes tienen,
+entre otras, dos importantes propiedades:
 
 ::: {.fragment}
 
-* **Maximización de varianza:** Se orientan en las direcciones que acumulan la mayor cantidad posible de varianza de la tabla de datos $X$, lo que permite reducir la dimensionalidad.
+* **Maximización de varianza:** Van en direcciones que acumulan la mayor cantidad posible de
+varianza de la tabla de datos $X$, útil para reducir la dimensionalidad
+del problema en el sentido de que basta con unas cuantas de ellas
+para interpretar y descubrir asociaciones e información intrínseca en
+los datos.
 
 :::
 
 ::: {.fragment}
 
-* **No correlación:** Son ortogonales (incorrelacionadas) entre sí, lo que facilita la representación gráfica y evita la redundancia de información.
+* **No correlación:** Todas las componentes son ortogonales entre sí, que facilita
+representaciones gráficas de los datos.
 
 :::
 
