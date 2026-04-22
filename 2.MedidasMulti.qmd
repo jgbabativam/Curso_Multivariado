@@ -935,12 +935,8 @@ Visualización de los datos originales comparando la relación alumnos/profesor 
 
 Visualización de los datos originales comparando la relación alumnos/profesor frente a la tasa de analfabetismo por ciudad.
 
-```{r}
-#| label: fig-ciudades-orig
-#| fig-cap: "Distribución de ciudades según Relación Alumnos/Profesor y Analfabetismo"
+```{r, fig.align='center'}
 #| echo: false
-#| message: false
-#| warning: false
 #| fig-width: 7
 #| fig-height: 5
 #| out-width: "70%"
@@ -950,8 +946,6 @@ ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";", fileEncoding = "lati
 
 library(ggplot2)
 
-# Generación del gráfico c1
-# Se asume que el objeto 'ciudades' ya fue cargado previamente
 c1 <- ggplot(ciudades, aes(Rel.al.prof, Analfabetismo)) +
   geom_text(aes(label = CIUDADES, color = CIUDADES), show.legend = FALSE) +
   theme_bw() +
@@ -965,133 +959,27 @@ c1 <- ggplot(ciudades, aes(Rel.al.prof, Analfabetismo)) +
 c1
 ```
 
-## Comparación: Datos Originales vs. Componentes Principales
 
-En el panel **(a)** vemos la relación directa entre dos variables. En el panel **(b)**, los datos se proyectan sobre las dos primeras componentes principales, que recogen la mayor variabilidad del conjunto de indicadores educativos.
+## Componentes Principales
 
-```{r}
-#| label: fig-comparacion-pca
-#| fig-cap: "Cambio de perspectiva: de variables originales a factores latentes"
-#| fig-subcap: 
-#|   - "a) Espacio de variables originales"
-#|   - "b) Espacio de componentes principales (PC1 vs PC2)"
-#| layout-ncol: 2
+```{r, fig.align='center'}
 #| echo: false
 #| message: false
 #| warning: false
-
-library(ggplot2)
-
-# 1. Preparación y limpieza rápida (evitar error de caracteres)
-ciudades$CIUDADES <- iconv(ciudades$CIUDADES, from = "latin1", to = "UTF-8")
-
-# 2. Gráfico A: Datos Originales
-c1 <- ggplot(ciudades, aes(x = Rel.al.prof, y = Analfabetismo)) +
-  geom_text(aes(label = CIUDADES, color = CIUDADES), 
-            show.legend = FALSE, size = 3) +
-  theme_bw() +
-  theme(legend.position = "none") +
-  labs(x = "Alumnos/Profesor", y = "Analfabetismo (%)")
-
-# 3. Cálculo de Componentes Principales (ACP)
-# Seleccionamos las columnas numéricas (2 a 6 según tus códigos previos)
-datos_num <- ciudades[, 2:6]
-pca_ciudades <- prcomp(datos_num, scale. = TRUE)
-
-# Extraemos los scores para graficar
-scores_pca <- as.data.frame(pca_ciudades$x)
-scores_pca$CIUDADES <- ciudades$CIUDADES
-
-# 4. Gráfico B: Proyección PCA
-c2 <- ggplot(scores_pca, aes(x = PC1, y = PC2)) +
-  geom_text(aes(label = CIUDADES, color = CIUDADES), 
-            show.legend = FALSE, size = 3) +
-  theme_bw() +
-  theme(legend.position = "none") +
-  labs(x = paste0("PC1 (", round(summary(pca_ciudades)$importance[2,1]*100, 1), "%)"),
-       y = paste0("PC2 (", round(summary(pca_ciudades)$importance[2,2]*100, 1), "%)"))
-
-# Renderizar ambos
-c1
-c2
-```
-
-## Visualización Mejorada de Componentes Principales
-
-Para mejorar la legibilidad, hemos utilizado el paquete `ggrepel`, que repele automáticamente las etiquetas de texto para evitar que se superpongan entre sí o con las líneas de los componentes principales (PC1 en rojo y PC2 en azul).
-
-```{r}
-#| label: fig-pca-lines-repel
-#| fig-cap: "Proyección de Componentes Principales con etiquetas repelidas para mayor legibilidad"
-#| echo: false
-#| message: false
-#| warning: false
-#| fig-width: 8
+#| fig-width: 9
 #| fig-height: 6
 
 library(ggplot2)
-# Cargamos ggrepel para solucionar el solapamiento de textos
 library(ggrepel) 
+library(FactoMineR)
 
-# 1. Asegurar codificación y limpieza
 ciudades$CIUDADES <- iconv(ciudades$CIUDADES, from = "latin1", to = "UTF-8")
 
-# 2. Calcular PCA para obtener las direcciones (loadings)
 df_sub <- ciudades[, c("Rel.al.prof", "Analfabetismo")]
-pca_sub <- prcomp(df_sub, scale. = TRUE)
+rownames(df_sub) <- ciudades$CIUDADES
+pca_sub <- PCA(df_sub, graph =FALSE)
 
-# 3. Extraer centros (medias) y direcciones para las líneas
-mu <- colMeans(df_sub)
-v <- pca_sub$rotation # Matriz de rotación
-s <- pca_sub$sdev     # Desviaciones estándar para longitud
-
-# Definimos un factor de escala para que las líneas crucen el gráfico
-escala <- 12 
-
-# Data frame para las líneas de las componentes
-lineas_pca <- data.frame(
-  x = mu[1], y = mu[2],
-  # PC1 (rojo)
-  x1_end = mu[1] + v[1,1] * s[1] * escala, 
-  y1_end = mu[2] + v[2,1] * s[1] * escala,
-  # PC2 (azul)
-  x2_end = mu[1] + v[1,2] * s[2] * escala, 
-  y2_end = mu[2] + v[2,2] * s[2] * escala
-)
-
-# 4. Gráfico con ggrepel y líneas
-ggplot(ciudades, aes(x = Rel.al.prof, y = Analfabetismo)) +
-  # Reemplazamos geom_text por geom_text_repel
-  geom_text_repel(aes(label = CIUDADES, color = CIUDADES), 
-                  show.legend = FALSE, 
-                  size = 3.5,            # Tamaño de texto ligeramente mayor
-                  point.padding = 0.3,   # Espacio alrededor del punto virtual
-                  box.padding = 0.5,     # Espacio alrededor de la caja de texto
-                  force = 1,             # Fuerza de repulsión
-                  max.overlaps = Inf) +  # Forzar a mostrar todas las etiquetas
-  # Línea para PC1 (Rojo)
-  geom_segment(data = lineas_pca, 
-               aes(x = x - (x1_end-x), y = y - (y1_end-y), xend = x1_end, yend = y1_end),
-               arrow = arrow(length = unit(0.25, "cm")), color = "red", size = 1.2) +
-  # Línea para PC2 (Azul)
-  geom_segment(data = lineas_pca, 
-               aes(x = x - (x2_end-x), y = y - (y2_end-y), xend = x2_end, yend = y2_end),
-               arrow = arrow(length = unit(0.25, "cm")), color = "blue", size = 1.2) +
-  # Etiquetas fijas para las componentes
-  annotate("label", x = lineas_pca$x1_end, y = lineas_pca$y1_end, 
-           label = "PC1", color = "white", fill = "red", fontface = "bold") +
-  annotate("label", x = lineas_pca$x2_end, y = lineas_pca$y2_end, 
-           label = "PC2", color = "white", fill = "blue", fontface = "bold") +
-  scale_color_viridis_d(option = "turbo") + # Paleta de colores más distinguible
-  theme_minimal() + # Tema más limpio para presentaciones
-  theme(legend.position = "none",
-        plot.title = element_text(face = "bold")) +
-  labs(
-    title = "Direcciones de las Componentes Principales (Repelido)",
-    subtitle = "Rojo: PC1 (Máxima varianza) | Azul: PC2 (Ortogonal)",
-    x = "Relación Alumnos por Profesor",
-    y = "Analfabetismo (%)"
-  )
+factoextra::fviz_pca_ind(pca_sub, col.ind = "blue", repel = TRUE)
 ```
 
 # Teorema de la Descomposición en Valores Singulares {background-color="#0077b6"}
@@ -1106,7 +994,7 @@ $$C = U L V^\prime$$ {#eq-tdvs}
 
 ---
 
-## TDVS (2)
+## TDVS (2) {style="font-size: 85%;"}
 
 Donde los componentes de la factorización $C = ULV'$ son:
 
@@ -1122,7 +1010,7 @@ donde $\mu_\alpha$ es el $\alpha$-ésimo valor propio no nulo de $CC^\prime$.
 
 ---
 
-## Reconstrucción a partir del TDVS
+## Reconstrucción a partir del TDVS {style="font-size: 80%;"}
 
 **Reconstrucción de la matriz de puntajes del ranking ARWU mediante el TDVS**
 
@@ -1144,14 +1032,10 @@ El ejercicio implica los siguientes pasos:
 ## Ejemplo: Reconstrucción SVD del ARWU
 
 ```{r}
-#| label: fig-svd-arwu
-#| fig-cap: "Error de reconstrucción del ARWU mediante TDVS (norma de Frobenius por rango truncado)"
 #| echo: true
 #| eval: true
 #| message: false
 #| warning: false
-#| fig-width: 7
-#| fig-height: 4
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 arwu_svd <- read.csv2(paste0(url, "ARWU_100_top.csv"))[, -c(2:6)]
@@ -1168,7 +1052,6 @@ V <- svd_C$v
 C_rec <- U %*% L %*% t(V)
 error_total <- norm(C - C_rec, type = "F")
 
-# Error por rango truncado r = 1, ..., ncol(C)
 r_max <- ncol(C)
 errores <- sapply(1:r_max, function(r) {
   C_r <- svd_C$u[, 1:r, drop = FALSE] %*%
@@ -1176,7 +1059,12 @@ errores <- sapply(1:r_max, function(r) {
          t(svd_C$v[, 1:r, drop = FALSE])
   norm(C - C_r, type = "F")
 })
+```
 
+
+## Ejemplo: Reconstrucción SVD del ARWU
+
+```{r, fig.align='center'}
 library(ggplot2)
 ggplot(data.frame(r = 1:r_max, error = errores), aes(x = r, y = error)) +
   geom_line(color = "#0077b6", linewidth = 1.2) +
@@ -1217,57 +1105,48 @@ Esta regla es coherente con la idea de concentración de probabilidad en la dist
 
 ---
 
-## Indicadores de educación y habitantes
-
-::: {.callout-note}
-### Ejemplo: Ciudades colombianas
-El archivo `ciudades` contiene datos del número de habitantes y cuatro indicadores de educación en 22 ciudades colombianas (ver @tbl-edu_ciudades_col).
-:::
-
-```{r}
-#| label: tbl-edu_ciudades_col
-#| tbl-cap: "Indicadores de educación en ciudades colombianas"
-#| echo: false
-
-# Aquí se cargaría la tabla mencionada anteriormente
-# knitr::kable(head(ciudades))
-```
-
 ## Ejemplo: Indicadores de Educación en Ciudades
 
-A continuación se presentan los datos de habitantes y cuatro indicadores de educación para 22 ciudades colombianas.
+```{r, echo=TRUE}
+library(pacman)
+p_load(tidyverse, janitor, corrplot, gt)
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") 
+```
+
+<div style="height:500px; overflow-y:auto;">
 
 ```{r}
-#| label: tbl-edu-ciudades
-#| tbl-cap: "Indicadores de educación y número de habitantes para 22 ciudades colombianas"
 #| echo: false
-#| message: false
+library(janitor)
+library(gt)
 
-library(knitr)
-library(kableExtra)
-library(dplyr)
+ciudades |> clean_names() |> 
+   gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  fmt_number(columns = where(is.numeric), decimals = 0, sep_mark = ".") |>
+  tab_options(table.font.size = px(18),
+              data_row.padding = px(3),
+              table.width = pct(100))
 
-# Se asume que el objeto 'ciudades' ya fue cargado con la codificación correcta
-# ciudades <- read.csv2(paste0(url_base, "ciudades.csv"), fileEncoding = "latin1")
-
-kable(ciudades, booktabs = TRUE, digits = 2) %>%
-  kable_styling(latex_options = c("striped", "scale_down", "hold_position"),
-                bootstrap_options = c("striped", "hover", "condensed"))
 ```
+
+</div>
+
 
 ---
 
 ## Detección de Ciudades Atípicas
 
-Utilizando la regla del Rango Intercuartílico ($IQR$), se identifican los valores atípicos para cada variable. Un valor se marca con un asterisco (`*`) si se encuentra fuera del intervalo $[Q_1 - 1.5IQR, Q_3 + 1.5IQR]$.
+Utilizando la regla del Rango Intercuartílico ($IQR$): $[Q_1 - 1.5IQR, Q_3 + 1.5IQR]$.
 
 ```{r}
-#| label: tbl-ciudades-atipicas
-#| tbl-cap: "Ciudades con valores atípicos identificados por variable"
-#| echo: false
+#| echo: true
 #| warning: false
 
-# Crear una copia para resaltar
 ciudades_atipicas <- ciudades
 
 # Función para identificar atípicos y marcarlos
@@ -1282,213 +1161,212 @@ marcar_atipicos <- function(x) {
   ifelse(x < inf | x > sup, "*", as.character(round(x, 2)))
 }
 
-# Aplicar a las columnas numéricas (2 a 6)
 ciudades_atipicas[, 2:6] <- lapply(ciudades[, 2:6], marcar_atipicos)
 
-# Formatear tabla
-kable(ciudades_atipicas, booktabs = TRUE, align = "lccccc") %>%
-  kable_styling(latex_options = c("striped", "scale_down", "hold_position"),
-                bootstrap_options = c("striped", "hover", "condensed"))
 ```
+
+---
+
+## Detección de Ciudades Atípicas
+
+<div style="height:400px; overflow-y:auto;">
+
+```{r}
+ciudades_atipicas |> 
+  clean_names() |> 
+   gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  fmt_number(columns = where(is.numeric), decimals = 0, sep_mark = ".") |>
+  tab_options(table.font.size = px(18),
+              data_row.padding = px(3),
+              table.width = pct(100))
+```
+
+</div>
 
 ::: {.callout-tip}
 ### Interpretación
 Las celdas con `*` indican que esa ciudad representa un valor extremo para esa dimensión educativa o poblacional en comparación con el resto del grupo.
 :::
 
-## Datos atípicos en dos variables: Distancia de Mahalanobis
+## Datos atípicos en dos variables
 
 ::: {.callout-note}
 ### Ejemplo: Problema de detección bidimensional
 Al analizar dos variables simultáneamente, una observación puede no ser atípica en ninguna de las variables por separado, pero sí serlo por romper la estructura de correlación del grupo.
 :::
 
-```{r}
-#| label: fig-ciudades-dispersion
-#| fig-cap: "Relación alumno profesor vs. Analfabetismo en ciudades colombianas ($r=0.76$). Se distinguen en los extremos las ciudades de San Andrés y Riohacha."
+```{r, fig.align='center'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 5.5
-#| fig-height: 4
+#| fig-width: 9.5
+#| fig-height: 8
 #| out-width: "100%"
 
-# Preparación de etiquetas
-cities <- ciudades[,1]
-i_rio <- which(cities == "Riohacha")
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
 
-# Gráfico base
-plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
-     xlab = "Relación alumno profesor",
-     ylab = "Analfabetismo",
-     xlim = c(19, 27),
-     xaxt = "n",
-     pch = 19, 
-     col = "gray70")
+# Preparar datos
+df <- ciudades |>
+  rename(
+    ciudad = 1,
+    rel_al_prof = Rel.al.prof,
+    analfabetismo = Analfabetismo
+  ) |>
+  mutate(
+    destacar = ifelse(ciudad == "Riohacha", "Riohacha", "Otras ciudades")
+  )
 
-axis(side = 1, at = 19:27)
-
-# Etiquetas de todas las ciudades en negro
-text(ciudades$Rel.al.prof,
-     ciudades$Analfabetismo,
-     labels = cities,
-     cex = 0.6,
-     pos = 2,
-     col = "black")
-
-# Resaltar Riohacha en rojo y negrilla
-text(ciudades$Rel.al.prof[i_rio],
-     ciudades$Analfabetismo[i_rio],
-     labels = cities[i_rio],
-     cex = 0.7,
-     pos = 2,
-     col = "red",
-     font = 2)
-
-# Punto de Riohacha en rojo
-points(ciudades$Rel.al.prof[i_rio], 
-       ciudades$Analfabetismo[i_rio], 
-       col = "red", pch = 19)
+ggplot(df, aes(rel_al_prof, analfabetismo)) +
+  
+  # Puntos
+  geom_point(aes(color = destacar), size = 3, alpha = 0.8) +
+  
+  # Etiquetas que no se montan
+  geom_text_repel(
+    aes(label = ciudad, color = destacar),
+    size = 4.5,
+    max.overlaps = Inf,
+    box.padding = 0.4
+  ) +
+  
+  # Escalas y ejes
+  scale_x_continuous(
+    limits = c(19, 27),
+    breaks = 19:27,
+    name = "Relación alumno–profesor"
+  ) +
+  scale_y_continuous(
+    name = "Tasa de analfabetismo"
+  ) +
+  
+  # Colores manuales para resaltar
+  scale_color_manual(
+    values = c("Otras ciudades" = "gray60", "Riohacha" = "red3")
+  ) +
+  
+  # Tema limpio
+  theme_minimal(base_size = 18) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
 ```
 
-## Visualización Avanzada: Ajuste de Etiquetas
+# Distancias entre observaciones multivariadas
 
-En este ejemplo se implementa una normalización de caracteres para asegurar que la selección de ciudades sea robusta a tildes o espacios, además de realizar un ajuste manual de posición para las etiquetas que suelen solaparse.
+## Concepto de distancia
 
-```{r}
-#| label: fig-ciudades-ajuste
-#| echo: false
-#| message: false
-#| warning: false
-#| fig-width: 5.5
-#| fig-height: 4
-#| out-width: "100%"
+</br></br>
 
-# 1. Preparación y normalización de nombres
-cities <- as.character(ciudades[,1])
+Intuitivamente, la distancia entre dos puntos **A** y **B** en una superficie plana es la longitud del espacio que hay entre ellos. 
 
-norm <- function(x){
-  x <- trimws(x)
-  x <- tolower(x)
-  iconv(x, from = "", to = "ASCII//TRANSLIT")
-}
-cities_n <- norm(cities)
-
-# 2. Identificación de grupos por color
-i_rio <- which(cities_n == norm("Riohacha"))
-
-blue_cities <- c("Medellín", "Montería", "Villavicencio",
-                 "Sincelejo", "Valledupar", "Cartagena")
-i_blue <- which(cities_n %in% norm(blue_cities))
-
-# Ciudades que permanecerán en negro
-i_black <- setdiff(seq_along(cities), union(i_blue, i_rio))
-
-# 3. Gráfico base
-plot(ciudades$Rel.al.prof, ciudades$Analfabetismo,
-     xlab = "Relación alumno profesor",
-     ylab = "Analfabetismo",
-     xlim = c(19,27),
-     xaxt = "n", pch = 19, col = "gray80")
-axis(side = 1, at = 19:27)
-
-# 4. Capas de texto
-# Negras (no destacadas)
-text(ciudades$Rel.al.prof[i_black],
-     ciudades$Analfabetismo[i_black],
-     cities[i_black],
-     cex = 0.5, pos = 2, col = "black")
-
-# Índices para desplazamiento manual
-i_villa <- which(cities_n == norm("Villavicencio"))
-i_sinc  <- which(cities_n == norm("Sincelejo"))
-i_blue_base <- setdiff(i_blue, c(i_villa, i_sinc))
-
-# Azules base
-text(ciudades$Rel.al.prof[i_blue_base],
-     ciudades$Analfabetismo[i_blue_base],
-     cities[i_blue_base],
-     cex = 0.6, pos = 2, col = "blue", font = 2)
-
-# Desplazamientos manuales para evitar solapamiento
-text(ciudades$Rel.al.prof[i_villa] + 0.15,
-     ciudades$Analfabetismo[i_villa] - 0.004,
-     cities[i_villa],
-     cex = 0.6, col = "blue", font = 2)
-
-text(ciudades$Rel.al.prof[i_sinc] - 0.15,
-     ciudades$Analfabetismo[i_sinc] + 0.004,
-     cities[i_sinc],
-     cex = 0.6, col = "blue", font = 2)
-
-# Riohacha en rojo (destacado final)
-text(ciudades$Rel.al.prof[i_rio],
-     ciudades$Analfabetismo[i_rio],
-     cities[i_rio],
-     cex = 0.65, pos = 2, col = "red", font = 2)
-```
-
-
-```{r}
-#| label: fig-habitantes-analfabetismo
-#| echo: false
-#| message: false
-#| warning: false
-#| fig-width: 5.5
-#| fig-height: 4
-#| out-width: "100%"
-
-# 1. Limpieza de nombres para búsqueda segura
-cities <- as.character(ciudades[,1])
-
-# Función interna para normalizar y evitar fallos por tildes/espacios
-clean_names <- function(x) {
-  x <- iconv(x, from = "UTF-8", to = "ASCII//TRANSLIT") # Quita tildes
-  x <- trimws(tolower(x)) # Quita espacios y pasa a minúsculas
-  return(x)
-}
-
-cities_clean <- clean_names(cities)
-
-# 2. Identificación de índices con validación
-i_rio <- which(cities_clean == "riohacha")
-i_bog <- which(cities_clean == "bogota")
-
-# Ciudades en negro (el resto)
-i_black <- setdiff(seq_along(cities), c(i_rio, i_bog))
-
-# 3. Gráfico base
-plot(ciudades$Num.Hab, ciudades$Analfabetismo,
-     xlab = "Número de Habitantes",
-     ylab = "Analfabetismo",
-     ylim = c(0, max(ciudades$Analfabetismo, na.rm = TRUE) * 1.1),
-     pch = 19, 
-     col = "gray80")
-
-# 4. Capas de texto con validación de longitud
-if(length(i_black) > 0) {
-  text(ciudades$Num.Hab[i_black], ciudades$Analfabetismo[i_black],
-       labels = cities[i_black], cex = 0.5, pos = 3, col = "black")
-}
-
-if(length(i_rio) > 0) {
-  text(ciudades$Num.Hab[i_rio], ciudades$Analfabetismo[i_rio],
-       labels = cities[i_rio], cex = 0.6, pos = 3, col = "red", font = 2)
-}
-
-if(length(i_bog) > 0) {
-  text(ciudades$Num.Hab[i_bog], ciudades$Analfabetismo[i_bog],
-       labels = cities[i_bog], cex = 0.6, pos = 3, col = "blue", font = 2)
-}
-```
-
-## Distancia de Mahalanobis en dos variables
-
-La **Distancia de Mahalanobis** es una medida de la distancia entre observaciones multivariadas que posee la propiedad de incluir tanto las distancias euclidianas entre las variables como el grado de correlación entre ellas.
+Si se desea ir de **A** hacia **B**, la distancia se puede medir en unidades físicas (como metros), lo que nos da una idea clara de qué tan lejos o cerca se encuentran el uno del otro.
 
 ---
 
-## Distancia de Mahalanobis entre observaciones
+## Propiedades de una métrica
+
+Esta idea de distancia se formaliza mediante las siguientes propiedades. Sean $A$, $B$ y $C$ puntos en el espacio $\mathbb{R}^2$ (o superior):
+
+* **No negatividad**: La distancia siempre es mayor o igual a cero, $d(A,B) \ge 0$. 
+
+  - Si los puntos coinciden, la distancia es cero: $d(A,A)=0$.
+
+* **Simetría**: La distancia de $A$ a $B$ es la misma que de $B$ a $A$: 
+  $$d(A,B) = d(B,A)$$
+
+* **Desigualdad triangular**: Ir de $A$ a $B$ directamente es siempre más corto o igual que pasar por un tercer punto $C$:
+  $$d(A,B) \le d(A,C) + d(C,B)$$
+
+
+
+---
+
+## Ejemplo: Valor Absoluto
+
+Un ejemplo básico de estas métricas es el **valor absoluto** entre dos números $a$ y $b$. 
+
+La distancia se mide por la diferencia entre ellos. Para evitar la ambigüedad que produce el signo de la diferencia ($a-b$ vs $b-a$), se utiliza el valor absoluto:
+$$|a-b|$$
+Este valor siempre es positivo y cumple con todas las propiedades de una métrica mencionadas anteriormente.
+
+---
+
+## Distancia Euclidiana
+
+Para dos filas ($i$, $i'$ con $i \ne i'$) de la matriz de datos $\mathbf{X}$:
+
+* $\mathbf{x}_i = (x_{i1}, \dots, x_{ip})^\top$
+* $\mathbf{x}_{i'} = (x_{i'1}, \dots, x_{i'p})^\top$
+
+La **distancia euclidiana** es la raíz cuadrada de la suma de las diferencias al cuadrado entre las coordenadas de cada variable:
+
+$$d_e(\mathbf{x}_i, \mathbf{x}_{i'}) = \sqrt{(\mathbf{x}_i - \mathbf{x}_{i'})^\top (\mathbf{x}_i - \mathbf{x}_{i'})} = \sqrt{\sum_{j=1}^p (x_{ij} - x_{i'j})^2}$$ 
+
+## Distancia Euclidiana entre ciudades {style="font-size: 90%;"}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(kableExtra)
+library(distances)
+
+rownames(ciudades) <- ciudades$CIUDADES
+X <- ciudades[, -1]
+
+X$ProPoblacional <- X$Num.Hab / sum(X$Num.Hab)
+X$Num.Hab <- NULL
+
+De_obj <- distances(X, id_variable = row.names(X))
+De_mat <- round(as.matrix(De_obj), 2)
+
+De_table <- as.data.frame(as.table(De_mat))
+
+# Filtrar para evitar duplicados y distancias diagonales (distancia a sí mismo)
+De_table <- De_table[as.numeric(De_table$Var1) < as.numeric(De_table$Var2), ]
+
+# Ordenar por distancia
+De_table <- De_table[order(-De_table$Freq), ]
+
+# Parejas más lejanas (Top 4)
+mas_distantes <- head(De_table, 4)
+colnames(mas_distantes) <- c("Ciudad A", "Ciudad B", "Dist.")
+
+# Parejas más cercanas (Bottom 4)
+mas_cercanas <- tail(De_table, 4)
+colnames(mas_cercanas) <- c("Ciudad A", "Ciudad B", "Dist.")
+
+# Combinar resultados en una tabla comparativa
+tabla_final <- cbind(mas_distantes, mas_cercanas)
+
+# Renderizado de la tabla
+kable(tabla_final, booktabs = TRUE, row.names = FALSE) %>%
+  kable_styling(latex_options = c("striped", "hold_position", "scale_down"),
+                bootstrap_options = c("striped", "hover", "condensed")) %>%
+  add_header_above(c("a) Más lejanas" = 3, "b) Más cercanas" = 3))
+```
+
+* Se utiliza la proporción de poblacion por ciudad
+
+## Distancia de Mahalanobis 
+
+</br></br>
+
+::: {.callout-note}
+La **Distancia de Mahalanobis** es una medida de la distancia entre observaciones multivariadas que posee la propiedad de incluir tanto las distancias euclidianas entre las variables como el grado de correlación entre ellas.
+:::
+
+---
+
+## Distancia de Mahalanobis entre observaciones {style="font-size: 95%;"}
 
 Asumiendo que hay $n$ observaciones para dos variables $X_1$ y $X_2$:
 
@@ -1505,12 +1383,15 @@ x_{n1} & x_{n2}
 $$
 
 
+---
+
+## Distancia de Mahalanobis entre observaciones {style="font-size: 90%;"}
 
 La distancia de Mahalanobis al cuadrado entre las observaciones $i$ e $i'$ se define como:
 
 $$
 d_M^2(i,i') = \frac{1}{(1-r_{12}^2)} \left[ \frac{(x_{i1}-x_{i'1})^2}{s_1^2} + \frac{(x_{i2}-x_{i'2})^2}{s_2^2} - 2r_{12}\frac{(x_{i1}-x_{i'1})(x_{i2}-x_{i'2})}{s_1s_2} \right]
-$$ {#eq-mahalanobis}
+$$
 
 Donde:
 
@@ -1518,7 +1399,7 @@ Donde:
 * $r_{12}$ es el **coeficiente de correlación** entre $X_1$ y $X_2$.
 * $s_1$ y $s_2$ son las desviaciones estándar de cada variable.
 
-## Interpretación de la distancia de Mahalanobis en dos variables
+## Interpretación de la distancia de Mahalanobis {style="font-size: 90%;"}
 
 La distancia de Mahalanobis ajusta la métrica de cercanía basándose en la estructura de covarianza de los datos. Su comportamiento depende críticamente del coeficiente de correlación $r_{12}$:
 
@@ -1530,10 +1411,9 @@ La distancia de Mahalanobis ajusta la métrica de cercanía basándose en la est
 
 ## Efecto de la Correlación en la Distancia de Mahalanobis
 
-A continuación se presenta la comparación de las elipses de distancia para tres niveles de correlación ($r$). Observe cómo la elipse se "estira" y cambia de orientación, lo que redefine qué puntos se consideran "cercanos" al centro.
+Elipses de distancia para tres niveles de correlación ($r$). 
 
-```{r}
-#| label: fig-elipses-mahalanobis
+```{r, fig.align='center'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1569,16 +1449,20 @@ ggplot(df_total, aes(x = X1, y = X2, color = Caso)) +
   facet_wrap(~Caso) +
   theme_minimal() +
   theme(legend.position = "none", strip.text = element_text(face = "bold")) +
-  labs(title = "Elipses de Distancia según la Correlación",
-       subtitle = "El contorno representa una distancia de Mahalanobis constante") +
   coord_fixed() # Para no distorsionar la forma circular/elíptica
 ```
 
-## Distancia de Mahalanobis.
+::: {.callout-note}
+Observe cómo la elipse se "estira" y cambia de orientación, lo que redefine qué puntos se consideran "cercanos" al centro.
+:::
+
+## Distancia de Mahalanobis 
 
 * **Distancia a la media multivariada** La distancia de Mahalanobis de la observación $i$ al centro de los datos se obtiene reemplazando $x_{i^\prime}$ por el vector de medias:
   $$\bar{\mathbf{x}} = (\bar{x}_1, \bar{x}_2)$$
   Esto permite cuantificar la separación de cada individuo respecto a la estructura global de las variables.
+
+## Distancia de Mahalanobis 
 
 * **Estimación de las varianzas** Para cada variable se utiliza usualmente el estimador insesgado:
   $$s_j^2 = \frac{1}{n-1} \sum_{i=1}^n (x_{ij}-\bar{x}_j)^2, \qquad j=1,2$$
@@ -1586,7 +1470,7 @@ ggplot(df_total, aes(x = X1, y = X2, color = Caso)) +
 
 ---
 
-## Caso particular: dos observaciones y dos variables
+## Caso particular: dos observaciones y dos variables {style="font-size: 80%;"}
 
 * **Matriz de datos reducida** Cuando solo se dispone de dos observaciones, la matriz de datos toma la forma:
   $$\begin{bmatrix} x_{11} & x_{12} \\ x_{21} & x_{22} \end{bmatrix}$$
@@ -1594,108 +1478,11 @@ ggplot(df_total, aes(x = X1, y = X2, color = Caso)) +
 * **Varianzas como sumas de cuadrados** Dado que $n=2$, las varianzas se simplifican a:
   $$s_j^2 = \sum_{i=1}^2 (x_{ij}-\bar{x}_j)^2, \qquad j=1,2$$
 
-* **Interpretación** > **Nota:** Este caso es fundamentalmente ilustrativo y tiene escaso interés práctico, debido a la inestabilidad inherente a trabajar con un número extremadamente pequeño de observaciones.
+::: {.callout-note}
+Este caso es fundamentalmente ilustrativo y tiene escaso interés práctico, debido a la inestabilidad inherente a trabajar con un número extremadamente pequeño de observaciones.
+:::
 
-# Distancias entre observaciones multivariadas
-
-## Concepto de Distancia
-
-Intuitivamente, la distancia entre dos puntos **A** y **B** en una superficie plana es la longitud del espacio que hay entre ellos. 
-
-Si se desea ir de **A** hacia **B**, la distancia se puede medir en unidades físicas (como metros), lo que nos da una idea clara de qué tan lejos o cerca se encuentran el uno del otro.
-
----
-
-## Propiedades de una Métrica
-
-Esta idea de distancia se formaliza mediante las siguientes propiedades. Sean $A$, $B$ y $C$ puntos en el espacio $\mathbb{R}^2$ (o superior):
-
-* **No negatividad**: La distancia siempre es mayor o igual a cero, $d(A,B) \ge 0$. Si los puntos coinciden, la distancia es cero: $d(A,A)=0$.
-* **Simetría**: La distancia de $A$ a $B$ es la misma que de $B$ a $A$: 
-  $$d(A,B) = d(B,A)$$
-* **Desigualdad triangular**: Ir de $A$ a $B$ directamente es siempre más corto o igual que pasar por un tercer punto $C$:
-  $$d(A,B) \le d(A,C) + d(C,B)$$
-
-
-
----
-
-## Ejemplo: Valor Absoluto
-
-Un ejemplo básico de estas métricas es el **valor absoluto** entre dos números $a$ y $b$. 
-
-La distancia se mide por la diferencia entre ellos. Para evitar la ambigüedad que produce el signo de la diferencia ($a-b$ vs $b-a$), se utiliza el valor absoluto:
-$$|a-b|$$
-Este valor siempre es positivo y cumple con todas las propiedades de una métrica mencionadas anteriormente.
-
----
-
-## Distancia Euclidiana
-
-En el contexto multivariado, para cualesquiera dos filas (observaciones) de la matriz de datos $\mathbf{X}$:
-* $\mathbf{x}_i = (x_{i1}, \dots, x_{ip})^\top$
-* $\mathbf{x}_{i'} = (x_{i'1}, \dots, x_{i'p})^\top$
-
-La **distancia euclidiana** es la raíz cuadrada de la suma de las diferencias al cuadrado entre las coordenadas de cada variable:
-
-$$d_e(\mathbf{x}_i, \mathbf{x}_{i'}) = \sqrt{(\mathbf{x}_i - \mathbf{x}_{i'})^\top (\mathbf{x}_i - \mathbf{x}_{i'})} = \sqrt{\sum_{j=1}^p (x_{ij} - x_{i'j})^2}$$ {#eq-deuclidian}
-
-## Distancia Euclidiana: Análisis de Proximidad
-
-Para el cálculo de las distancias se utiliza la proporción de población por ciudad en lugar de su valor absoluto. Esto se debe a que la mayoría de las variables son indicadores con valores entre cero y uno, los cuales son pequeños comparados con la variable Población, lo que sesgaría la métrica.
-
-```{r}
-#| label: tbl-distancias-euclidianas
-#| tbl-cap: "Parejas de ciudades más distantes y más cercanas en el sentido euclidiano"
-#| echo: false
-#| message: false
-#| warning: false
-
-library(distances)
-library(knitr)
-library(kableExtra)
-
-# 1. Carga y preparación de datos
-# ciudades <- read.csv2("ciudades.csv", fileEncoding = "latin1") # Ajustado para Quarto
-rownames(ciudades) <- ciudades$CIUDADES
-X <- ciudades[, -1]
-
-# 2. Transformación de la variable Población
-# Se calcula la proporción para equilibrar escalas
-X$ProPoblacional <- X$Num.Hab / sum(X$Num.Hab)
-X$Num.Hab <- NULL
-
-# 3. Cálculo de Distancia Euclidiana
-De_obj <- distances(X, id_variable = row.names(X))
-De_mat <- round(as.matrix(De_obj), 2)
-
-# 4. Procesamiento de la matriz para extraer extremos
-De_table <- as.data.frame(as.table(De_mat))
-
-# Filtrar para evitar duplicados y distancias diagonales (distancia a sí mismo)
-De_table <- De_table[as.numeric(De_table$Var1) < as.numeric(De_table$Var2), ]
-
-# Ordenar por distancia
-De_table <- De_table[order(-De_table$Freq), ]
-
-# Parejas más lejanas (Top 4)
-mas_distantes <- head(De_table, 4)
-colnames(mas_distantes) <- c("Ciudad A", "Ciudad B", "Dist.")
-
-# Parejas más cercanas (Bottom 4)
-mas_cercanas <- tail(De_table, 4)
-colnames(mas_cercanas) <- c("Ciudad A", "Ciudad B", "Dist.")
-
-# Combinar resultados en una tabla comparativa
-tabla_final <- cbind(mas_distantes, mas_cercanas)
-
-# Renderizado de la tabla
-kable(tabla_final, booktabs = TRUE, row.names = FALSE) %>%
-  kable_styling(latex_options = c("striped", "hold_position", "scale_down"),
-                bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c("a) Más lejanas" = 3, "b) Más cercanas" = 3))
-```
-## Distancia de Mahalanobis: Análisis de Proximidad
+## Distancia de Mahalanobis: Análisis de Proximidad {style="font-size: 80%;"}
 
 ```{r}
 #| label: tbl-mahalanobis-ciudades
@@ -1744,7 +1531,7 @@ kable(ciud_lej_cerca_mh, booktabs = TRUE, row.names = FALSE) %>%
 
 # Laboratorio {background-color="#0077b6"}
 
-## Laboratorio (1/4)
+## Laboratorio (1/4) {style="font-size: 90%;"}
 
 Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos grupos de variables asignados en el ejercicio de datos atípicos, junto con la subtabla de indicadores de Recursos Humanos del mismo archivo de ciudades, para conformar una nueva tabla que contenga los dos conjuntos de variables.
 
@@ -1756,7 +1543,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (2/4)
+## Laboratorio (2/4) {style="font-size: 90%;"}
 
 ::: {.incremental}
 4. Calcular la matriz de covarianzas con el comando `cov()` de R. ¿Coincide con la obtenida en el punto 3? ¿Por qué?
@@ -1768,7 +1555,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (3/4)
+## Laboratorio (3/4) {style="font-size: 90%;"}
 
 ::: {.incremental}
 7. Calcular la **matriz de covarianzas** $S$ e identificar las dos variables con **mayor covarianza** y las dos con **menor covarianza**.
@@ -1780,7 +1567,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (4/4)
+## Laboratorio (4/4) {style="font-size: 90%;"}
 
 ::: {.incremental}
 10. Comprobar que la matriz de covarianzas se obtiene con $\frac{1}{n}\tilde{X}'\tilde{X}$.
