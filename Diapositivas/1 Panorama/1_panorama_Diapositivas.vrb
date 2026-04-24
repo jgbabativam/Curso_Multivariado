@@ -1,0 +1,62 @@
+\frametitle{Correspondencias múltiples: Tablas de tablas de contingencia \textcolor {yellow}{(ECC)}}
+\tiny
+\begin{ejem}
+\newcommand{\ansbox}[1]{\fbox{\rule{0pt}{1.6ex}\hspace{1.2ex}#1\hspace{1.2ex}}}
+
+\begin{table}[H]
+\noindent\centering
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+% (1) Encabezado
+\begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash}X|}
+\hline
+\textit{20. Dígame si en su opinión se justifica o no desobedecer la ley:} \\
+\hline
+\end{tabularx}
+
+\vspace{1.5mm}
+
+% (2) Ítems reordenados
+\begin{tabularx}{\linewidth}{|
+>{\raggedright\arraybackslash}X
+>{\centering\arraybackslash}p{1.4cm}
+>{\centering\arraybackslash}p{1.4cm}|
+>{\raggedright\arraybackslash}X
+>{\centering\arraybackslash}p{1.4cm}
+>{\centering\arraybackslash}p{1.4cm}|}
+\hline
+ & \textbf{Sí} & \textbf{No} &  & \textbf{Sí} & \textbf{No} \\
+\hline
+a.\ Cuando es la única manera de alcanzar sus objetivos
+& \ansbox{1} & \ansbox{2}
+& g.\ Cuando es bastante seguro que uno no será castigado
+& \ansbox{1} & \ansbox{2} \\
+\hline
+b.\ Cuando es la única manera de ayudarle a la familia
+& \ansbox{1} & \ansbox{2}
+& h.\ Cuando alguien lo ha hecho y le ha ido bien
+& \ansbox{1} & \ansbox{2} \\
+\hline
+c.\ Cuando es la única manera de luchar públicamente contra una ley o un régimen injusto
+& \ansbox{1} & \ansbox{2}
+& i.\ Cuando es lo acostumbrado
+& \ansbox{1} & \ansbox{2} \\
+\hline
+d.\ Cuando es muy provechoso económicamente
+& \ansbox{1} & \ansbox{2}
+& j.\ Para pagar un favor
+& \ansbox{1} & \ansbox{2} \\
+\hline
+e.\ Cuando la creencia religiosa lo permite
+& \ansbox{1} & \ansbox{2}
+& k.\ Para defender propiedades o bienes
+& \ansbox{1} & \ansbox{2} \\
+\hline
+f.\ Cuando se hace para responder a una ofensa al honor
+& \ansbox{1} & \ansbox{2}
+&  &  &  \\
+\hline
+\end{tabularx}
+\end{table}
+\end{ejem}

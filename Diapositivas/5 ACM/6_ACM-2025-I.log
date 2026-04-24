@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2026.4.21)  24 APR 2026 09:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2026.4.21)  24 APR 2026 11:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1123,6 +1123,12 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 
 LaTeX Warning: Label `inerciamod' multiply defined.
 
+
+LaTeX Warning: Label `fig:plano1-2' multiply defined.
+
+
+LaTeX Warning: Label `' multiply defined.
+
 )
 \openout1 = `6_ACM-2025-I.aux'.
 
@@ -1276,11 +1282,18 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \c@lstlisting=\count392
-No file 6_ACM-2025-I.nav.
+(6_ACM-2025-I.nav)
+Overfull \vbox (2.8034pt too high) detected at line 71
+ []
+
 (6_ACM-2025-I-concordance.tex)
 
 Package hyperref Warning: Option `pdfauthor' has already been used,
 (hyperref)                setting the option has no effect on input line 79.
+
+
+Overfull \vbox (2.8034pt too high) detected at line 87
+ []
 
 LaTeX Font Info:    Trying to load font information for OT1+ztmcm on input line
  87.
@@ -1321,121 +1334,260 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 87.
 
+Overfull \vbox (15.43393pt too high) detected at line 87
+ []
 
-[1
 
-{C:/Users/PROYECTO/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/P
-ROYECTO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}] (6_ACM-2025
--I.toc)
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
+[1{C:/Users/PROYECTO/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users
+/PROYECTO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
+
+]
+Overfull \vbox (2.8034pt too high) detected at line 120
+ []
+
+(6_ACM-2025-I.toc)
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [2
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 125
+ []
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 125.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 125.
 
-Package natbib Warning: Citation `lebart1984' on page 3 undefined on input line
- 125.
 
 
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [3
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 141
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [4
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 158
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [5
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 165
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [6
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 182
+ []
+
+
 Overfull \hbox (12.63126pt too wide) detected at line 182
 []
  []
 
 
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
 [7
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 191
+ []
+
+
 Overfull \hbox (11.62447pt too wide) detected at line 191
 []
  []
 
 
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
 [8
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 214
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [9
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 229
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [10
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 245
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [11
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 269
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [12
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 277
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [13
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 287
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [14
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 295
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [15
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 303
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [16
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 324
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [17
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 338
+ []
+
+
 Overfull \hbox (14.38225pt too wide) detected at line 338
 []
  []
 
 
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
 [18
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 348
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [19
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 355
+ []
 
-Package natbib Warning: Citation `lebart2006statistique' on page 20 undefined o
-n input line 355.
 
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [20
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 379
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [21
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 389
+ []
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 389.
 
@@ -1446,18 +1598,42 @@ has been already used, duplicate ignored
 l.389 \end{frame}
                  
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
 [22
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 401
+ []
+
+
+Overfull \vbox (2.23198pt too high) detected at line 401
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [23
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 406
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [24
 
 ]
-<Justificaciones obdiencia de la ley.png, id=734, 963.6pt x 542.025pt>
+Overfull \vbox (2.8034pt too high) detected at line 416
+ []
+
+<Justificaciones obdiencia de la ley.png, id=1045, 963.6pt x 542.025pt>
 File: Justificaciones obdiencia de la ley.png Graphic file (type png)
 <use Justificaciones obdiencia de la ley.png>
 Package pdftex.def Info: Justificaciones obdiencia de la ley.png  used on input
@@ -1469,43 +1645,83 @@ Overfull \hbox (30.73085pt too wide) in paragraph at lines 416--416
  []
 
 
+Overfull \vbox (27.07095pt too high) detected at line 416
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [25
 
  <./Justificaciones obdiencia de la ley.png>]
+Overfull \vbox (2.8034pt too high) detected at line 420
+ []
+
 
 LaTeX Warning: Reference `tab:Vp1ACM' on page 26 undefined on input line 420.
 
 
-LaTeX Warning: Reference `fig:Vrspropios' on page 26 undefined on input line 42
-0.
 
 
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [26
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 428
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
 
+
+Overfull \vbox (2.8034pt too high) detected at line 454
+ []
+
 (6_ACM-2025-I.vrb)
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [27
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 457
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
 
+
+Overfull \vbox (2.8034pt too high) detected at line 465
+ []
+
 (6_ACM-2025-I.vrb
-<6_ACM-2025-I-014.pdf, id=825, 433.62pt x 433.62pt>
+<6_ACM-2025-I-014.pdf, id=1184, 433.62pt x 433.62pt>
 File: 6_ACM-2025-I-014.pdf Graphic file (type pdf)
 <use 6_ACM-2025-I-014.pdf>
 Package pdftex.def Info: 6_ACM-2025-I-014.pdf  used on input line 5.
 (pdftex.def)             Requested size: 184.3758pt x 184.37538pt.
 )
+Overfull \vbox (7.71294pt too high) detected at line 465
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [28
 
  <./6_ACM-2025-I-014.pdf>]
+Overfull \vbox (2.8034pt too high) detected at line 468
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
+
+
+Overfull \vbox (2.8034pt too high) detected at line 505
+ []
 
 (6_ACM-2025-I.vrb
 Overfull \hbox (7.5028pt too wide) in paragraph at lines 7--35
@@ -1513,22 +1729,50 @@ Overfull \hbox (7.5028pt too wide) in paragraph at lines 7--35
  []
 
 )
+Overfull \vbox (34.7651pt too high) detected at line 505
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [29
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 514
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [30
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 518
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [31
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 521
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
 
+
+Overfull \vbox (2.8034pt too high) detected at line 527
+ []
+
 (6_ACM-2025-I.vrb
-<6_ACM-2025-I-016.pdf, id=957, 433.62pt x 433.62pt>
+<6_ACM-2025-I-016.pdf, id=1376, 433.62pt x 433.62pt>
 File: 6_ACM-2025-I-016.pdf Graphic file (type pdf)
 <use 6_ACM-2025-I-016.pdf>
 Package pdftex.def Info: 6_ACM-2025-I-016.pdf  used on input line 4.
@@ -1537,54 +1781,96 @@ Package pdftex.def Info: 6_ACM-2025-I-016.pdf  used on input line 4.
 Package hyperref Warning: Ignoring empty anchor on input line 6.
 
 )
+Overfull \vbox (27.22375pt too high) detected at line 527
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [32
 
  <./6_ACM-2025-I-016.pdf>]
+Overfull \vbox (2.8034pt too high) detected at line 531
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [33
 
 ]
+Overfull \vbox (2.8034pt too high) detected at line 534
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
 
+
+Overfull \vbox (2.8034pt too high) detected at line 540
+ []
+
 (6_ACM-2025-I.vrb
-<6_ACM-2025-I-017.pdf, id=1020, 433.62pt x 433.62pt>
+<6_ACM-2025-I-017.pdf, id=1469, 433.62pt x 433.62pt>
 File: 6_ACM-2025-I-017.pdf Graphic file (type pdf)
 <use 6_ACM-2025-I-017.pdf>
 Package pdftex.def Info: 6_ACM-2025-I-017.pdf  used on input line 4.
 (pdftex.def)             Requested size: 184.3758pt x 184.37538pt.
 )
+Overfull \vbox (27.22375pt too high) detected at line 540
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [34
 
  <./6_ACM-2025-I-017.pdf>]
+Overfull \vbox (2.8034pt too high) detected at line 542
+ []
+
 \openout4 = `6_ACM-2025-I.vrb'.
 
-(6_ACM-2025-I.vrb
 
-LaTeX Warning: Reference `fig:asocia_facl' on page 35 undefined on input line 2
-.
+Overfull \vbox (2.8034pt too high) detected at line 544
+ []
 
-)
+(6_ACM-2025-I.vrb)
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [35
 
 ]
-<6_ACM-2025-I-019.pdf, id=1085, 433.62pt x 433.62pt>
+Overfull \vbox (2.8034pt too high) detected at line 553
+ []
+
+<6_ACM-2025-I-019.pdf, id=1564, 433.62pt x 433.62pt>
 File: 6_ACM-2025-I-019.pdf Graphic file (type pdf)
 <use 6_ACM-2025-I-019.pdf>
 Package pdftex.def Info: 6_ACM-2025-I-019.pdf  used on input line 553.
 (pdftex.def)             Requested size: 215.10196pt x 215.1024pt.
 
-Overfull \vbox (24.82014pt too high) detected at line 553
+Overfull \vbox (76.43996pt too high) detected at line 553
  []
 
 
 
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
+
 [36
 
  <./6_ACM-2025-I-019.pdf>]
-<6_ACM-2025-I-020.pdf, id=1118, 433.62pt x 433.62pt>
+Overfull \vbox (2.8034pt too high) detected at line 562
+ []
+
+<6_ACM-2025-I-020.pdf, id=1609, 433.62pt x 433.62pt>
 File: 6_ACM-2025-I-020.pdf Graphic file (type pdf)
 <use 6_ACM-2025-I-020.pdf>
 Package pdftex.def Info: 6_ACM-2025-I-020.pdf  used on input line 562.
@@ -1600,12 +1886,27 @@ l.562 \end{frame}
 Package hyperref Warning: Ignoring empty anchor on input line 562.
 
 
+Overfull \vbox (45.71294pt too high) detected at line 562
+ []
+
+
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [37
 
  <./6_ACM-2025-I-020.pdf>]
-No file 6_ACM-2025-I.bbl.
+Overfull \vbox (2.8034pt too high) detected at line 582
+ []
 
+(6_ACM-2025-I.bbl
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10.95> not available
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 6.
+)
+
+
+Overfull \vbox (2.8034pt too high) has occurred while \output is active []
 
 [38
 
@@ -1619,9 +1920,6 @@ No file 6_ACM-2025-I.bbl.
 \tf@snm=\write9
 \openout9 = `6_ACM-2025-I.snm'.
 
-
-Package natbib Warning: There were undefined citations.
-
 (6_ACM-2025-I.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
@@ -1634,14 +1932,14 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `6_ACM-2025-I.out' has not changed.
-(rerunfilecheck)             Checksum: 6069F78E81C3802CA9C62CD58C68C98F;1226.
+(rerunfilecheck)             Checksum: 823E6F9875F9ABB5861D9695880F5EE2;1319.
  ) 
 Here is how much of TeX's memory you used:
- 28077 strings out of 473536
- 537828 string characters out of 5713504
- 925183 words of memory out of 5000000
- 50535 multiletter control sequences out of 15000+600000
- 675817 words of font info for 202 fonts, out of 8000000 for 9000
+ 28211 strings out of 473536
+ 539536 string characters out of 5713504
+ 928440 words of memory out of 5000000
+ 50660 multiletter control sequences out of 15000+600000
+ 676103 words of font info for 202 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,22n,123p,550b,822s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
@@ -1655,13 +1953,14 @@ type1/public/amsfonts/cm/cmr10.pfb><C:/Users/PROYECTO/AppData/Local/Programs/Mi
 KTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/PROYECTO/AppData/Local
 /Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/PROYECTO/AppData
 /Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Users/PROYECTO/A
-ppData/Local/Programs/MiKTeX/fonts/type1/urw/symbol/usyr.pfb><C:/Users/PROYECTO
-/AppData/Local/Programs/MiKTeX/fonts/type1/urw/symbol/usyr.pfb><C:/Users/PROYEC
-TO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/PRO
-YECTO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on 6_ACM-2025-I.pdf (38 pages, 507483 bytes).
+ppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvro8a.pfb><C:/Users/PRO
+YECTO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/symbol/usyr.pfb><C:/Users/P
+ROYECTO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/symbol/usyr.pfb><C:/Users
+/PROYECTO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Us
+ers/PROYECTO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on 6_ACM-2025-I.pdf (38 pages, 576358 bytes).
 PDF statistics:
- 1245 PDF objects out of 1440 (max. 8388607)
- 95 named destinations out of 1000 (max. 500000)
- 231 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1758 PDF objects out of 2073 (max. 8388607)
+ 98 named destinations out of 1000 (max. 500000)
+ 239 words of extra memory for PDF output out of 10000 (max. 10000000)
 

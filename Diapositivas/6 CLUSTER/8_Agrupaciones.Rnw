@@ -390,6 +390,8 @@ Graduados de posgrado (GrPos2012).
 require(kableExtra)
 require(magrittr)
 df = SUEsolo2012[1:6,] # primeras 6 filas del archivo de trabjo
+# df <- SUEsolo2012[1:6,]
+
 kable(df, "latex", booktabs = T, 
       caption = "Primeras seis filas de indicadores del SUE", label = "sue") %>%
 kable_styling(latex_options = c("striped", "scale_down", 
