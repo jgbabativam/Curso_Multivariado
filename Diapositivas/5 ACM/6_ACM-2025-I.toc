@@ -1,0 +1,6 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Descripción del método}{3}{0}{1}
+\beamer@sectionintoc {2}{Obtención de las componentes}{14}{0}{2}
+\beamer@sectionintoc {3}{Varianza (inercia) de opciones de respuesta y de las preguntas}{20}{0}{3}
+\beamer@sectionintoc {4}{Guías para la interpretación del ACM}{23}{0}{4}
+\beamer@sectionintoc {5}{Encuesta de Cultura Ciudadana (ECC)}{24}{0}{5}

@@ -1,0 +1,6 @@
+\babel@toc {english}{}\relax 
+\beamer@sectionintoc {1}{Descripción del método}{3}{0}{1}
+\beamer@sectionintoc {2}{\textcolor {yellow}{Tablas de contingencia}}{8}{0}{2}
+\beamer@sectionintoc {3}{Ejemplos}{14}{0}{3}
+\beamer@sectionintoc {4}{Obtención de los factores}{31}{0}{4}
+\beamer@sectionintoc {5}{Ejemplos}{49}{0}{5}

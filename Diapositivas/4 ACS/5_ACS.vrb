@@ -1,0 +1,7 @@
+\frametitle{\textcolor {yellow}{Representación simultánea: }}\framesubtitle {Relaciones entre filas y columnas}
+\setkeys{Gin}{width=3.5\textwidth, height=0.8\textheight,keepaspectratio} % para redefinir el tama?o de los
+\begin{figure}[H]
+	\centering
+\includegraphics{5_ACS-029}
+	\caption{Sentimientos ante palabras como regla o norma y facilidad para actuar conforme a la ley.}\label{fig:PlanoincumAcuerd}
+\end{figure}
