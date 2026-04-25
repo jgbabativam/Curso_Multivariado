@@ -30,15 +30,6 @@ library(pacman)
 p_load(here, tidyverse, FactoMineR, factoextra, corrplot, ggrepel, gt, janitor, jpeg)
 ```
 
-```{r}
-#| label: setup-ecv
-#| message: false
-#| warning: false
-# Generar dataset ECV si no existe
-if (!file.exists(here::here("datos/ecv_departamentos_2022.csv"))) {
-  source(here::here("datos_ECV_DANE.R"))
-}
-```
 
 ```{r}
 #| label: setup-imagenes
@@ -100,7 +91,7 @@ if (file.exists(dest)) {
 
 # Descripción del método {background-color="#0077b6"}
 
-## Dos enfoques de las componentes principales
+## Dos enfoques de las componentes principales {style="font-size: 80%;"}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -123,13 +114,13 @@ Problema de optimización que **minimiza la suma de cuadrados residuales** entre
 
 ::: {.fragment}
 ::: {.re-blue}
-> **Conclusión fundamental:** Ambos enfoques producen exactamente la misma solución. El TDVS garantiza la equivalencia mediante los valores y vectores propios de $X^\prime X$ y $XX^\prime$.
+> **Conclusión:** Ambos enfoques producen exactamente la misma solución. El TDVS garantiza la equivalencia mediante los valores y vectores propios de $X^\prime X$ y $XX^\prime$.
 :::
 :::
 
 ---
 
-## Descripción del método
+## Descripción del método {style="font-size: 85%;"}
 
 El **Análisis de Componentes Principales (ACP)** produce combinaciones lineales de las variables originales, denominadas:
 
@@ -145,7 +136,7 @@ El **Análisis de Componentes Principales (ACP)** produce combinaciones lineales
 
 ---
 
-## Utilidad del ACP
+## Utilidad del ACP {style="font-size: 90%;"}
 
 El ACP es la base de los **métodos factoriales** más importantes:
 
@@ -165,7 +156,7 @@ El ACP es un método **no supervisado**: no existe una variable respuesta $Y$. E
 
 # Fundamentos matemáticos {background-color="#0077b6"}
 
-## Matriz de datos centrados, estandarizados y normados
+## Matriz de datos centrados, estandarizados y normados {style="font-size: 90%;"}
 
 Partiendo de la matriz de datos centrada y estandarizada $\widetilde{Y}$ (con denominador $\sqrt{n}$), se define:
 
@@ -176,7 +167,7 @@ donde $D = \text{diag}(s_1, \ldots, s_p)$ contiene las desviaciones estándar.
 ::: {.fragment}
 **Propiedades:**
 
-$$\text{med}(Y) = \frac{1}{n} Y^\prime \mathbf{1}_n = \mathbf{0}$$
+$$\text{med}(Y) = \frac{1}{\sqrt{n}} med(\tilde{Y}) = \mathbf{0}$$
 
 $$S_Y = Y^\prime Y = \frac{1}{n}\,\widetilde{Y}^\prime\widetilde{Y} = R$$
 
@@ -185,7 +176,7 @@ La matriz de covarianzas de $Y$ **coincide** con la matriz de correlaciones $R$.
 
 ---
 
-## Aplicación del TDVS
+## Aplicación del TDVS {style="font-size: 90%;"}
 
 Aplicando el Teorema de Descomposición en Valores Singulares a $Y$:
 
@@ -193,11 +184,15 @@ $$Y_{n \times p} = U_{n \times p}\; L_{p \times p}\; V_{p \times p}^\prime$$
 
 donde:
 
+<div style="font-size:0.90em; line-height:1.1;">
+
 | Objeto | Descripción |
 |:------:|:-----------|
-| $U$ | columnas ortonormales: $U^\prime U = I_p$ — **direcciones en espacio de objetos** |
-| $V$ | columnas ortonormales: $V^\prime V = I_p$ — **direcciones en espacio de variables** (cargas/loadings) |
+| $U$ | columnas ortonormales: $U^\prime U = I_p$, **direcciones en espacio de objetos** |
+| $V$ | columnas ortonormales: $V^\prime V = I_p$, **direcciones en espacio de variables** (cargas/loadings) |
 | $L = \text{diag}(\sqrt{\lambda_1}, \ldots, \sqrt{\lambda_p})$ | valores singulares, con $\lambda_1 \ge \cdots \ge \lambda_p \ge 0$ |
+
+</div>
 
 ::: {.fragment}
 Los $\lambda_\alpha$ son los **valores propios** de $Y^\prime Y = R$, y las columnas de $V$ son sus **vectores propios**.
@@ -205,7 +200,7 @@ Los $\lambda_\alpha$ son los **valores propios** de $Y^\prime Y = R$, y las colu
 
 ---
 
-## Matriz de componentes principales
+## Matriz de componentes principales {style="font-size: 90%;"}
 
 La **matriz de scores** (coordenadas de los objetos sobre las componentes) se obtiene como:
 
@@ -225,14 +220,14 @@ $$z_{i\alpha} = y_{i\cdot}^\prime v_\alpha = \sum_{j=1}^p y_{ij}\, v_{j\alpha}$$
 
 ---
 
-## Propiedades de las componentes principales
+## Propiedades de las componentes principales {style="font-size: 90%;"}
 
 Las columnas de $Z = YV$ satisfacen:
 
-**1. Media nula:**
+**1. Media cero:**
 $$\frac{1}{n}Z^\prime\mathbf{1}_n = \frac{1}{n}V^\prime Y^\prime \mathbf{1}_n = V^\prime \text{med}(Y) = \mathbf{0}$$
 
-**2. Covarianzas nulas (decorrelacionadas):**
+**2. Incorrelacionadas:**
 $$Z^\prime Z = V^\prime Y^\prime Y V = V^\prime R\, V = \Lambda = \text{diag}(\lambda_1, \ldots, \lambda_p)$$
 
 ::: {.fragment}
@@ -275,7 +270,7 @@ Las columnas de $W$ describen cómo cada variable se **asocia** con cada direcci
 
 ---
 
-## Proporción de varianza explicada
+## Proporción de varianza explicada {style="font-size: 90%;"}
 
 La **varianza total** de los datos estandarizados es $\text{tr}(R) = p$.
 
@@ -295,7 +290,7 @@ $$\tau_q = \frac{\sum_{\alpha=1}^q \lambda_\alpha}{\sum_{\alpha=1}^p \lambda_\al
 
 ---
 
-## Ecuaciones de transición (I)
+## Ecuaciones de transición (I) {style="font-size: 90%;"}
 
 Los vectores propios de $Y^\prime Y$ y $YY^\prime$ están profundamente relacionados.
 
@@ -315,7 +310,7 @@ $$Y Y^\prime (Y v_\alpha) = \lambda_\alpha (Y v_\alpha)$$
 
 ---
 
-## Ecuaciones de transición (II)
+## Ecuaciones de transición (II) {style="font-size: 90%;"}
 
 La norma de $Yv_\alpha$ es:
 
@@ -331,7 +326,7 @@ $$v_\alpha = \frac{1}{\sqrt{\lambda_\alpha}}\,Y^\prime u_\alpha$$
 
 ---
 
-## Ecuaciones de transición (III)
+## Ecuaciones de transición (III) {style="font-size: 90%;"}
 
 Sustituyendo $v_\alpha = \frac{1}{\sqrt{\lambda_\alpha}} Y^\prime u_\alpha$ en $z_\alpha = Yv_\alpha$:
 
@@ -345,7 +340,7 @@ $$z_\alpha = Y v_\alpha = \frac{1}{\sqrt{\lambda_\alpha}}\,YY^\prime u_\alpha = 
 
 # Guías para la interpretación {background-color="#0077b6"}
 
-## Calidad de la representación
+## Calidad de la representación {style="font-size: 90%;"}
 
 La **calidad de representación** de un conjunto de $q$ componentes mide qué fracción de la varianza total captura la aproximación de rango $q$:
 
@@ -359,7 +354,7 @@ Una variable tiene buena representación en el plano 1-2 si $\cos^2_{j,1} + \cos
 
 ---
 
-## Correlaciones variable-factor
+## Correlaciones variable-factor {style="font-size: 90%;"}
 
 La **correlación** entre la variable $X_j$ y la componente $Z_\alpha$ es:
 
@@ -377,13 +372,13 @@ En la práctica, en FactoMineR las coordenadas de las variables en el plano se o
 
 ---
 
-## Contribuciones a la varianza
+## Contribuciones a la varianza {style="font-size: 90%;"}
 
 La **contribución** de la variable $j$ a la componente $\alpha$ mide qué fracción de $\lambda_\alpha$ aporta esa variable:
 
 $$\text{CTR}(j, \alpha) = \frac{v_{j\alpha}^2}{\sum_{k=1}^p v_{k\alpha}^2} = v_{j\alpha}^2$$
 
-(ya que $v_\alpha^\prime v_\alpha = 1$)
+ya que $v_\alpha^\prime v_\alpha = 1$
 
 Para los **objetos**, la contribución del objeto $i$ a la componente $\alpha$ es:
 
@@ -397,7 +392,7 @@ Las contribuciones suman 1 sobre todas las variables (u objetos) para cada compo
 
 ---
 
-## Cosenos cuadrados
+## Cosenos cuadrados {style="font-size: 90%;"}
 
 Los **cosenos cuadrados** ($\cos^2$) miden la calidad de la representación de un objeto o variable en un plano factorial:
 
@@ -415,7 +410,7 @@ Una variable puede tener **alta contribución** a una componente pero **bajo cos
 
 ---
 
-## Planos factoriales y distancias entre variables
+## Planos factoriales y distancias entre variables {style="font-size: 90%;"}
 
 Las variables se representan en el plano factorial como vectores desde el origen. La distancia entre dos variables en el espacio de $q$ componentes es:
 
@@ -433,7 +428,7 @@ donde $\theta_{jj^\prime}$ es el ángulo entre sus vectores en el plano.
 
 ---
 
-## Tipificación de los objetos
+## Tipificación de los objetos {style="font-size: 90%;"}
 
 Para interpretar los objetos en el plano factorial se utilizan:
 
@@ -447,7 +442,7 @@ Para interpretar los objetos en el plano factorial se utilizan:
 
 ---
 
-## Biplots: relaciones objeto-variable
+## Biplots: relaciones objeto-variable {style="font-size: 90%;"}
 
 El **biplot** representa simultáneamente objetos y variables en el mismo plano factorial.
 
@@ -467,7 +462,7 @@ En el biplot de FactoMineR (`fviz_pca_biplot`), los vectores de las variables es
 
 ---
 
-## Factor tamaño y variables suplementarias
+## Factor tamaño y variables suplementarias {style="font-size: 90%;"}
 
 **Factor tamaño:**
 Cuando la primera componente está correlacionada positivamente con **todas** las variables, se interpreta como un indicador de "tamaño" o "nivel general". Las componentes posteriores capturan contrastes (forma, estructura).
@@ -494,7 +489,7 @@ PCA(datos, ind.sup = c(1, 4, 7))   # filas 1, 4 y 7 como ilustrativas
 
 # Construcción de las componentes {background-color="#0077b6"}
 
-## Método de multiplicadores de Lagrange
+## Método de multiplicadores de Lagrange {style="font-size: 90%;"}
 
 El **primer vector de cargas** $v_1$ es la solución del problema de optimización:
 
@@ -516,7 +511,7 @@ $$\frac{\partial \mathcal{L}}{\partial v_1} = 2R\,v_1 - 2\lambda_1 v_1 = 0 \impl
 
 ---
 
-## Cálculo de las componentes principales
+## Cálculo de las componentes principales {style="font-size: 90%;"}
 
 Ordenando los valores propios de $R$ de mayor a menor: $\lambda_1 \ge \lambda_2 \ge \cdots \ge \lambda_p \ge 0$, la $\alpha$-ésima componente principal es:
 
@@ -532,9 +527,9 @@ $$\text{tr}(R) = \sum_{j=1}^p s_j^2 = p = \sum_{\alpha=1}^p \lambda_\alpha$$
 El ACP redistribuye la varianza total de las $p$ variables originales en $p$ componentes independientes, concentrando la mayor parte en las primeras.
 :::
 
-# Ejemplo 1: Compresión de imágenes {background-color="#0077b6"}
+# Ejemplo 1: Análisis de imágenes {background-color="#0077b6"}
 
-## PCA aplicado a datos visuales
+## ACP aplicado a datos visuales 
 
 Una imagen digital en color es un **arreglo tridimensional** de dimensiones $n \times m \times 3$:
 
@@ -542,8 +537,11 @@ Una imagen digital en color es un **arreglo tridimensional** de dimensiones $n \
 - $m$: número de columnas de píxeles (ancho)
 - $3$: canales de color R, G, B
 
-::: {.fragment}
-Cada canal es una **matriz de intensidades** en $[0,1]$. Si aplicamos PCA a cada canal por separado:
+---
+
+## ACP aplicado a datos visuales {style="font-size: 90%;"}
+
+Cada canal es una **matriz de intensidades** en $[0,1]$. Si aplicamos ACP a cada canal por separado:
 
 $$\text{Canal}_k = U_k\, L_k\, V_k^\prime, \quad k \in \{R, G, B\}$$
 
@@ -552,11 +550,10 @@ La reconstrucción usando solo las primeras $q$ componentes es:
 $$\widehat{\text{Canal}}_k^{(q)} = U_k^{(q)}\, L_k^{(q)}\, \left(V_k^{(q)}\right)^\prime$$
 
 donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
-:::
 
 ---
 
-## La imagen: Monte Rushmore
+## Monte Rushmore {style="font-size: 90%;"}
 
 ```{r}
 #| echo: true
@@ -564,7 +561,6 @@ donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
 #| warning: false
 library(jpeg)
 
-# Cargar la imagen (853 × 1280 × 3 arreglo RGB)
 imagen <- readJPEG(here::here("images/rushmore.jpg"))
 cat("Dimensiones:", paste(dim(imagen), collapse = " × "), "\n")
 cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen),
@@ -574,7 +570,7 @@ cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen),
 ::: {.fragment}
 ```{r}
 #| fig-align: center
-#| out-width: "70%"
+#| out-width: "60%"
 knitr::include_graphics(here::here("images/rushmore.jpg"))
 ```
 :::
@@ -586,20 +582,20 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 ```{r}
 #| echo: true
 #| eval: false
-# Submuestreo para reducir cómputo (cada 3 píxeles)
+
 img <- imagen[seq(1, nrow(imagen), 3),
               seq(1, ncol(imagen), 3), ]
 
-# PCA por canal (sin centrado: preserva la escala de intensidades)
+# ACP por canal (sin centrado: preserva la escala de intensidades)
 pca_r <- prcomp(img[,,1], center = FALSE)
 pca_g <- prcomp(img[,,2], center = FALSE)
 pca_b <- prcomp(img[,,3], center = FALSE)
 
-# Función de reconstrucción
+
 reconstruir <- function(pca_ls, n_comp) {
   sapply(pca_ls, function(p) {
     rec <- p$x[, 1:n_comp] %*% t(p$rotation[, 1:n_comp])
-    pmax(0, pmin(1, rec))          # clamping a [0, 1]
+    pmax(0, pmin(1, rec))          
   }, simplify = "array")
 }
 ```
@@ -670,7 +666,7 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 
 ## Varianza explicada acumulada
 
-```{r}
+```{r, eval=FALSE}
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
@@ -694,6 +690,38 @@ if (exists("var_exp")) {
               vjust = -0.5, size = 3.2, color = "#C0392B") +
     scale_x_continuous(limits = c(1, 150)) +
     labs(title = "Varianza acumulada — canal R (representativo)",
+         x = "Número de componentes principales",
+         y = "Varianza explicada acumulada (%)") +
+    theme_bw()
+}
+```
+
+## Varianza explicada acumulada
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 5.5
+#| message: false
+#| warning: false
+if (exists("var_exp")) {
+  df_var <- data.frame(
+    comp = 1:length(var_exp),
+    var_acum = var_exp * 100
+  )
+  puntos <- df_var[df_var$comp %in% c(3, 10, 30, 100), ]
+
+  ggplot(df_var, aes(x = comp, y = var_acum)) +
+    geom_line(color = "#0077b6", linewidth = 1.1) +
+    geom_point(data = puntos, aes(x = comp, y = var_acum),
+               color = "#C0392B", size = 3.5) +
+    geom_text(data = puntos,
+              aes(label = paste0(comp, " comp.\n",
+                                 round(var_acum, 1), "%")),
+              vjust = -0.5, size = 3.2, color = "#C0392B") +
+    scale_x_continuous(limits = c(1, 150)) +
+    labs(title = "Varianza acumulada — canal R (del RGB)",
          x = "Número de componentes principales",
          y = "Varianza explicada acumulada (%)") +
     theme_bw()
@@ -876,7 +904,7 @@ fviz_pca_biplot(pca_supl, repel = TRUE,
 
 # Ejemplo 3: Calidad de vida — ECV DANE {background-color="#0077b6"}
 
-## Encuesta Nacional de Calidad de Vida
+## Encuesta Nacional de Calidad de Vida {style="font-size: 90%;"}
 
 La **ECV** es el principal instrumento del DANE para medir las condiciones de vida de los hogares colombianos. Se realiza anualmente con cobertura nacional y departamental.
 
@@ -902,7 +930,12 @@ Los indicadores negativos (analfabetismo, hacinamiento, IPM) se transformaron co
 #| echo: true
 #| message: false
 #| warning: false
-ecv <- read.csv(here::here("datos/ecv_departamentos_2022.csv"))
+library(pacman)
+p_load(tidyverse, janitor, corrplot)
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE)
+
 rownames(ecv) <- ecv$departamento
 ecv_num <- ecv |> select(-departamento)
 
@@ -924,16 +957,7 @@ cat(paste0("  ", names(ecv_num)), sep = "\n")
 #| message: false
 #| warning: false
 R_ecv <- cor(ecv_num)
-corrplot(R_ecv,
-         method  = "color",
-         type    = "upper",
-         order   = "hclust",
-         tl.cex  = 0.65,
-         tl.col  = "black",
-         addCoef.col = "black",
-         number.cex  = 0.45,
-         title = "Matriz de correlaciones — Indicadores ECV 2022",
-         mar = c(0, 0, 1.5, 0))
+corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust", tl.cex  = 0.65, tl.col  = "black", addCoef.col = "black", number.cex  = 0.45, mar = c(0, 0, 1.5, 0))
 ```
 
 ---
