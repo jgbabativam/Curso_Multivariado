@@ -1,0 +1,42 @@
+---
+title: "Informe de laboratorio #__"
+author: "Grupo _#"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    keep_tex: true
+lang: es
+fontsize: 11pt
+geometry: margin=2.5cm
+
+params:
+  universidad: "Universidad Nacional de Colombia"
+  sede: "Sede Bogotá"
+  facultad: "Facultad de ________"
+  departamento: "Departamento de ________"
+  asignatura: "Asignatura: ________"
+  grupo: "Grupo: XX"
+  laboratorio: "Informe de laboratorio #__"
+  instructor: "Profesor(a): J Corzo"
+  integrantes:
+    - "Integrante 1"
+    - "Integrante 2"
+    - "Integrante 3"
+    - "Integrante 4"
+  ciudad: "Bogotá D.C."
+  logo: "logo_unal.pdf"
+
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyhf{}
+  - \rhead{\thepage}
+  - \lhead{Informe de laboratorio}
+  - \renewcommand{\headrulewidth}{0.4pt}
+---
+
