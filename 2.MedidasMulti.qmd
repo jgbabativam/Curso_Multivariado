@@ -1691,6 +1691,16 @@ Utilizar los datos del archivo *datos_ciudades.xlsx* y los mismos grupos de vari
 | Grupo 5 | Puestos 51 a 60 |
 | Grupo 6 | Puestos 41 a 50 |
 
+## Laboratorio complementario
+
+</br>
+
+Como preparación para el examen, se recomienda resolver el siguiente laboratorio:
+
+</br>
+
+[Laboratorio](https://github.com/jgbabativam/Curso_Multivariado/blob/main/Laboratorios/LabB_Panorama_MedDesc.pdf)
+
 # GRACIAS! {background-color="#ddf3ff"}
 
 
