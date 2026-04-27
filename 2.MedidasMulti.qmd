@@ -1571,9 +1571,72 @@ ggplot(data.frame(r = 1:r_max, error = errores), aes(x = r, y = error)) +
 
 # Laboratorio {background-color="#0077b6"}
 
-## Laboratorio (1/4) {style="font-size: 90%;"}
+## Laboratorio 1 {style="font-size: 90%;"}
 
-Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos grupos de variables asignados en el ejercicio de datos atípicos, junto con la subtabla de indicadores de Recursos Humanos del mismo archivo de ciudades, para conformar una nueva tabla que contenga los dos conjuntos de variables.
+Con los datos del *ARWU_100_top.csv* elaborar un diagrama de barras que muestre las primeras 20 universidades según *World Rank*, con barras de la altura del indicador de
+
+* **Grupo_1:** número de premios Nobel o medallas Field obtenidos por sus docentes (Award)  
+* **Grupo_2:** número de premios Nobel o medallasFields obtenidos por sus egresados (Alumni)  
+* **Grupo_3:** número de investigadores altamente citados (HiCi)  
+* **Grupo_4:** número publicaciones en las revistas Science o Nature (N.S)  
+* **Grupo_5:** número de artículos altamente citados (PUB)  
+* **Grupo_6:** desempeño per cápita de su personal académico (PCP)  
+
+¿Hay universidades que se distinguen por el indicador que le correspondió al grupo?, ¿Cuáles?
+
+## Laboratorio 2 {style="font-size: 90%;"}
+
+Utilizar los datos del archivo *r14_Sci_Qs_Webometrics.csv* para elaborar gráficos de dispersión de
+
+* **Grupo_1:** del SC.Lac.Ranking con QS.Ranking  
+* **Grupo_2:** del SC.Lac.Ranking con SC.Ibe.Ranking  
+* **Grupo_3:** del SC.Lac.Ranking con WEB.Ranking.LA  
+* **Grupo_4:** del QS.Ranking con SC.Ibe.Ranking  
+* **Grupo_5:** del QS.Ranking con WEB.Ranking.LA  
+* **Grupo_6:** del QS.Ranking con WEB.Ranking.mundial  
+
+¿Hay inconsistencias en las posiciones de las universidades entre los rankings que se compararon?  
+Usar como referencia el ejemplo 2.4.2
+
+## Laboratorio 3 {style="font-size: 90%;"}
+
+Con los datos del *ARWU_100_top.csv* elaborar una matriz de dispersión con
+
+* **Grupo_1:** Los criterios del Scimago incluyendo el SC.Lac.Ranking  
+* **Grupo_2:** Los criterios del QS incluyendo el QS.Ranking  
+* **Grupo_3:** Los criterios del Scimago incluyendo el QS.Ranking  
+* **Grupo_4:** Los criterios del QS incluyendo el SC.Lac.Ranking  
+* **Grupo_5:** Los criterios del Scimago incluyendo el WEB.Ranking.LA  
+* **Grupo_6:** Los criterios del QS incluyendo el WEB.Ranking.LA  
+
+¿Se puede intuir algún tipo de asociación entre los criterios y el tipo de ranking que se incluyó en la matriz de dispersión? Usar como referencia la gráfica 2.10
+
+## Laboratorio 4
+
+Con los datos del archivo **datos_ciudades.xlsx** elaborar diagramas de cajas (Boxplots) para visualizar si hay datos atípicos en las variables
+
+* **Grupo_1:** Ciencia y Tecnología C&T  
+* **Grupo_2:** Infraestructura INFRA  
+* **Grupo_3:** Finanzas FIN  
+* **Grupo_4:** Gestión productividad GOB  
+* **Grupo_5:** Crecimiento FOR  
+* **Grupo_6:** Internacionalización INT  
+
+## Laboratorio 5
+
+Utilizar el archivo **datos_ciudades.xlsx** para calcular los cuantiles $Q_{.25}$ y $Q_{.75}$ para corroborar si hay observaciones atípicas en las variables del conjunto que le correspondió al grupo.
+
+## Laboratorio 6 {style="font-size: 90%;"}
+
+Calcular la matriz de correlación entre las variables del conjunto que le correspondió al grupo en el ejercicio 5 y escoger las dos variables que tienen mayor correlación. Calcular la distancia euclidiana entre San Andrés y Riohacha con respecto a estas dos variables y luego calcular la distancia de Mahalanobis entre las mismas ciudades respecto a las mismas dos variables. Para el cálculo de la distancia de Mahalanobis utilizar la matriz de covarianzas de las dos variables con todas las ciudades.
+
+i. ¿Son las dos distancias igual?  
+
+ii. ¿A qué se puede atribuir la diferencia si la hay?
+
+## Laboratorio 7 {style="font-size: 90%;"}
+
+Utilizar los datos del archivo *datos_ciudades.xlsx* y los mismos grupos de variables asignados en el ejercicio de datos atípicos, junto con la subtabla de indicadores de Recursos Humanos del mismo archivo de ciudades, para conformar una nueva tabla que contenga los dos conjuntos de variables.
 
 ::: {.incremental}
 1. Calcular el **vector de medias** de todas las variables del conjunto asignado al grupo.
@@ -1583,7 +1646,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (2/4) {style="font-size: 90%;"}
+## Laboratorio 8 {style="font-size: 90%;"}
 
 ::: {.incremental}
 4. Calcular la matriz de covarianzas con el comando `cov()` de R. ¿Coincide con la obtenida en el punto 3? ¿Por qué?
@@ -1595,7 +1658,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (3/4) {style="font-size: 90%;"}
+## Laboratorio 9 {style="font-size: 90%;"}
 
 ::: {.incremental}
 7. Calcular la **matriz de covarianzas** $S$ e identificar las dos variables con **mayor covarianza** y las dos con **menor covarianza**.
@@ -1607,7 +1670,7 @@ Utilizar los datos del archivo `original-filtrado-con-etiquetas` y los mismos gr
 
 ---
 
-## Laboratorio (4/4) {style="font-size: 80%;"}
+## Laboratorio 10 {style="font-size: 80%;"}
 
 ::: {.incremental}
 10. Comprobar que la matriz de covarianzas se obtiene con $\frac{1}{n}\tilde{X}'\tilde{X}$.
