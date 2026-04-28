@@ -1,0 +1,40 @@
+---
+title: |
+  Informe laboratorio 1  
+  **Introducción y panorama de EDM**
+  *caps 1 y 2*  
+  **Grupo #999**
+
+author: |
+  **Ruimberto Hellman**^[rimhell@unal.edu.co], Universidad Nacional de Colombia  
+  **Helmuth Peterhaim**^[HelmutPet@unal.edu.co], Universidad Nacional de Colombia  
+  **Wilheim Mendez**^[wilheiMend@unal.edu.co], Universidad Nacional de Colombia  
+  **Wimberto Hartman**^[rimhell@unal.edu.co], Universidad Nacional de Colombia
+  
+institute: |
+  Departamento de Estadística  
+  Facultad de Ciencias  
+  Universidad Nacional de Colombia  
+  Bogotá, Colombia
+
+abstract: |
+  Informe Laboratorio 1 Introducción, panorama de la estadística multivariada y medidas descriptivas multivariadas
+
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
+
+fontsize: 12pt
+geometry: margin=2.5cm
+bibliography: BiblioMultivariado.bib
+
+header-includes:
+  - \usepackage{titlesec}
+  - \renewcommand{\thesubsection}{\alph{subsection})}
+  - \makeatletter
+  - \renewcommand{\l@subsection}{\@dottedtocline{2}{1.5em}{2.3em}}
+  - \makeatother
+---

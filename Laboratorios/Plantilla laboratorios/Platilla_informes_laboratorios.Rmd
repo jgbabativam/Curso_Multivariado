@@ -1,0 +1,69 @@
+---
+title: |
+  Informe LABORATORIO 1  
+  **Introducción y Panorama de la 
+  
+  **Estadística Descriptiva Multivariada (EDM)**
+  
+  *caps 1 y 2*  
+  **Grupo #999**
+
+author: |
+  **Ruimberto Hellman**^[rimhell@unal.edu.co], Universidad Nacional de Colombia  
+  **Helmuth Peterhaim**^[HelmutPet@unal.edu.co], Universidad Nacional de Colombia  
+  **Wilheim Mendez**^[wilheiMend@unal.edu.co], Universidad Nacional de Colombia  
+  **Wimberto Hartman**^[rimhell@unal.edu.co], Universidad Nacional de Colombia
+  
+institute: |
+  Departamento de Estadística  
+  Facultad de Ciencias  
+  Universidad Nacional de Colombia  
+  Bogotá, Colombia
+
+abstract: |
+  Informe Laboratorio 1 Introducción, Panorama de la EDM, y Medidas Descriptivas Multivariadas
+
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
+fontsize: 12pt
+geometry: margin=2.5cm
+bibliography: BiblioMultivariado.bib
+header-includes:
+  - \usepackage{titlesec}
+  - \renewcommand{\thesubsection}{\alph{subsection})}
+  - \makeatletter
+  - \renewcommand{\l@subsection}{\@dottedtocline{2}{1.5em}{2.3em}}
+  - \makeatother
+
+---
+
+# Punto 1
+
+Con los datos del archivo arwu\_top\_100\_2025.csv reproducir gráficas del tipo XX
+
+## Identificar tendencias o patrones tanto entre el total\_score y las criterios que le correspondieron al grupo
+
+## Analizar relaciones entre rankings y variables explicativas
+
+
+# Punto 2
+
+Utilizar los datos del archivo xxxxx
+
+## Identificar tendencias o patrones entre los criterios mismos.
+
+## seguir identificando etc.....
+
+aquí se usaron resultados de 
+
+- @gareth2021introduction 
+- @pena2013analisis  
+
+# Bibliografía
+
+
+

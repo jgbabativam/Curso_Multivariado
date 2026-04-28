@@ -30,7 +30,7 @@ El repositorio está diseñado como un recurso de aprendizaje tanto para estudia
 | Bienvenida | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/0.Bienvenida.html)| 
 | Panorama | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/1.Panorama.html)|
 | Medidas Descriptivas <br> Multivariadas | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/2.MedidasMulti.html)|
-| Análisis de Componentes Principales | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/3.PCA.html) |
+| Análisis de Componentes Principales | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/3.ACP.html) |
 
 ---
 
