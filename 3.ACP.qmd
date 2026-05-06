@@ -120,6 +120,86 @@ Problema de optimización que **minimiza la suma de cuadrados residuales** entre
 
 ---
 
+## Dos enfoques de las componentes principales {style="font-size: 80%;"}
+
+<div style="text-align: justify;">
+
+Pearson (1901) planteó un problema geométrico: encontrar una representación óptima de datos multivariados en una dimensión reducida con respecto al error cuadrático medio.
+
+</div>
+
+::: columns
+::: {.column width="65%"}
+
+Sea $\mathbf{X}\in \mathbb{R}^{n \times p}$ una matriz centrada, el problema del ACP es 
+
+$$\min_{V \in \mathbb{R}^{p \times k}}
+\sum_{i=1}^{n} \left\| \mathbf{x}_i - V V^\prime \mathbf{x}_i \right\|^2
+\quad \text{s.a.} \quad V^\prime V = I_k, \quad k < p$$
+
+Equivalente a:
+
+$$\min_{V^\prime V = I_k} \left\|\mathbf{X} - \mathbf{X} V V^\prime \right\|_F^2$$
+:::
+
+::: {.column  width="35%"}
+
+![](images/Karl_Pearson.jpg){fig-align="right" width="80%"}
+
+:::
+
+:::
+
+---
+
+## Dos enfoques de las componentes principales {style="font-size: 80%;"}
+
+Hotelling (1933) mostró que las cargas de los componentes principales 
+son los eigenvectores de la matriz de covarianza muestral.
+
+::: columns
+::: {.column width="60%"}
+
+</br>
+El objetivo del PCA puede escribirse como:
+
+</br>
+
+$$
+\max_{V \in \mathbb{R}^{p \times k}}
+\operatorname{tr}\!\left( V^\prime S V \right),
+\quad \text{s.a.} \quad V^\prime V = I_k, \quad k<p
+$$
+
+donde
+
+$$
+S = \frac{1}{n} X^\prime X
+$$
+
+es la matriz de covarianza muestral y $X \in \mathbb{R}^{n \times p}$ 
+es una matriz centrada.
+
+:::
+
+::: {.column  width="40%"}
+
+![](images/hotelling.jpg){fig-align="right" width="80%"}
+
+:::
+
+:::
+
+---
+
+## Dos enfoques de las componentes principales {style="font-size: 80%;"}
+
+Enfoque de Hotelling (1933) vs Pearson (1901)
+
+<br>
+
+![](images/PCA7.png){fig-align="center"}
+
 ## Descripción del método {style="font-size: 85%;"}
 
 El **Análisis de Componentes Principales (ACP)** produce combinaciones lineales de las variables originales, denominadas:
@@ -354,6 +434,10 @@ Una variable tiene buena representación en el plano 1-2 si $\cos^2_{j,1} + \cos
 
 ---
 
+## Calidad de la representación {style="font-size: 100%;"}
+
+![](images/GPCA1.png){width=100%}
+
 ## Correlaciones variable-factor {style="font-size: 90%;"}
 
 La **correlación** entre la variable $X_j$ y la componente $Z_\alpha$ es:
@@ -410,6 +494,12 @@ Una variable puede tener **alta contribución** a una componente pero **bajo cos
 
 ---
 
+## Ilustración contribuciones y cosenos cuadrados {style="font-size: 100%;"}
+
+![](images/GPCA2.png){width=100%}
+
+---
+
 ## Planos factoriales y distancias entre variables {style="font-size: 90%;"}
 
 Las variables se representan en el plano factorial como vectores desde el origen. La distancia entre dos variables en el espacio de $q$ componentes es:
@@ -428,6 +518,12 @@ donde $\theta_{jj^\prime}$ es el ángulo entre sus vectores en el plano.
 
 ---
 
+## Planos factoriales y distancias entre variables
+
+![](images/GPCA3.png){width=100%}
+
+---
+
 ## Tipificación de los objetos {style="font-size: 90%;"}
 
 Para interpretar los objetos en el plano factorial se utilizan:
@@ -439,6 +535,18 @@ Para interpretar los objetos en el plano factorial se utilizan:
 - **Cuadrantes opuestos:** objetos en cuadrantes opuestos tienen perfiles antípodas.
 - **Distancia al origen:** objetos lejos del origen tienen perfiles distintos al perfil medio.
 :::
+
+---
+
+### Tipificación de los objetos
+
+![](images/IPCA1.png){width=100%}
+
+---
+
+### Tipificación de los objetos
+
+![](images/IPCA2.png){fig-align="center" width=100%}
 
 ---
 
@@ -456,7 +564,7 @@ El **biplot** representa simultáneamente objetos y variables en el mismo plano 
 
 ::: {.fragment}
 ::: {.callout-note}
-En el biplot de FactoMineR (`fviz_pca_biplot`), los vectores de las variables están escalados por $\sqrt{\lambda_\alpha}$, lo que facilita la interpretación simultánea.
+En el biplot de factoextra (`fviz_pca_biplot`), los vectores de las variables están escalados por $\sqrt{\lambda_\alpha}$, lo que facilita la interpretación simultánea.
 :::
 :::
 
@@ -465,7 +573,7 @@ En el biplot de FactoMineR (`fviz_pca_biplot`), los vectores de las variables es
 ## Factor tamaño y variables suplementarias {style="font-size: 90%;"}
 
 **Factor tamaño:**
-Cuando la primera componente está correlacionada positivamente con **todas** las variables, se interpreta como un indicador de "tamaño" o "nivel general". Las componentes posteriores capturan contrastes (forma, estructura).
+Cuando la primera componente está correlacionada con **todas** las variables, se interpreta como un indicador de "tamaño" o "nivel general". Las componentes posteriores capturan contrastes (forma, estructura).
 
 ::: {.fragment}
 **Variables suplementarias (ilustrativas):**
@@ -559,18 +667,24 @@ donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
 #| echo: true
 #| message: false
 #| warning: false
-library(jpeg)
+library(pacman)
+p_load(jpeg, tidyverse)
 
-imagen <- readJPEG(here::here("images/rushmore.jpg"))
+url_img <- "https://raw.githubusercontent.com/jgbabativam/Curso_Multivariado/main/images/rushmore.jpg"
+
+tmp <- tempfile(fileext = ".jpg")
+download.file(url_img, tmp, mode = "wb")
+
+imagen <- readJPEG(tmp)
+
 cat("Dimensiones:", paste(dim(imagen), collapse = " × "), "\n")
-cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen),
-    "| Canales RGB:", dim(imagen)[3])
+cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen), "| Canales RGB:", dim(imagen)[3])
 ```
 
 ::: {.fragment}
 ```{r}
 #| fig-align: center
-#| out-width: "60%"
+#| out-width: "50%"
 knitr::include_graphics(here::here("images/rushmore.jpg"))
 ```
 :::
@@ -578,6 +692,7 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 ---
 
 ## PCA aplicado a cada canal RGB
+
 
 ```{r}
 #| echo: true
