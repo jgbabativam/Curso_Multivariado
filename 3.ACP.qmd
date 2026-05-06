@@ -550,6 +550,10 @@ Para interpretar los objetos en el plano factorial se utilizan:
 
 ---
 
+![](images/ExplicaJ4.png){fig-align="center" width=100%}
+
+---
+
 ## Biplots: relaciones objeto-variable {style="font-size: 90%;"}
 
 El **biplot** representa simultáneamente objetos y variables en el mismo plano factorial.
