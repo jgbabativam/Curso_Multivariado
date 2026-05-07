@@ -865,40 +865,63 @@ Los datos corresponden a **promedios por país** de las posiciones de sus univer
 
 ---
 
-## Carga y preparación de los datos
+## Carga de los datos
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
 library(pacman)
-p_load(tidyverse, FactoMineR, factoextra, janitor)
+p_load(tidyverse, FactoMineR, factoextra, janitor, corrplot)
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 rank_lat <- read.csv2(paste0(url, "r14_Sci_Qs_Webometrics.csv"))
+```
 
-# Promedios por país: columnas 2 (país) y 3-5 (rankings numéricos)
-rank_sub <- rank_lat[-34, c(2:5)]          # 4 cols: país + 3 rankings
-rank_paises <- aggregate(
-  rank_sub[, 2:4],                          # solo columnas numéricas
-  by  = list(Pais = rank_sub[, 1]),
-  FUN = function(x) mean(x, na.rm = TRUE)
-) |>
-  column_to_rownames("Pais") |>
-  setNames(c("SC_Lac", "QS", "WEB"))
+</br>
 
-# Eliminar países donde algún ranking es NaN
-rank_paises <- rank_paises[complete.cases(rank_paises), ]
+<div style="height:380px; overflow-y:auto;">
+```{r}
+#| message: false
+#| warning: false
+rank_lat |>
+  select(2:5) |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_options(table.font.size = px(16), data_row.padding = px(3),
+              table.width = pct(100))
+```
+</div>
 
-# Negativos: mayor valor = mejor posición
-tres_rank <- -rank_paises
+
+---
+
+## Preparación de los datos {style="font-size: 90%;"}
+
+Se analizan los promedios por país: columnas 2 (país) y 3-5 (rankings numéricos)
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+rank <- rank_lat |> 
+        select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |> 
+        group_by(Pais) |> 
+        summarise(across(where(is.numeric), ~mean(., na.rm = T))) |>
+        column_to_rownames("Pais") |> 
+        mutate(across(where(is.numeric), ~.*-1)) #Invertir escala 
+         
+names(rank) <- c("SC_Lac", "QS", "WEB")
 ```
 
 <div style="height:280px; overflow-y:auto;">
 ```{r}
 #| message: false
 #| warning: false
-tres_rank |>
+rank |>
   round(1) |>
   rownames_to_column("País") |>
   gt() |>
@@ -918,20 +941,18 @@ tres_rank |>
 #| echo: true
 #| message: false
 #| warning: false
-pca_rank <- PCA(tres_rank, graph = FALSE)
+pca_rank <- PCA(rank, graph = FALSE)
 ```
 
 ```{r}
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 4
-fviz_eig(pca_rank, addlabels = TRUE, ylim = c(0, 100),
-         barfill = "#0077b6", barcolor = "#0077b6",
-         linecolor = "#C0392B") +
+#| fig-height: 6
+
+fviz_eig(pca_rank, addlabels = TRUE, ylim = c(0, 100), barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
   labs(title = "Gráfico de sedimentación — Rankings latinoamericanos",
-       x = "Componente", y = "% varianza explicada") +
-  theme_bw()
+       x = "Componente", y = "% varianza explicada") + theme_bw()
 ```
 
 ---
@@ -942,18 +963,15 @@ fviz_eig(pca_rank, addlabels = TRUE, ylim = c(0, 100),
 #| echo: true
 #| fig-align: center
 #| fig-width: 8
-#| fig-height: 5
-fviz_pca_var(pca_rank,
-             col.var = "contrib",
+#| fig-height: 6
+fviz_pca_var(pca_rank, col.var = "contrib",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel = TRUE,
-             title = "Plano 1-2 — Variables (rankings)") +
-  theme_bw()
+             repel = TRUE, title = "Plano 1-2 — Variables (rankings)") + theme_bw()
 ```
 
 ---
 
-## Indicadores básicos — Variables
+## Indicadores básicos — Variables  {style="font-size: 80%;"}
 
 ```{r}
 #| echo: true
@@ -974,13 +992,10 @@ round(res_var$cos2, 3)
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 5.5
-fviz_pca_ind(pca_rank,
-             col.ind = "cos2",
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel = TRUE,
-             title = "Plano 1-2 — Países (rankings universitarios)") +
-  theme_bw()
+#| fig-height: 6.5
+fviz_pca_ind(pca_rank, col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE, 
+             title = "Plano 1-2 — Países (rankings universitarios)") + theme_bw()
 ```
 
 ---
@@ -991,34 +1006,58 @@ fviz_pca_ind(pca_rank,
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 5.5
-fviz_pca_biplot(pca_rank,
-                repel = TRUE,
-                col.var = "#C0392B",
-                col.ind = "#0077b6",
-                title = "Biplot — Rankings universitarios latinoamericanos") +
-  theme_bw()
+#| fig-height: 6.5
+fviz_pca_biplot(pca_rank, repel = TRUE,
+                col.var = "#C0392B", col.ind = "#0077b6",
+                title = "Biplot — Rankings universitarios latinoamericanos") + theme_bw()
 ```
 
 ---
 
-## Objetos suplementarios: países con una sola universidad
+## Análisis complementario
+
+Número de instituciones por país:
+
+```{r}
+#| echo: true
+
+n_inst <- rank_lat |>
+          select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |> 
+          count(Pais, name = "nInst") 
+
+n_inst[n_inst$nInst == 1,] ## Paises con una sola institución
+
+```
+
+<div style="height:230px; overflow-y:auto;">
+```{r}
+#| message: false
+#| warning: false
+n_inst |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_options(table.font.size = px(16), data_row.padding = px(3),
+              table.width = pct(50))
+```
+</div>
+
+--- 
+
+## Objetos suplementarios: países con una sola universidad {style="font-size: 80%;"}
 
 Los países con una sola institución en los rankings (Bolivia, Cuba, Puerto Rico, Paraguay) son **atípicos** respecto a los demás. Se incluyen como objetos ilustrativos:
 
 ```{r}
 #| echo: true
 #| fig-align: center
-#| fig-width: 9
-#| fig-height: 4.5
+#| fig-width: 11
+#| fig-height: 6.5
 # Bolivia=1, Cuba=3, Puerto Rico=10, Paraguay=13
-pca_supl <- PCA(tres_rank, ind.sup = c(1, 3, 10, 13), graph = FALSE)
-fviz_pca_biplot(pca_supl, repel = TRUE,
-                col.var  = "#C0392B",
-                col.ind  = "#0077b6",
-                col.ind.sup = "#8E44AD",
-                title = "Biplot con países ilustrativos (en morado)") +
-  theme_bw()
+pca_supl <- PCA(rank, ind.sup = c(1, 3, 10, 13), graph = FALSE)
+fviz_pca_biplot(pca_supl, repel = TRUE, col.var  = "#C0392B", col.ind  = "#0077b6", col.ind.sup = "#8E44AD",
+                title = "Biplot con países ilustrativos (en morado)") + theme_bw()
 ```
 
 # Ejemplo 3: Calidad de vida — ECV DANE {background-color="#0077b6"}
@@ -1028,7 +1067,7 @@ fviz_pca_biplot(pca_supl, repel = TRUE,
 La **ECV** es el principal instrumento del DANE para medir las condiciones de vida de los hogares colombianos. Se realiza anualmente con cobertura nacional y departamental.
 
 ::: {.fragment}
-El dataset que usaremos contiene **15 indicadores de calidad de vida** para los **33 departamentos** de Colombia (incluido Bogotá D.C.), construidos a partir de los resultados publicados por el DANE para la ECV 2022.
+El conjunto de datos que usaremos contiene **15 indicadores de calidad de vida** para los **33 departamentos** de Colombia (incluido Bogotá D.C.), construidos a partir de los resultados publicados por el DANE para la ECV 2022.
 
 Todas las variables están en escala 0–100 con la convención:
 :::
@@ -1037,13 +1076,13 @@ Todas las variables están en escala 0–100 con la convención:
 ::: {.re-blue}
 > **Mayor valor = mejor condición de vida**
 
-Los indicadores negativos (analfabetismo, hacinamiento, IPM) se transformaron como $100 - \text{indicador}$.
+Los indicadores en escala inversa (analfabetismo, hacinamiento, IPM) se transformaron como $I_j = 100 - \text{indicador}$.
 :::
 :::
 
 ---
 
-## Carga y exploración del dataset
+## Carga de los datos
 
 ```{r}
 #| echo: true
@@ -1053,16 +1092,26 @@ library(pacman)
 p_load(tidyverse, janitor, corrplot)
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
-ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE)
-
-rownames(ecv) <- ecv$departamento
-ecv_num <- ecv |> select(-departamento)
-
-cat("Dimensiones:", nrow(ecv_num), "departamentos ×",
-    ncol(ecv_num), "indicadores\n")
-cat("\nVariables:\n")
-cat(paste0("  ", names(ecv_num)), sep = "\n")
+ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE) |> 
+       column_to_rownames("departamento")
 ```
+
+<div style="height:450px; overflow-y:auto;">
+```{r}
+#| message: false
+#| warning: false
+ecv |>
+  round(1) |>
+  rownames_to_column("departamento") |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_options(table.font.size = px(16), data_row.padding = px(3),
+              table.width = pct(100))
+```
+</div>
+
 
 ---
 
@@ -1071,32 +1120,34 @@ cat(paste0("  ", names(ecv_num)), sep = "\n")
 ```{r}
 #| echo: true
 #| fig-align: center
-#| fig-width: 8
-#| fig-height: 5.5
+#| fig-width: 10
+#| fig-height: 6.5
 #| message: false
 #| warning: false
-R_ecv <- cor(ecv_num)
-corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust", tl.cex  = 0.65, tl.col  = "black", addCoef.col = "black", number.cex  = 0.45, mar = c(0, 0, 1.5, 0))
+R_ecv <- cor(ecv)
+corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust", 
+         col = colorRampPalette(c("#2b8cbe", "white", "#d7301f"))(200),  diag = FALSE,
+         tl.cex  = 0.65, tl.col  = "black", addCoef.col = "black", number.cex  = 0.45, mar = c(0, 0, 1.5, 0))
 ```
 
 ---
 
-## Cálculo del ACP con FactoMineR
+## Análisis de componentes principales
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
-pca_ecv <- PCA(ecv_num,
+pca_ecv <- PCA(ecv, graph = FALSE,
                scale.unit = TRUE,   # estandariza automáticamente
-               ncp        = 5,      # retener 5 componentes
-               graph      = FALSE)
+               ncp        = 5)      # retener 5 componentes
+               
 ```
 
 ::: {.fragment}
 ```{r}
 #| echo: true
-# Tabla de autovalores
+# Tabla de valores propios
 eig_ecv <- get_eigenvalue(pca_ecv)
 round(eig_ecv, 3)
 ```
@@ -1110,19 +1161,10 @@ round(eig_ecv, 3)
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 5
-fviz_eig(pca_ecv,
-         addlabels  = TRUE,
-         ncp        = 10,
-         ylim       = c(0, 80),
-         barfill    = "#0077b6",
-         barcolor   = "#0077b6",
-         linecolor  = "#C0392B") +
-  geom_hline(yintercept = 100/ncol(ecv_num),
-             linetype = "dashed", color = "gray50") +
+#| fig-height: 6
+fviz_eig(pca_ecv, addlabels  = TRUE, ncp = 10) +
   labs(title = "Gráfico de sedimentación — Calidad de vida ECV 2022",
-       x = "Componente", y = "% varianza explicada") +
-  theme_bw()
+       x = "Componente", y = "% varianza explicada") + theme_bw()
 ```
 
 ---
@@ -1133,13 +1175,10 @@ fviz_eig(pca_ecv,
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 5.5
-fviz_pca_var(pca_ecv,
-             col.var    = "cos2",
+#| fig-height: 6.5
+fviz_pca_var(pca_ecv, col.var    = "cos2", repel = TRUE,
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel      = TRUE,
-             title      = "Plano 1-2 — Indicadores de calidad de vida") +
-  theme_bw()
+             title      = "Plano 1-2 — Indicadores de calidad de vida") + theme_bw()
 ```
 
 ---
@@ -1158,7 +1197,7 @@ fviz_pca_var(pca_ecv,
 fviz_contrib(pca_ecv, choice = "var", axes = 1,
              fill = "#0077b6", color = "#0077b6",
              title = "Contribuciones a la Dim 1") +
-  theme_bw()
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
 ```
 
 ### Dimensión 2
@@ -1171,7 +1210,7 @@ fviz_contrib(pca_ecv, choice = "var", axes = 1,
 fviz_contrib(pca_ecv, choice = "var", axes = 2,
              fill = "#C0392B", color = "#C0392B",
              title = "Contribuciones a la Dim 2") +
-  theme_bw()
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
 ```
 
 :::
@@ -1184,14 +1223,10 @@ fviz_contrib(pca_ecv, choice = "var", axes = 2,
 #| echo: true
 #| fig-align: center
 #| fig-width: 10
-#| fig-height: 5.5
-fviz_pca_ind(pca_ecv,
-             col.ind   = "cos2",
+#| fig-height: 6.5
+fviz_pca_ind(pca_ecv, col.ind   = "cos2", repel = TRUE, labelsize = 3.5,
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             repel     = TRUE,
-             labelsize = 3,
-             title     = "Plano 1-2 — Departamentos de Colombia") +
-  theme_bw()
+             title     = "Plano 1-2 — Departamentos de Colombia") + theme_bw()
 ```
 
 ---
@@ -1202,14 +1237,10 @@ fviz_pca_ind(pca_ecv,
 #| echo: true
 #| fig-align: center
 #| fig-width: 10
-#| fig-height: 5.5
-fviz_pca_biplot(pca_ecv,
-                repel     = TRUE,
-                col.var   = "#C0392B",
-                col.ind   = "#0077b6",
-                labelsize = 3,
-                title     = "Biplot — Calidad de vida ECV 2022") +
-  theme_bw()
+#| fig-height: 6.5
+fviz_pca_biplot(pca_ecv, repel = TRUE, labelsize = 3.5,
+                col.var   = "#C0392B", col.ind   = "#0077b6",
+                title     = "Biplot — Calidad de vida ECV 2022") + theme_bw()
 ```
 
 ---
@@ -1237,7 +1268,8 @@ ggplot(coord_var, aes(x = Dim1, y = Dim2, label = Variable)) +
   annotate("text", x = 0.85, y = -0.9,
            label = "Brecha digital\ny conectividad",
            fontface = "italic", color = "#C0392B", size = 3.5) +
-  annotate("text", x = -0.85, y = -0.9,
+  xlim(-0.8, 1.1)+
+  annotate("text", x = -0.65, y = -0.9,
            label = "Atraso en\nservicios básicos",
            fontface = "italic", color = "#27AE60", size = 3.5) +
   labs(title = "Coordenadas de variables en el plano 1-2",
@@ -1254,14 +1286,14 @@ ggplot(coord_var, aes(x = Dim1, y = Dim2, label = Variable)) +
 
 ::: {.incremental style="font-size: 0.88em;"}
 - **Dim 1 (eje horizontal):** captura el **nivel general de calidad de vida**. Bogotá D.C. y departamentos del Eje Cafetero tienen coordenadas altas (derecha); Chocó, La Guajira y territorios amazónicos están a la izquierda.
-- **Dim 2 (eje vertical):** diferencia entre departamentos con **alta conectividad** (internet, computador, gas natural — arriba) vs. **alta cobertura de servicios básicos** (acueducto, alcantarillado — abajo). San Andrés, por ejemplo, tiene buena cobertura de servicios pero baja en gas natural.
+- **Dim 2 (eje vertical):** diferencia entre departamentos con **alta conectividad** (internet, computador, gas natural — arriba) vs. **alta cobertura de servicios básicos** (acueducto, alcantarillado — abajo). 
 - **Variables en el mismo cuadrante:** están correlacionadas positivamente (p.ej., `internet` y `computador`).
 - **Variables en cuadrantes opuestos:** están negativamente correlacionadas en ese plano.
 :::
 
 # Variables y objetos suplementarios {background-color="#0077b6"}
 
-## Ejemplo ARWU: variables activas vs. ilustrativas
+## Ejemplo ARWU: variables activas vs. ilustrativas {style="font-size: 90%;"}
 
 Los rankings construidos con ponderaciones predefinidas (ARWU World Rank, Regional Rank, National Rank) pueden usarse como **variables ilustrativas** para validar si las componentes capturan los mismos patrones.
 
@@ -1290,7 +1322,7 @@ pca_arwu <- PCA(arwu_pca_data,
 
 ---
 
-## Plano de variables: criterios activos vs. rankings ilustrativos
+## Plano de variables: criterios activos vs. ilustrativos
 
 ```{r}
 #| echo: true
@@ -1314,6 +1346,7 @@ Las 50 universidades de menor rango se proyectan como **objetos ilustrativos** s
 #| fig-align: center
 #| fig-width: 9
 #| fig-height: 4.8
+#| eval: false
 # Top 50 como activos; universidades 51-100 como ilustrativas
 arwu_pca_supl <- PCA(arwu_pca_data,
                      quanti.sup = 1:length(vars_sup),
@@ -1329,6 +1362,36 @@ fviz_pca_biplot(arwu_pca_supl,
                 title = "ARWU — Top 50 (azul) y objetos ilustrativos 51-100 (morado)") +
   theme_bw()
 ```
+
+---
+
+## Objetos suplementarios: universidades del rango 51-100
+
+Las 50 universidades de menor rango se proyectan como **objetos ilustrativos** sobre el plano construido solo con el Top-50 del ARWU:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-align: center
+#| fig-width: 11
+#| fig-height: 6.8
+# Top 50 como activos; universidades 51-100 como ilustrativas
+arwu_pca_supl <- PCA(arwu_pca_data,
+                     quanti.sup = 1:length(vars_sup),
+                     ind.sup    = 51:100,
+                     graph      = FALSE)
+
+fviz_pca_biplot(arwu_pca_supl,
+                repel        = TRUE,
+                col.var      = "#C0392B",
+                col.ind      = "#0077b6",
+                col.ind.sup  = "#8E44AD",
+                label        = "var",
+                title = "ARWU — Top 50 (azul) y objetos ilustrativos 51-100 (morado)") +
+  theme_bw()
+```
+
 
 # Laboratorio {background-color="#0077b6"}
 
