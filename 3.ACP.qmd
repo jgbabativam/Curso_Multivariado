@@ -275,7 +275,7 @@ donde:
 </div>
 
 ::: {.fragment}
-Los $\lambda_\alpha$ son los **valores propios** de $Y^\prime Y = R$, y las columnas de $V$ son sus **vectores propios**.
+Los $\lambda_\alpha$ son los valores propios de $Y^\prime Y = R$, y las columnas de $V$ son sus vectores propios. $\lambda_\alpha$ también son los valores propios de $YY^\prime$ y $U$ contiene en sus columnas sus vectores propios.
 :::
 
 ---
@@ -326,7 +326,7 @@ $$z_{i\cdot} = \left(z_{i1}, \ldots, z_{i\alpha}, \ldots, z_{ip}\right)$$
 
 La varianza de la $\alpha$-ésima componente en el conjunto de $n$ objetos es:
 
-$$\text{var}(Z_\alpha) = \frac{1}{n}\sum_{i=1}^n z_{i\alpha}^2 = \frac{1}{n}\,v_\alpha^\prime Y^\prime Y\, v_\alpha = \frac{\lambda_\alpha}{n} \cdot n = \lambda_\alpha$$
+$$\text{var}(Z_\alpha) = v_\alpha^\prime Y^\prime Y\, v_\alpha = v_\alpha^\prime R v_\alpha = \lambda_\alpha v_\alpha^\prime v_\alpha = \lambda_\alpha $$
 
 ::: {.fragment}
 **Interpretación:** $v_1$ es la dirección de máxima varianza en el espacio de las variables; $v_2$ es la dirección de máxima varianza **ortogonal a** $v_1$; y así sucesivamente.
@@ -340,7 +340,7 @@ De $Y = ULV^\prime$ se obtiene $Y^\prime = VLU^\prime$. Proyectando las variable
 
 $$W = Y^\prime U = VL$$
 
-La coordenada de la variable $j$ sobre la componente $\alpha$:
+La $\alpha$-ésima componente es $w_\alpha = Y^\prime u_\alpha$ y la coordenada de la variable $j$ sobre la componente $\alpha$:
 
 $$w_{j\alpha} = \sum_{i=1}^n u_{i\alpha}\, y_{ij}$$
 
@@ -372,7 +372,7 @@ $$\tau_q = \frac{\sum_{\alpha=1}^q \lambda_\alpha}{\sum_{\alpha=1}^p \lambda_\al
 
 ## Ecuaciones de transición (I) {style="font-size: 90%;"}
 
-Los vectores propios de $Y^\prime Y$ y $YY^\prime$ están profundamente relacionados.
+Los vectores propios de $Y^\prime Y$ y $YY^\prime$ comparten los valores propios. 
 
 Sea $v_\alpha$ vector propio de $R = Y^\prime Y$ con valor propio $\lambda_\alpha$:
 
@@ -420,23 +420,13 @@ $$z_\alpha = Y v_\alpha = \frac{1}{\sqrt{\lambda_\alpha}}\,YY^\prime u_\alpha = 
 
 # Guías para la interpretación {background-color="#0077b6"}
 
-## Calidad de la representación {style="font-size: 90%;"}
+## Calidad de la representación global {style="font-size: 90%;"}
 
 La **calidad de representación** de un conjunto de $q$ componentes mide qué fracción de la varianza total captura la aproximación de rango $q$:
 
 $$\tau_q = \frac{\sum_{\alpha=1}^q \lambda_\alpha}{p}$$
 
-Para las **variables**, la calidad en el plano formado por las componentes $\alpha$ y $\beta$ se mide con el coseno cuadrado:
-
-$$\cos^2(\theta_{j,\alpha}) = \lambda_\alpha\, v_{j\alpha}^2$$
-
-Una variable tiene buena representación en el plano 1-2 si $\cos^2_{j,1} + \cos^2_{j,2}$ es cercano a 1.
-
----
-
-## Calidad de la representación {style="font-size: 100%;"}
-
-![](images/GPCA1.png){width=100%}
+![](images/GPCA1a.png){width=100%}
 
 ## Correlaciones variable-factor {style="font-size: 90%;"}
 
@@ -1395,51 +1385,105 @@ fviz_pca_biplot(arwu_pca_supl,
 
 # Laboratorio {background-color="#0077b6"}
 
-## Laboratorio (1/3) {style="font-size: 90%;"}
+## Índice de Probreza Multidimensional - IPM
 
-Usando los datos de la **Encuesta Nacional de Calidad de Vida (ECV 2022)** cargados en la presentación (`ecv_departamentos_2022.csv`):
+![](images/IPM.png){fig-align="right" width="80%"}
 
-::: {.incremental}
-1. Calcule la **matriz de correlaciones** entre los 15 indicadores. Identifique los tres pares de indicadores más correlacionados y los tres con correlación más cercana a cero.
+## Asignación por grupos
 
-2. Aplique el ACP usando `PCA()` de `FactoMineR`. Compare los resultados usando:
-   a. `scale.unit = TRUE` (sobre $R$)
-   b. `scale.unit = FALSE` (sobre $S$)
+Cada grupo trabajará con una semilla distinta y con **3 dimensiones del IPM diferentes**.
 
-   ¿Cambian los resultados? ¿Por qué?
+| Grupo | Semilla | Dimensiones IPM asignadas |
+|------:|:-------:|----------------------------|
+| 1 | 1234 | Educación – Niñez y juventud – Trabajo |
+| 2 | 4321 | Salud – Vivienda – Servicios públicos |
+| 3 | 2468 | Educación – Salud – Trabajo |
+| 4 | 1357 | Niñez y juventud – Vivienda – Servicios públicos |
+| 5 | 9876 | Educación – Vivienda – Trabajo |
 
-3. ¿Cuántas componentes retiene cada uno de los tres criterios presentados? Justifique cuál le parece más adecuado para este conjunto de datos.
-:::
 
----
-
-## Laboratorio (2/3) {style="font-size: 90%;"}
-
-::: {.incremental}
-4. Construya el **plano 1-2 de variables** con `fviz_pca_var()`. Identifique:
-   - Las dos variables con mayor contribución a la Dimensión 1.
-   - Las dos variables con mayor contribución a la Dimensión 2.
-   - Una variable con bajo cos² en el plano 1-2 (mal representada).
-
-5. Construya el **plano de individuos** con `fviz_pca_ind()` coloreando por cos². Identifique:
-   - El departamento con mejor calidad de vida general.
-   - El departamento peor representado en el plano 1-2.
-   - Dos departamentos con perfiles similares (cercanos en el plano).
-   - Dos departamentos con perfiles opuestos (en cuadrantes contrarios).
-
-6. Genere el **biplot** e interprete qué variable(s) caracterizan al departamento que quedó en el extremo derecho del eje 1.
-:::
 
 ---
 
-## Laboratorio (3/3) {style="font-size: 90%;"}
+## Laboratorio (1/5)
+
+Usando los datos a nivel de hogares del **IPM** de la **Encuesta Nacional de Calidad de Vida (ECV 2025)** disponibles en el portal de microdatos del DANE:
+
+[DANE Microdatos ECV 2025](https://microdatos.dane.gov.co/index.php/catalog/903/get-microdata)
+
+Cada grupo debe usar el siguiente código como referencia para generar el conjunto de datos que va a trabajar. Los códigos deben ser entregados.
+
+---
+
+## Laboratorio (2/5) {style="font-size: 90%;"}
+
+Selección de la muestra de 30.000 hogares.
+
+```{r, echo=TRUE, eval=FALSE}
+library(pacman)
+p_load(tidyverse, sampling, haven)
+
+ipm <- read_sav("IPM2025.sav")
+n_total <- 30000 # Tamaño muestra
+
+# Tamaños por estrato (afijación proporcional)
+tam_estrato <- ipm |> 
+               count(DEPARTAMENTO) |> 
+               mutate(nh = round(n / sum(n) * n_total))
+
+# Diseño estratificado
+set.seed(semilla)
+muestra <- strata(data = ipm,
+                  stratanames = "DEPARTAMENTO",
+                  size = tam_estrato$nh,
+                  method = "srswor")
+
+df_ipm <- getdata(ipm, muestra)
+```
+
+## Laboratorio (3/5) {style="font-size: 90%;"}
+
+1. Calcules los indicadores de las variables del IPM de las dimensiones que le correspondió a nivel de departamento, incluyendo el promedio del IPM y el porcentaje de hogares en condición de pobreza multidimensional.
+
+2. Calcule la matriz de correlaciones entre los indicadores seleccionados.
+
+3. Aplique el ACP usando PCA() de FactoMineR. Compare:
+  - `scale.unit = TRUE` (sobre $R$)
+  - `scale.unit = FALSE` (sobre $S$)
+
+¿Cambian los resultados? ¿Por qué?
+
+4. ¿Cuántas componentes retiene cada uno de los tres criterios presentados? Justifique cuál le parece más adecuado para este conjunto de datos.
+
+## Laboratorio (4/5) {style="font-size: 90%;"}
+
+::: {.incremental} 
+
+5. Construya el **plano 1-2 de variables** con fviz_pca_var(). 
+Identifique: 
+  - Las dos variables con mayor contribución a la Dimensión 1. 
+  - Las dos variables con mayor contribución a la Dimensión 2. 
+  - Una variable con bajo $cos^2$ en el plano 1-2 (mal representada). 
+
+6. Construya el **plano de individuos** con fviz_pca_ind() coloreando por $cos^2$. 
+Identifique: 
+  - El departamento con mejor calidad de vida general. 
+  - El departamento peor representado en el plano 1-2. 
+  - Dos departamentos con perfiles similares (cercanos en el plano). 
+  - Dos departamentos con perfiles opuestos (en cuadrantes contrarios).
+
+:::
+
+## Laboratorio (5/5) {style="font-size: 90%;"}
 
 ::: {.incremental}
-7. Agregue la variable `ipm` original (sin transformar) como **variable suplementaria** usando `quanti.sup`. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional?
 
-8. Repita el ACP con los indicadores de **vivienda** (`piso_adec`, `paredes_adec`) como variables suplementarias. ¿Cambia la interpretación de las componentes?
+7. Genere el **biplot** e interprete qué variable(s) caracterizan al departamento que quedó en el extremo derecho del eje 1. 
 
-9. **Reto:** Clasifique los departamentos en **4 grupos** usando K-means sobre las coordenadas de las 2 primeras componentes. Visualice los grupos en el biplot con `fviz_cluster()`. ¿Coinciden los grupos con las regiones naturales de Colombia?
+8. Agregue las variables IPM y porcentaje de hogares en condición de pobreza  (sin transformar) como **variables suplementarias** usando quanti.sup. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional? 
 
-10. Con los datos de **ciudades colombianas** disponibles en el repositorio, realice un ACP con las variables de infraestructura e investigación. Use la variable `Región` como variable ilustrativa cualitativa. Utilice `quali.sup` en `PCA()`.
+9. Repita el ACP con los indicadores de una de las dimensiones como variables suplementarias. ¿Cambia la interpretación de las componentes? 
+
+10. **Reto:** Clasifique los departamentos en **4 grupos**. 
+
 :::
