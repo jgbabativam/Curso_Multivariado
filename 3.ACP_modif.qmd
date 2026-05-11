@@ -70,8 +70,10 @@ if (file.exists(dest)) {
     if (!file.exists(ruta)) writeJPEG(reconstruir(pca_list, k), ruta)
   }
 
-  # Varianza explicada acumulada del canal rojo (representativo)
-  var_exp <- cumsum(pca_r$sdev^2) / sum(pca_r$sdev^2)
+  # Varianza explicada acumulada por canal
+  var_exp_r <- cumsum(pca_r$sdev^2) / sum(pca_r$sdev^2)
+  var_exp_g <- cumsum(pca_g$sdev^2) / sum(pca_g$sdev^2)
+  var_exp_b <- cumsum(pca_b$sdev^2) / sum(pca_b$sdev^2)
 }
 ```
 
@@ -131,7 +133,7 @@ Pearson (1901) planteó un problema geométrico: encontrar una representación �
 ::: columns
 ::: {.column width="65%"}
 
-Sea $\mathbf{X}\in \mathbb{R}^{n \times p}$ una matriz centrada, el problema del ACP es 
+Sea $\mathbf{X}\in \mathbb{R}^{n \times p}$ una matriz centrada, el problema del ACP es
 
 $$\min_{V \in \mathbb{R}^{p \times k}}
 \sum_{i=1}^{n} \left\| \mathbf{x}_i - V V^\prime \mathbf{x}_i \right\|^2
@@ -154,7 +156,7 @@ $$\min_{V^\prime V = I_k} \left\|\mathbf{X} - \mathbf{X} V V^\prime \right\|_F^2
 
 ## Dos enfoques de las componentes principales {style="font-size: 80%;"}
 
-Hotelling (1933) mostró que las cargas de los componentes principales 
+Hotelling (1933) mostró que las cargas de los componentes principales
 son los eigenvectores de la matriz de covarianza muestral.
 
 ::: columns
@@ -177,7 +179,7 @@ $$
 S = \frac{1}{n} X^\prime X
 $$
 
-es la matriz de covarianza muestral y $X \in \mathbb{R}^{n \times p}$ 
+es la matriz de covarianza muestral y $X \in \mathbb{R}^{n \times p}$
 es una matriz centrada.
 
 :::
@@ -372,7 +374,7 @@ $$\tau_q = \frac{\sum_{\alpha=1}^q \lambda_\alpha}{\sum_{\alpha=1}^p \lambda_\al
 
 ## Ecuaciones de transición (I) {style="font-size: 90%;"}
 
-Los vectores propios de $Y^\prime Y$ y $YY^\prime$ comparten los valores propios. 
+Los vectores propios de $Y^\prime Y$ y $YY^\prime$ comparten los valores propios.
 
 Sea $v_\alpha$ vector propio de $R = Y^\prime Y$ con valor propio $\lambda_\alpha$:
 
@@ -677,7 +679,7 @@ rank_lat <- read.csv2(paste0(url, "r14_Sci_Qs_Webometrics.csv"))
 #| message: false
 #| warning: false
 rank_lat |>
-  select(1:5) |>
+  select(2:5) |>
   gt() |>
   opt_row_striping() |>
   tab_style(style = cell_text(weight = "bold"),
@@ -699,13 +701,13 @@ Se analizan los promedios por país: columnas 2 (país) y 3-5 (rankings numéric
 #| message: false
 #| warning: false
 
-rank <- rank_lat |> 
-        select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |> 
-        group_by(Pais) |> 
+rank <- rank_lat |>
+        select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |>
+        group_by(Pais) |>
         summarise(across(where(is.numeric), ~mean(., na.rm = T))) |>
-        column_to_rownames("Pais") |> 
-        mutate(across(where(is.numeric), ~.*-1)) #Invertir escala 
-         
+        column_to_rownames("Pais") |>
+        mutate(across(where(is.numeric), ~.*-1)) #Invertir escala
+
 names(rank) <- c("SC_Lac", "QS", "WEB")
 ```
 
@@ -727,7 +729,7 @@ rank |>
 
 ---
 
-## Valores propios y varianza explicada
+## Autovalores y varianza explicada
 
 ```{r}
 #| echo: true
@@ -786,7 +788,7 @@ round(res_var$cos2, 3)
 #| fig-width: 9
 #| fig-height: 6.5
 fviz_pca_ind(pca_rank, col.ind = "cos2",
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE, 
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE,
              title = "Plano 1-2 — Países (rankings universitarios)") + theme_bw()
 ```
 
@@ -814,8 +816,8 @@ Número de instituciones por país:
 #| echo: true
 
 n_inst <- rank_lat |>
-          select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |> 
-          count(Pais, name = "nInst") 
+          select(Pais, SC.Lac.Ranking, QS.Ranking, WEB.Ranking.LA) |>
+          count(Pais, name = "nInst")
 
 n_inst[n_inst$nInst == 1,] ## Paises con una sola institución
 
@@ -835,7 +837,7 @@ n_inst |>
 ```
 </div>
 
---- 
+---
 
 ## Objetos suplementarios: países con una sola universidad {style="font-size: 80%;"}
 
@@ -846,8 +848,8 @@ Los países con una sola institución en los rankings (Bolivia, Cuba, Puerto Ric
 #| fig-align: center
 #| fig-width: 11
 #| fig-height: 6.5
-# Bolivia=2, Cuba=7, Puerto Rico=12, Paraguay=13
-pca_supl <- PCA(rank, ind.sup = c(2, 7, 10, 13), graph = FALSE)
+# Bolivia=1, Cuba=3, Puerto Rico=10, Paraguay=13
+pca_supl <- PCA(rank, ind.sup = c(1, 3, 10, 13), graph = FALSE)
 fviz_pca_biplot(pca_supl, repel = TRUE, col.var  = "#C0392B", col.ind  = "#0077b6", col.ind.sup = "#8E44AD",
                 title = "Biplot con países ilustrativos (en morado)") + theme_bw()
 ```
@@ -884,10 +886,8 @@ library(pacman)
 p_load(tidyverse, janitor, corrplot)
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
-ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE) |> 
-       column_to_rownames("departamento") |> 
-       rename(inv_hacinamiento = sin_hacinamiento,
-              inv_ipm = sin_ipm, leen_adultos = lit_adultos)
+ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE) |>
+       column_to_rownames("departamento")
 ```
 
 <div style="height:450px; overflow-y:auto;">
@@ -919,7 +919,7 @@ ecv |>
 #| message: false
 #| warning: false
 R_ecv <- cor(ecv)
-corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust", 
+corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust",
          col = colorRampPalette(c("#2b8cbe", "white", "#d7301f"))(200),  diag = FALSE,
          tl.cex  = 0.65, tl.col  = "black", addCoef.col = "black", number.cex  = 0.45, mar = c(0, 0, 1.5, 0))
 ```
@@ -935,7 +935,7 @@ corrplot(R_ecv, method  = "color", type    = "upper", order   = "hclust",
 pca_ecv <- PCA(ecv, graph = FALSE,
                scale.unit = TRUE,   # estandariza automáticamente
                ncp        = 5)      # retener 5 componentes
-               
+
 ```
 
 ::: {.fragment}
@@ -963,7 +963,7 @@ fviz_eig(pca_ecv, addlabels  = TRUE, ncp = 10) +
 
 ---
 
-## Plano de variables: tres criterios de interpretación {style="font-size: 90%;"}
+## Plano de variables — tres criterios de interpretación {style="font-size: 90%;"}
 
 ::: {.panel-tabset}
 
@@ -973,12 +973,15 @@ fviz_eig(pca_ecv, addlabels  = TRUE, ncp = 10) +
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 6.0
+#| fig-height: 4.8
 #| message: false
 #| warning: false
-fviz_pca_var(pca_ecv, col.var = pca_ecv$var$coord[, 1], repel = TRUE,
+fviz_pca_var(pca_ecv,
+             col.var = pca_ecv$var$coord[, 1],
              gradient.cols = c("#D6EAF8", "#2980B9", "#1A5276"),
-             title = "Plano 1-2 — coloreado por correlación con Dim 1") + theme_bw()
+             repel = TRUE,
+             title = "Plano 1-2 — coloreado por correlación con Dim 1") +
+  theme_bw()
 ```
 
 ::: {.callout-note}
@@ -991,12 +994,14 @@ Dim 1 explica ~92 % de la varianza: es un **factor tamaño**. Todas las variable
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 6.0
+#| fig-height: 5.0
 #| message: false
 #| warning: false
-fviz_pca_var(pca_ecv, col.var = "contrib", repel = TRUE,
+fviz_pca_var(pca_ecv, col.var = "contrib",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             title = "Plano 1-2 — coloreado por contribución") + theme_bw()
+             repel = TRUE,
+             title = "Plano 1-2 — coloreado por contribución") +
+  theme_bw()
 ```
 
 ### Cosenos cuadrados
@@ -1005,12 +1010,14 @@ fviz_pca_var(pca_ecv, col.var = "contrib", repel = TRUE,
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 6.0
+#| fig-height: 5.0
 #| message: false
 #| warning: false
-fviz_pca_var(pca_ecv, col.var = "cos2", repel = TRUE,
+fviz_pca_var(pca_ecv, col.var = "cos2",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             title = "Plano 1-2 — coloreado por cos²") + theme_bw()
+             repel = TRUE,
+             title = "Plano 1-2 — coloreado por cos²") +
+  theme_bw()
 ```
 
 :::
@@ -1031,7 +1038,7 @@ fviz_pca_var(pca_ecv, col.var = "cos2", repel = TRUE,
 fviz_contrib(pca_ecv, choice = "var", axes = 1,
              fill = "#0077b6", color = "#0077b6",
              title = "Contribuciones a la Dim 1") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
 ### Dimensión 2
@@ -1044,7 +1051,20 @@ fviz_contrib(pca_ecv, choice = "var", axes = 1,
 fviz_contrib(pca_ecv, choice = "var", axes = 2,
              fill = "#C0392B", color = "#C0392B",
              title = "Contribuciones a la Dim 2") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+### Dimensión 3
+
+```{r}
+#| echo: true
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 4.5
+fviz_contrib(pca_ecv, choice = "var", axes = 3,
+             fill = "#8E44AD", color = "#8E44AD",
+             title = "Contribuciones a la Dim 3") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
 :::
@@ -1116,6 +1136,64 @@ ggplot(coord_var, aes(x = Dim1, y = Dim2, label = Variable)) +
                   round(eig_ecv[2,2], 1), "%)")) +
   theme_bw()
 ```
+
+---
+
+## Dimensión 3: más allá del factor tamaño {style="font-size: 90%;"}
+
+::: {.panel-tabset}
+
+### Variables (plano 1-3)
+
+```{r}
+#| echo: true
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 5.0
+#| message: false
+#| warning: false
+fviz_pca_var(pca_ecv, axes = c(1, 3),
+             col.var = "contrib",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE,
+             title = paste0("Plano 1-3 — Variables (",
+                            round(eig_ecv[3, 2], 1), "% adicional en Dim 3)")) +
+  theme_bw()
+```
+
+### Departamentos (plano 1-3)
+
+```{r}
+#| echo: true
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 5.0
+#| message: false
+#| warning: false
+fviz_pca_ind(pca_ecv, axes = c(1, 3),
+             col.ind = "cos2", repel = TRUE, labelsize = 3.5,
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             title = "Plano 1-3 — Departamentos de Colombia") +
+  theme_bw()
+```
+
+:::
+
+::: {.fragment}
+La Dim 3 captura una **dimensión residual** no cubierta por el combo completo de infraestructura (Dim 1) ni por el contraste conectividad-servicios básicos (Dim 2). Las variables con alta contribución a Dim 3 señalan aspectos de calidad de vida que operan de forma **relativamente independiente** del nivel general.
+:::
+
+---
+
+## Lectura del plano: regiones de Colombia {style="font-size: 85%;"}
+
+::: {.incremental}
+- **Dim 1 (eje horizontal):** **factor tamaño**. Bogotá D.C. y el Eje Cafetero tienen coordenadas altas (derecha); Chocó, La Guajira y territorios amazónicos están a la izquierda.
+- **Dim 2 (eje vertical):** contraste entre departamentos con **alta cobertura de servicios básicos** (acueducto, alcantarillado — arriba) vs. **alta conectividad digital** (internet, computador — abajo).
+- **Variables en el mismo cuadrante:** están positivamente correlacionadas (p.ej., `internet` y `computador`).
+- **"Cuadrantes opuestos" con factor tamaño dominante:** dos variables en Q1 y Q4 (o en Q2 y Q3) pueden estar **muy correlacionadas positivamente** (~0.73) aunque aparezcan en lados opuestos del eje 2 — porque **ambas apuntan al mismo lado del factor tamaño (eje 1)**. El ángulo entre vectores solo equivale directamente a la correlación cuando ningún eje está dominado por un factor tamaño.
+- **Correlación negativa real:** requiere que los vectores apunten a cuadrantes diagonalmente opuestos (Q1 vs Q3, o Q2 vs Q4) **y** que el factor tamaño no sea dominante.
+:::
 
 # Variables y objetos suplementarios {background-color="#0077b6"}
 
@@ -1220,10 +1298,10 @@ fviz_pca_biplot(arwu_pca_supl,
 
 # Ejemplo: Análisis de imágenes {background-color="#0077b6"}
 
-## ¿Qué es un píxel? {style="font-size: 80%;"}
+## ¿Qué es un píxel? {style="font-size: 90%;"}
 
 ::: {.columns}
-::: {.column width="60%"}
+::: {.column width="55%"}
 
 Un **píxel** (*picture element*) es la unidad mínima de una imagen digital: el punto de color más pequeño que puede representarse en pantalla o en un archivo.
 
@@ -1234,7 +1312,7 @@ Un **píxel** (*picture element*) es la unidad mínima de una imagen digital: el
 :::
 
 :::
-::: {.column width="40%"}
+::: {.column width="45%"}
 
 ```{r}
 #| echo: false
@@ -1285,10 +1363,10 @@ Los valores se almacenan usualmente como enteros en $[0, 255]$ (8 bits por canal
 
 ---
 
-## El tensor RGB {style="font-size: 85%;"}
+## El tensor RGB {style="font-size: 90%;"}
 
 ::: {.columns}
-::: {.column width="60%"}
+::: {.column width="48%"}
 
 Una imagen a color de $n \times m$ píxeles se representa como un **tensor** (arreglo tridimensional):
 
@@ -1305,7 +1383,7 @@ Cada **canal** es una "rebanada" o subtabla del tensor: una matriz $n \times m$ 
 :::
 
 :::
-::: {.column width="40%"}
+::: {.column width="52%"}
 
 ```{r}
 #| echo: false
@@ -1447,7 +1525,7 @@ pca_imagen <- list(pca_r, pca_g, pca_b)
 reconstruir <- function(pca_ls, n_comp) {
   sapply(pca_ls, function(p) {
     rec <- p$x[, 1:n_comp] %*% t(p$rotation[, 1:n_comp])
-    pmax(0, pmin(1, rec))          
+    pmax(0, pmin(1, rec))
   }, simplify = "array")
 }
 
@@ -1469,13 +1547,13 @@ Se usa `prcomp(..., center = FALSE)` porque los valores de intensidad ya están 
 
 ---
 
-## Varianza explicada acumulada en los tres canales {style="font-size: 90%;"}
+## Varianza explicada acumulada — los tres canales {style="font-size: 90%;"}
 
-```{r, eval=TRUE}
-#| echo: false
+```{r, eval=FALSE}
+#| echo: true
 #| fig-align: center
-#| fig-width: 11
-#| fig-height: 6.5
+#| fig-width: 9
+#| fig-height: 4.5
 #| message: false
 #| warning: false
 
@@ -1509,6 +1587,44 @@ ggplot(df_rgb, aes(x = comp, y = var_acum, color = Canal)) +
   theme_bw()
 ```
 
+## Varianza explicada acumulada — los tres canales
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 5.5
+#| message: false
+#| warning: false
+if (exists("var_exp_r")) {
+  max_comp <- min(150, length(var_exp_r))
+
+  df_rgb <- bind_rows(
+    data.frame(comp = seq_len(max_comp),
+               var_acum = var_exp_r[seq_len(max_comp)] * 100, Canal = "R"),
+    data.frame(comp = seq_len(max_comp),
+               var_acum = var_exp_g[seq_len(max_comp)] * 100, Canal = "G"),
+    data.frame(comp = seq_len(max_comp),
+               var_acum = var_exp_b[seq_len(max_comp)] * 100, Canal = "B")
+  )
+
+  puntos_ref <- df_rgb |> filter(comp %in% c(3, 10, 30, 100))
+
+  ggplot(df_rgb, aes(x = comp, y = var_acum, color = Canal)) +
+    geom_line(linewidth = 1.1) +
+    geom_point(data = puntos_ref, size = 3) +
+    geom_text(data = puntos_ref |> filter(Canal == "R"),
+              aes(label = paste0(comp, " comp.\n", round(var_acum, 1), "%")),
+              vjust = -0.6, size = 3.0, color = "#C0392B") +
+    scale_color_manual(values = c("R" = "#C0392B", "G" = "#1E8449", "B" = "#2471A3")) +
+    scale_x_continuous(limits = c(1, 150)) +
+    labs(title = "Varianza acumulada — canales R, G y B",
+         x = "Número de componentes principales",
+         y = "Varianza explicada acumulada (%)",
+         color = "Canal") +
+    theme_bw()
+}
+```
 
 ---
 
@@ -1566,6 +1682,8 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 
 :::
 
+---
+
 # Laboratorio {background-color="#0077b6"}
 
 ## Índice de Probreza Multidimensional - IPM
@@ -1610,8 +1728,8 @@ ipm <- read_sav("IPM2025.sav")
 n_total <- 30000 # Tamaño muestra
 
 # Tamaños por estrato (afijación proporcional)
-tam_estrato <- ipm |> 
-               count(DEPARTAMENTO) |> 
+tam_estrato <- ipm |>
+               count(DEPARTAMENTO) |>
                mutate(nh = round(n / sum(n) * n_total))
 
 # Diseño estratificado
@@ -1630,9 +1748,9 @@ df_ipm <- getdata(ipm, muestra)
 
 2. Calcule la matriz de correlaciones entre los indicadores seleccionados.
 
-3. Aplique el ACP usando PCA() de FactoMineR:
-  - `scale.unit = TRUE` 
-  - `scale.unit = FALSE`
+3. Aplique el ACP usando PCA() de FactoMineR. Compare:
+  - `scale.unit = TRUE` (sobre $R$)
+  - `scale.unit = FALSE` (sobre $S$)
 
 ¿Cambian los resultados? ¿Por qué?
 
@@ -1640,19 +1758,20 @@ df_ipm <- getdata(ipm, muestra)
 
 ## Laboratorio (4/5) {style="font-size: 90%;"}
 
-::: {.incremental} 
+::: {.incremental}
 
-5. Construya el **plano 1-2 de variables** con fviz_pca_var(). 
-Identifique: 
-  - Las dos variables peor representadas a la Dimensión 1. 
-  - Las dos variables con la peor contribución a la Dimensión 2. 
+5. Construya el **plano 1-2 de variables** con fviz_pca_var().
+Identifique:
+  - Las dos variables con mayor contribución a la Dimensión 1.
+  - Las dos variables con mayor contribución a la Dimensión 2.
+  - Una variable con bajo $cos^2$ en el plano 1-2 (mal representada).
 
-6. Construya el **plano de individuos** con fviz_pca_ind() coloreando por $cos^2$ y otro por $contrib$. 
-Identifique: 
-  - El departamento con mejor calidad de vida general usando el criterio de correlación. 
-  - El departamento peor representado en el plano 1-2 usando el criterio de los cosenos cuadrados. 
-  - Dos departamentos con perfiles similares (use la distancia entre variables sobre el plano). 
-  - Dos departamentos con perfiles opuestos (use la distancia entre variables sobre el plano).
+6. Construya el **plano de individuos** con fviz_pca_ind() coloreando por $cos^2$.
+Identifique:
+  - El departamento con mejor calidad de vida general.
+  - El departamento peor representado en el plano 1-2.
+  - Dos departamentos con perfiles similares (cercanos en el plano).
+  - Dos departamentos con perfiles opuestos (en cuadrantes contrarios).
 
 :::
 
@@ -1660,10 +1779,12 @@ Identifique:
 
 ::: {.incremental}
 
-7. Genere el **biplot** e interprete qué variable(s) caracterizan al departamento que quedó en el extremo derecho del eje 1. 
+7. Genere el **biplot** e interprete qué variable(s) caracterizan al departamento que quedó en el extremo derecho del eje 1.
 
-8. Agregue las variables IPM y porcentaje de hogares en condición de pobreza  (sin transformar) como **variables suplementarias** usando quanti.sup. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional? 
+8. Agregue las variables IPM y porcentaje de hogares en condición de pobreza  (sin transformar) como **variables suplementarias** usando quanti.sup. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional?
 
-9. Repita el ACP con los indicadores de una de las dimensiones como variables suplementarias. ¿Cambia la interpretación de las componentes? 
+9. Repita el ACP con los indicadores de una de las dimensiones como variables suplementarias. ¿Cambia la interpretación de las componentes?
+
+10. **Reto:** Clasifique los departamentos en **4 grupos**.
 
 :::
