@@ -446,7 +446,7 @@ $$\frac{\partial \mathcal{L}}{\partial v_1} = 2R\,v_1 - 2\lambda_1 v_1 = 0 \impl
 
 Ordenando los valores propios de $R$ de mayor a menor: $\lambda_1 \ge \lambda_2 \ge \cdots \ge \lambda_p \ge 0$, la $\alpha$-ésima componente principal es:
 
-$$Z_\alpha = \widetilde{Y}\, v_\alpha = \sqrt{n}\; Y\, v_\alpha$$
+$$Z_\alpha = Y\, v_\alpha = \frac{1}{\sqrt{n}}\; \widetilde{Y}\, v_\alpha$$
 
 con varianza $\text{var}(Z_\alpha) = \lambda_\alpha$.
 
@@ -506,7 +506,7 @@ ya que $v_\alpha^\prime v_\alpha = 1$
 
 Para los **objetos**, la contribución del objeto $i$ a la componente $\alpha$ es:
 
-$$\text{CTR}(i, \alpha) = \frac{z_{i\alpha}^2}{\sum_{i^\prime=1}^n z_{i^\prime\alpha}^2} = \frac{z_{i\alpha}^2}{n\,\lambda_\alpha}$$
+$$\text{CTR}(i, \alpha) = \frac{z_{i\alpha}^2}{\sum_{i^\prime=1}^n z_{i^\prime\alpha}^2} = \frac{z_{i\alpha}^2}{\lambda_\alpha}$$
 
 ::: {.fragment}
 ::: {.callout-note}
