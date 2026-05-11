@@ -81,8 +81,8 @@ if (file.exists(dest)) {
 
 1. Descripción del método
 2. Fundamentos matemáticos
-3. Guías para la interpretación
-4. Construcción de las componentes
+3. Construcción de las componentes
+4. Guías para la interpretación
 5. Ejemplo 1: Compresión de imágenes
 6. Ejemplo 2: Rankings universitarios latinoamericanos
 7. Ejemplo 3: Calidad de vida — ECV DANE
@@ -418,6 +418,46 @@ $$z_\alpha = Y v_\alpha = \frac{1}{\sqrt{\lambda_\alpha}}\,YY^\prime u_\alpha = 
 :::
 :::
 
+# Construcción de las componentes {background-color="#0077b6"}
+
+## Método de multiplicadores de Lagrange {style="font-size: 90%;"}
+
+El **primer vector de cargas** $v_1$ es la solución del problema de optimización:
+
+$$\max_{v_1} \quad v_1^\prime R\, v_1 \qquad \text{sujeto a} \quad v_1^\prime v_1 = 1$$
+
+El Lagrangiano del problema es:
+
+$$\mathcal{L} = v_1^\prime R\, v_1 - \lambda_1(v_1^\prime v_1 - 1)$$
+
+Derivando e igualando a cero:
+
+$$\frac{\partial \mathcal{L}}{\partial v_1} = 2R\,v_1 - 2\lambda_1 v_1 = 0 \implies R\,v_1 = \lambda_1\,v_1$$
+
+::: {.fragment}
+::: {.re-blue}
+> **Conclusión:** $\lambda_1$ y $v_1$ son el **valor propio mayor** y su **vector propio asociado** de $R$. Las componentes sucesivas se obtienen imponiendo ortogonalidad $v_j^\prime v_i = 0$ para $i < j$.
+:::
+:::
+
+---
+
+## Cálculo de las componentes principales {style="font-size: 90%;"}
+
+Ordenando los valores propios de $R$ de mayor a menor: $\lambda_1 \ge \lambda_2 \ge \cdots \ge \lambda_p \ge 0$, la $\alpha$-ésima componente principal es:
+
+$$Z_\alpha = \widetilde{Y}\, v_\alpha = \sqrt{n}\; Y\, v_\alpha$$
+
+con varianza $\text{var}(Z_\alpha) = \lambda_\alpha$.
+
+::: {.fragment}
+**Propiedad fundamental — conservación de la varianza total:**
+
+$$\text{tr}(R) = \sum_{j=1}^p s_j^2 = p = \sum_{\alpha=1}^p \lambda_\alpha$$
+
+El ACP redistribuye la varianza total de las $p$ variables originales en $p$ componentes independientes, concentrando la mayor parte en las primeras.
+:::
+
 # Guías para la interpretación {background-color="#0077b6"}
 
 ## Calidad de la representación global {style="font-size: 90%;"}
@@ -428,7 +468,17 @@ $$\tau_q = \frac{\sum_{\alpha=1}^q \lambda_\alpha}{p}$$
 
 ![](images/GPCA1a.png){width=100%}
 
-## Correlaciones variable-factor {style="font-size: 90%;"}
+---
+
+## Tres criterios para la interpretación de los factores
+
+::: {.fragment}
+1. **Correlaciones variable-Factor**: Indican hasta dónde es capaz una variable de explicar o conformar el factor.
+2. **Contribuciones**: Es el aporte de cada variable a la varianza del factor.
+3. **Cosenos cuadrados (cos2)**: Indican hasta dónde un factor es capaz de dar cuenta de una variable.
+:::
+
+## Interpretación de los factores {style="font-size: 90%;"}
 
 La **correlación** entre la variable $X_j$ y la componente $Z_\alpha$ es:
 
@@ -437,7 +487,7 @@ $$r(X_j, Z_\alpha) = \sqrt{\lambda_\alpha}\; v_{j\alpha}$$
 ::: {.fragment}
 **Interpretación:**
 
-- Si $|r(X_j, Z_\alpha)|$ es alto, la variable $X_j$ está bien representada en la componente $\alpha$.
+- Si $|r(X_j, Z_\alpha)|$ es alto, la variable $X_j$ tipifica bien la componente $\alpha$.
 - Variables con alta correlación con la misma componente miden aspectos similares.
 - Variables con correlaciones de signo opuesto están inversamente relacionadas.
 
@@ -446,7 +496,7 @@ En la práctica, en FactoMineR las coordenadas de las variables en el plano se o
 
 ---
 
-## Contribuciones a la varianza {style="font-size: 90%;"}
+## Interpretación de los factores {style="font-size: 90%;"}
 
 La **contribución** de la variable $j$ a la componente $\alpha$ mide qué fracción de $\lambda_\alpha$ aporta esa variable:
 
@@ -466,7 +516,7 @@ Las contribuciones suman 1 sobre todas las variables (u objetos) para cada compo
 
 ---
 
-## Cosenos cuadrados {style="font-size: 90%;"}
+## Interpretación de los factores {style="font-size: 90%;"}
 
 Los **cosenos cuadrados** ($\cos^2$) miden la calidad de la representación de un objeto o variable en un plano factorial:
 
@@ -589,255 +639,7 @@ PCA(datos, ind.sup = c(1, 4, 7))   # filas 1, 4 y 7 como ilustrativas
 ```
 :::
 
-# Construcción de las componentes {background-color="#0077b6"}
-
-## Método de multiplicadores de Lagrange {style="font-size: 90%;"}
-
-El **primer vector de cargas** $v_1$ es la solución del problema de optimización:
-
-$$\max_{v_1} \quad v_1^\prime R\, v_1 \qquad \text{sujeto a} \quad v_1^\prime v_1 = 1$$
-
-El Lagrangiano del problema es:
-
-$$\mathcal{L} = v_1^\prime R\, v_1 - \lambda_1(v_1^\prime v_1 - 1)$$
-
-Derivando e igualando a cero:
-
-$$\frac{\partial \mathcal{L}}{\partial v_1} = 2R\,v_1 - 2\lambda_1 v_1 = 0 \implies R\,v_1 = \lambda_1\,v_1$$
-
-::: {.fragment}
-::: {.re-blue}
-> **Conclusión:** $\lambda_1$ y $v_1$ son el **valor propio mayor** y su **vector propio asociado** de $R$. Las componentes sucesivas se obtienen imponiendo ortogonalidad $v_j^\prime v_i = 0$ para $i < j$.
-:::
-:::
-
----
-
-## Cálculo de las componentes principales {style="font-size: 90%;"}
-
-Ordenando los valores propios de $R$ de mayor a menor: $\lambda_1 \ge \lambda_2 \ge \cdots \ge \lambda_p \ge 0$, la $\alpha$-ésima componente principal es:
-
-$$Z_\alpha = \widetilde{Y}\, v_\alpha = \sqrt{n}\; Y\, v_\alpha$$
-
-con varianza $\text{var}(Z_\alpha) = \lambda_\alpha$.
-
-::: {.fragment}
-**Propiedad fundamental — conservación de la varianza total:**
-
-$$\text{tr}(R) = \sum_{j=1}^p s_j^2 = p = \sum_{\alpha=1}^p \lambda_\alpha$$
-
-El ACP redistribuye la varianza total de las $p$ variables originales en $p$ componentes independientes, concentrando la mayor parte en las primeras.
-:::
-
-# Ejemplo 1: Análisis de imágenes {background-color="#0077b6"}
-
-## ACP aplicado a datos visuales 
-
-Una imagen digital en color es un **arreglo tridimensional** de dimensiones $n \times m \times 3$:
-
-- $n$: número de filas de píxeles (altura)
-- $m$: número de columnas de píxeles (ancho)
-- $3$: canales de color R, G, B
-
----
-
-## ACP aplicado a datos visuales {style="font-size: 90%;"}
-
-Cada canal es una **matriz de intensidades** en $[0,1]$. Si aplicamos ACP a cada canal por separado:
-
-$$\text{Canal}_k = U_k\, L_k\, V_k^\prime, \quad k \in \{R, G, B\}$$
-
-La reconstrucción usando solo las primeras $q$ componentes es:
-
-$$\widehat{\text{Canal}}_k^{(q)} = U_k^{(q)}\, L_k^{(q)}\, \left(V_k^{(q)}\right)^\prime$$
-
-donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
-
----
-
-## Monte Rushmore {style="font-size: 90%;"}
-
-```{r}
-#| echo: true
-#| message: false
-#| warning: false
-library(pacman)
-p_load(jpeg, tidyverse)
-
-url_img <- "https://raw.githubusercontent.com/jgbabativam/Curso_Multivariado/main/images/rushmore.jpg"
-
-tmp <- tempfile(fileext = ".jpg")
-download.file(url_img, tmp, mode = "wb")
-
-imagen <- readJPEG(tmp)
-
-cat("Dimensiones:", paste(dim(imagen), collapse = " × "), "\n")
-cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen), "| Canales RGB:", dim(imagen)[3])
-```
-
-::: {.fragment}
-```{r}
-#| fig-align: center
-#| out-width: "50%"
-knitr::include_graphics(here::here("images/rushmore.jpg"))
-```
-:::
-
----
-
-## PCA aplicado a cada canal RGB
-
-
-```{r}
-#| echo: true
-#| eval: false
-
-img <- imagen[seq(1, nrow(imagen), 3),
-              seq(1, ncol(imagen), 3), ]
-
-# ACP por canal (sin centrado: preserva la escala de intensidades)
-pca_r <- prcomp(img[,,1], center = FALSE)
-pca_g <- prcomp(img[,,2], center = FALSE)
-pca_b <- prcomp(img[,,3], center = FALSE)
-
-
-reconstruir <- function(pca_ls, n_comp) {
-  sapply(pca_ls, function(p) {
-    rec <- p$x[, 1:n_comp] %*% t(p$rotation[, 1:n_comp])
-    pmax(0, pmin(1, rec))          
-  }, simplify = "array")
-}
-```
-
-::: {.fragment}
-::: {.callout-note}
-Se usa `prcomp(..., center = FALSE)` porque los valores de intensidad ya están en $[0,1]$ y centrar alteraría la escala de grises. La reconstrucción es $\hat{X} = U^{(q)} \cdot (V^{(q)})^\prime$.
-:::
-:::
-
----
-
-## Reconstrucción progresiva con pocas componentes
-
-::: {.panel-tabset}
-
-### 3 componentes
-
-```{r}
-#| fig-align: center
-#| out-width: "80%"
-if (file.exists(here::here("images/rushmore_comp3.jpg"))) {
-  knitr::include_graphics(here::here("images/rushmore_comp3.jpg"))
-}
-```
-
-### 10 componentes
-
-```{r}
-#| fig-align: center
-#| out-width: "80%"
-if (file.exists(here::here("images/rushmore_comp10.jpg"))) {
-  knitr::include_graphics(here::here("images/rushmore_comp10.jpg"))
-}
-```
-
-### 30 componentes
-
-```{r}
-#| fig-align: center
-#| out-width: "80%"
-if (file.exists(here::here("images/rushmore_comp30.jpg"))) {
-  knitr::include_graphics(here::here("images/rushmore_comp30.jpg"))
-}
-```
-
-### 100 componentes
-
-```{r}
-#| fig-align: center
-#| out-width: "80%"
-if (file.exists(here::here("images/rushmore_comp100.jpg"))) {
-  knitr::include_graphics(here::here("images/rushmore_comp100.jpg"))
-}
-```
-
-### Original
-
-```{r}
-#| fig-align: center
-#| out-width: "80%"
-knitr::include_graphics(here::here("images/rushmore.jpg"))
-```
-
-:::
-
----
-
-## Varianza explicada acumulada
-
-```{r, eval=FALSE}
-#| echo: true
-#| fig-align: center
-#| fig-width: 9
-#| fig-height: 4.5
-#| message: false
-#| warning: false
-if (exists("var_exp")) {
-  df_var <- data.frame(
-    comp = 1:length(var_exp),
-    var_acum = var_exp * 100
-  )
-  puntos <- df_var[df_var$comp %in% c(3, 10, 30, 100), ]
-
-  ggplot(df_var, aes(x = comp, y = var_acum)) +
-    geom_line(color = "#0077b6", linewidth = 1.1) +
-    geom_point(data = puntos, aes(x = comp, y = var_acum),
-               color = "#C0392B", size = 3.5) +
-    geom_text(data = puntos,
-              aes(label = paste0(comp, " comp.\n",
-                                 round(var_acum, 1), "%")),
-              vjust = -0.5, size = 3.2, color = "#C0392B") +
-    scale_x_continuous(limits = c(1, 150)) +
-    labs(title = "Varianza acumulada — canal R (representativo)",
-         x = "Número de componentes principales",
-         y = "Varianza explicada acumulada (%)") +
-    theme_bw()
-}
-```
-
-## Varianza explicada acumulada
-
-```{r}
-#| echo: false
-#| fig-align: center
-#| fig-width: 9
-#| fig-height: 5.5
-#| message: false
-#| warning: false
-if (exists("var_exp")) {
-  df_var <- data.frame(
-    comp = 1:length(var_exp),
-    var_acum = var_exp * 100
-  )
-  puntos <- df_var[df_var$comp %in% c(3, 10, 30, 100), ]
-
-  ggplot(df_var, aes(x = comp, y = var_acum)) +
-    geom_line(color = "#0077b6", linewidth = 1.1) +
-    geom_point(data = puntos, aes(x = comp, y = var_acum),
-               color = "#C0392B", size = 3.5) +
-    geom_text(data = puntos,
-              aes(label = paste0(comp, " comp.\n",
-                                 round(var_acum, 1), "%")),
-              vjust = -0.5, size = 3.2, color = "#C0392B") +
-    scale_x_continuous(limits = c(1, 150)) +
-    labs(title = "Varianza acumulada — canal R (del RGB)",
-         x = "Número de componentes principales",
-         y = "Varianza explicada acumulada (%)") +
-    theme_bw()
-}
-```
-
-# Ejemplo 2: Rankings universitarios latinoamericanos {background-color="#0077b6"}
+# Ejemplo 1: Rankings universitarios latinoamericanos {background-color="#0077b6"}
 
 ## Descripción de los datos {style="font-size: 90%;"}
 
@@ -1050,7 +852,7 @@ fviz_pca_biplot(pca_supl, repel = TRUE, col.var  = "#C0392B", col.ind  = "#0077b
                 title = "Biplot con países ilustrativos (en morado)") + theme_bw()
 ```
 
-# Ejemplo 3: Calidad de vida — ECV DANE {background-color="#0077b6"}
+# Ejemplo 2: Calidad de vida — ECV DANE {background-color="#0077b6"}
 
 ## Encuesta Nacional de Calidad de Vida {style="font-size: 90%;"}
 
@@ -1382,6 +1184,225 @@ fviz_pca_biplot(arwu_pca_supl,
   theme_bw()
 ```
 
+# Ejemplo: Análisis de imágenes {background-color="#0077b6"}
+
+## ACP aplicado a datos visuales 
+
+Una imagen digital en color es un **arreglo tridimensional** de dimensiones $n \times m \times 3$:
+
+- $n$: número de filas de píxeles (altura)
+- $m$: número de columnas de píxeles (ancho)
+- $3$: canales de color R, G, B
+
+---
+
+## ACP aplicado a datos visuales {style="font-size: 90%;"}
+
+Cada canal es una **matriz de intensidades** en $[0,1]$. Si aplicamos ACP a cada canal por separado:
+
+$$\text{Canal}_k = U_k\, L_k\, V_k^\prime, \quad k \in \{R, G, B\}$$
+
+La reconstrucción usando solo las primeras $q$ componentes es:
+
+$$\widehat{\text{Canal}}_k^{(q)} = U_k^{(q)}\, L_k^{(q)}\, \left(V_k^{(q)}\right)^\prime$$
+
+donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
+
+---
+
+## Monte Rushmore {style="font-size: 90%;"}
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+library(pacman)
+p_load(jpeg, tidyverse)
+
+url_img <- "https://raw.githubusercontent.com/jgbabativam/Curso_Multivariado/main/images/rushmore.jpg"
+
+tmp <- tempfile(fileext = ".jpg")
+download.file(url_img, tmp, mode = "wb")
+
+imagen <- readJPEG(tmp)
+
+cat("Dimensiones:", paste(dim(imagen), collapse = " × "), "\n")
+cat("Filas (alto):", nrow(imagen), "| Columnas (ancho):", ncol(imagen), "| Canales RGB:", dim(imagen)[3])
+```
+
+::: {.fragment}
+```{r}
+#| fig-align: center
+#| out-width: "50%"
+knitr::include_graphics(here::here("images/rushmore.jpg"))
+```
+:::
+
+---
+
+## PCA aplicado a cada canal RGB {style="font-size: 90%;"}
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+img <- imagen[seq(1, nrow(imagen), 3),
+              seq(1, ncol(imagen), 3), ]
+
+# ACP por canal (sin centrado: preserva la escala de intensidades)
+pca_r <- prcomp(img[,,1], center = FALSE)
+pca_g <- prcomp(img[,,2], center = FALSE)
+pca_b <- prcomp(img[,,3], center = FALSE)
+
+# Creo la lista con los PCA del RGB.
+pca_imagen <- list(pca_r, pca_g, pca_b)
+
+# Matriz Reconstruida
+reconstruir <- function(pca_ls, n_comp) {
+  sapply(pca_ls, function(p) {
+    rec <- p$x[, 1:n_comp] %*% t(p$rotation[, 1:n_comp])
+    pmax(0, pmin(1, rec))          
+  }, simplify = "array")
+}
+
+## Generar Imágenes
+getwd()
+for (i in seq.int(3, round(nrow(imagen) - 700), length.out = 10)) {
+  pca.img <- sapply(pca_imagen, function(j) {
+    compressed.img <- j$x[,1:i] %*% t(j$rotation[,1:i])
+  }, simplify = 'array')
+  writeJPEG(pca.img, paste('imagen_con_', round(i,0), '_componentes.jpg', sep = ''))
+}
+```
+
+::: {.fragment}
+::: {.callout-note}
+Se usa `prcomp(..., center = FALSE)` porque los valores de intensidad ya están en $[0,1]$ y centrar alteraría la escala de grises. La reconstrucción es $\hat{X} = U^{(q)} \cdot (V^{(q)})^\prime$.
+:::
+:::
+
+---
+
+## Reconstrucción progresiva con pocas componentes
+
+::: {.panel-tabset}
+
+### 3 componentes
+
+```{r}
+#| fig-align: center
+#| out-width: "80%"
+if (file.exists(here::here("images/rushmore_comp3.jpg"))) {
+  knitr::include_graphics(here::here("images/rushmore_comp3.jpg"))
+}
+```
+
+### 10 componentes
+
+```{r}
+#| fig-align: center
+#| out-width: "80%"
+if (file.exists(here::here("images/rushmore_comp10.jpg"))) {
+  knitr::include_graphics(here::here("images/rushmore_comp10.jpg"))
+}
+```
+
+### 30 componentes
+
+```{r}
+#| fig-align: center
+#| out-width: "80%"
+if (file.exists(here::here("images/rushmore_comp30.jpg"))) {
+  knitr::include_graphics(here::here("images/rushmore_comp30.jpg"))
+}
+```
+
+### 100 componentes
+
+```{r}
+#| fig-align: center
+#| out-width: "80%"
+if (file.exists(here::here("images/rushmore_comp100.jpg"))) {
+  knitr::include_graphics(here::here("images/rushmore_comp100.jpg"))
+}
+```
+
+### Original
+
+```{r}
+#| fig-align: center
+#| out-width: "80%"
+knitr::include_graphics(here::here("images/rushmore.jpg"))
+```
+
+:::
+
+---
+
+## Varianza explicada acumulada
+
+```{r, eval=FALSE}
+#| echo: true
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 4.5
+#| message: false
+#| warning: false
+if (exists("var_exp")) {
+  df_var <- data.frame(
+    comp = 1:length(var_exp),
+    var_acum = var_exp * 100
+  )
+  puntos <- df_var[df_var$comp %in% c(3, 10, 30, 100), ]
+
+  ggplot(df_var, aes(x = comp, y = var_acum)) +
+    geom_line(color = "#0077b6", linewidth = 1.1) +
+    geom_point(data = puntos, aes(x = comp, y = var_acum),
+               color = "#C0392B", size = 3.5) +
+    geom_text(data = puntos,
+              aes(label = paste0(comp, " comp.\n",
+                                 round(var_acum, 1), "%")),
+              vjust = -0.5, size = 3.2, color = "#C0392B") +
+    scale_x_continuous(limits = c(1, 150)) +
+    labs(title = "Varianza acumulada — canal R (representativo)",
+         x = "Número de componentes principales",
+         y = "Varianza explicada acumulada (%)") +
+    theme_bw()
+}
+```
+
+## Varianza explicada acumulada
+
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 9
+#| fig-height: 5.5
+#| message: false
+#| warning: false
+if (exists("var_exp")) {
+  df_var <- data.frame(
+    comp = 1:length(var_exp),
+    var_acum = var_exp * 100
+  )
+  puntos <- df_var[df_var$comp %in% c(3, 10, 30, 100), ]
+
+  ggplot(df_var, aes(x = comp, y = var_acum)) +
+    geom_line(color = "#0077b6", linewidth = 1.1) +
+    geom_point(data = puntos, aes(x = comp, y = var_acum),
+               color = "#C0392B", size = 3.5) +
+    geom_text(data = puntos,
+              aes(label = paste0(comp, " comp.\n",
+                                 round(var_acum, 1), "%")),
+              vjust = -0.5, size = 3.2, color = "#C0392B") +
+    scale_x_continuous(limits = c(1, 150)) +
+    labs(title = "Varianza acumulada — canal R (del RGB)",
+         x = "Número de componentes principales",
+         y = "Varianza explicada acumulada (%)") +
+    theme_bw()
+}
+```
 
 # Laboratorio {background-color="#0077b6"}
 
