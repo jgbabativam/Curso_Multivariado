@@ -847,7 +847,7 @@ Los países con una sola institución en los rankings (Bolivia, Cuba, Puerto Ric
 #| fig-width: 11
 #| fig-height: 6.5
 # Bolivia=2, Cuba=7, Puerto Rico=12, Paraguay=13
-pca_supl <- PCA(rank, ind.sup = c(2, 7, 10, 13), graph = FALSE)
+pca_supl <- PCA(rank, ind.sup = c(2, 7, 12, 13), graph = FALSE)
 fviz_pca_biplot(pca_supl, repel = TRUE, col.var  = "#C0392B", col.ind  = "#0077b6", col.ind.sup = "#8E44AD",
                 title = "Biplot con países ilustrativos (en morado)") + theme_bw()
 ```
