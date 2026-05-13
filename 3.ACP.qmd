@@ -1570,9 +1570,12 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 
 ## Laboratorio Ciudades
 
+</br> 
+
+
 Para ver este laboratorio de clic sobre este enlace:
 
-[Laboratorio ACP]()
+[Laboratorio ACP](https://github.com/jgbabativam/Curso_Multivariado/blob/main/Laboratorios/LabC_ACP.pdf)
 
 ## Índice de Probreza Multidimensional - IPM
 
