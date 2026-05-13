@@ -189,6 +189,14 @@ La **inercia** $T$ elimina el efecto del tamaño muestral. Es la varianza total 
 
 # Obtención de los factores {background-color="#0077b6"}
 
+## Diferencias entre ACP y ACS
+
+- **ACP**: En las tablas de datos del ACP las filas representan objetos y las columnas son las variables, de manera que el análisis por filas es un análisis de similitudes entre objetos, el análisis por columnas es un análisis de correlación entre variables.
+
+- **ACS**: Las filas y columnas representan las modalidades de dos variables cualitativas, y por tanto la interpretación de los dos análisis es la misma. Asociación entre modalidades
+de la variable que está en las filas (columnas) y el análisis simultáneo de filas y columnas es para identificar el grado de asociación entre modalidades de las dos variables.
+
+
 ## Factores del ACS {style="font-size: 90%;"}
 
 Las **coordenadas** de filas y columnas sobre el $\alpha$-ésimo factor son promedios ponderados de las distancias estandarizadas:
@@ -337,7 +345,7 @@ perfilas |>
   opt_row_striping() |>
   tab_style(style = cell_text(weight = "bold"),
             locations = cells_column_labels()) |>
-  tab_options(table.font.size = px(15), data_row.padding = px(3),
+  tab_options(table.font.size = px(18), data_row.padding = px(3),
               table.width = pct(100)) |>
   tab_header(title = "Perfiles fila: distribución de facilidad para cumplir la ley según sentimiento ante normas")
 ```
@@ -346,6 +354,35 @@ perfilas |>
 ::: {.fragment}
 ::: {.callout-note}
 Los perfiles fila eliminan el efecto del total de encuestados y permiten comparar directamente las distribuciones entre modalidades. Observe que el sentimiento "Indiferente" tiene la mayor proporción en "Casi siempre" + "Siempre".
+:::
+:::
+
+---
+
+## Perfiles columna {style="font-size: 88%;"}
+
+```{r}
+#| echo: true
+perColum  <- round(sweep(perfilesF, 2, colSums(perfilesF), "/"), 3)
+```
+
+<div style="height:280px; overflow-y:auto;">
+```{r}
+perColum |>
+  rownames_to_column("Sentimiento (P16)") |>
+  gt() |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_options(table.font.size = px(18), data_row.padding = px(3),
+              table.width = pct(100)) |>
+  tab_header(title = "Perfiles columna para el sentimiento ante reglas o normas vs. facilidad para obedecer la ley")
+```
+</div>
+
+::: {.fragment}
+::: {.callout-note}
+Se elimina el efecto del total de encuestados. Hay una fuerte similitud entre las distribuciones según la facilidad para actuar conforme a la ley. Lo paradógico es que cualquiera sea el grado de facilidad para actuar conforme a la ley, en todos los casos domina el sentimiento positivo y en menor grado muy positivo.
 :::
 :::
 
@@ -367,6 +404,34 @@ eig_acs <- get_eigenvalue(acs_p16x17)
 round(eig_acs, 3)
 ```
 :::
+
+---
+
+## Análisis de las filas — Factores 1 y 2
+
+```{r, echo=FALSE}
+library(FactoMineR)
+library(knitr)
+
+coord <- acs_p16x17$row$coord[, 1:2]
+cos2  <- acs_p16x17$row$cos2[, 1:2]
+contrib <- acs_p16x17$row$contrib[, 1:2]
+
+tabla_filas <- data.frame(
+  Fila = rownames(coord),
+  Coord_Dim1 = coord[,1],
+  Coord_Dim2 = coord[,2],
+  Cos2_Dim1 = cos2[,1],
+  Cos2_Dim2 = cos2[,2],
+  Contrib_Dim1 = contrib[,1],
+  Contrib_Dim2 = contrib[,2]
+) |>
+  mutate(across(-Fila, round, 3)) |>
+  arrange(desc(Contrib_Dim1))
+
+kable(tabla_filas, align = "c")
+```
+
 
 ---
 
