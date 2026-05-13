@@ -784,11 +784,50 @@ fviz_ca_biplot(acs_cand, repel = TRUE, labelsize = 3,
 
 ## Del ACS al ACM {style="font-size: 90%;"}
 
-El ACS identifica asociaciones entre **dos** variables cualitativas. Cuando un instrumento tiene $Q \geq 3$ preguntas cualitativas, se generaliza al **Análisis de Correspondencias Múltiples (ACM)**.
+El ACS identifica asociaciones entre **dos** variables cualitativas. Cuando el interés se centra en $Q \geq 3$ preguntas cualitativas, se generaliza al **Análisis de Correspondencias Múltiples (ACM)**.
 
 ::: {.fragment}
 El ACM se construye sobre una **Tabla de Tablas de Contingencia** denominada **tabla de Burt**, que es una matriz simétrica por bloques donde cada bloque es la tabla de frecuencias entre un par de variables:
+:::
 
+
+## Matriz disyuntiva {style="font-size: 88%;"}
+
+Suponiendo $n$ individuos que responden $Q$ preguntas, la respuesta a la pregunta $q$ (con $p_q$ modalidades) se codifica en una **matriz disyuntiva** $Z_q$ de dimensiones $n \times p_q$:
+
+$$Z_q \in \mathbb{R}^{n \times p_q}$$
+
+cuyos elementos son:
+
+$$
+Z_q = \{ z_q(i,k) \}, \quad 
+i = 1, \dots, n,\;
+k = 1, \dots, p_q,\;
+q = 1, \dots, Q$$
+
+donde
+
+$$z_q(i,k) =
+\begin{cases}
+1 & \text{si el individuo } i \text{ seleccionó la opción } k \text{ de la pregunta } q \\
+0 & \text{en caso contrario}
+\end{cases}$$
+
+## Matriz disyuntiva completa {style="font-size: 80%;"}
+
+La **matriz disyuntiva completa** concatena todas las preguntas:
+
+$$Z = [Z_1,\, Z_2,\, \cdots,\, Z_Q] \qquad (n \times p), \quad p = \sum_{q=1}^Q p_q$$
+
+<p align="center">
+<img src="images/ACM2.png" width="90%">
+</p>
+
+# Tabla de Burt {style="font-size: 90%;"}
+
+Al realizar la operación $Z^\prime Z$ se llega a la matriz que concatena todas las tablas de contingencia entre pares de variables, denominada tabla de *Burt*
+
+::: {.fragment}
 $$B = Z^\prime Z = \begin{bmatrix} Z_1^\prime Z_1 & Z_1^\prime Z_2 & \cdots & Z_1^\prime Z_Q \\ Z_2^\prime Z_1 & Z_2^\prime Z_2 & \cdots & Z_2^\prime Z_Q \\ \vdots & \vdots & \ddots & \vdots \\ Z_Q^\prime Z_1 & Z_Q^\prime Z_2 & \cdots & Z_Q^\prime Z_Q \end{bmatrix}$$
 :::
 
@@ -798,49 +837,6 @@ $$B = Z^\prime Z = \begin{bmatrix} Z_1^\prime Z_1 & Z_1^\prime Z_2 & \cdots & Z_
 :::
 :::
 
----
-
-## Tabla disyuntiva completa {style="font-size: 88%;"}
-
-Suponiendo $n$ individuos que responden $Q$ preguntas, la respuesta a la pregunta $q$ (con $p_q$ modalidades) se codifica en una **matriz disyuntiva** $Z_q$ de dimensiones $n \times p_q$:
-
-$$z_{q(ik)} = \begin{cases} 1 & \text{si el individuo } i \text{ seleccionó la modalidad } k \text{ de la pregunta } q \\ 0 & \text{si no} \end{cases}$$
-
-::: {.fragment}
-La **matriz disyuntiva completa** concatena todas las preguntas:
-
-$$Z = [Z_1,\, Z_2,\, \cdots,\, Z_Q] \qquad (n \times p), \quad p = \sum_{q=1}^Q p_q$$
-
-Sus propiedades:
-
-| | |
-|:--|:--|
-| Suma por filas | $z_{i.} = Q$ (número de preguntas) |
-| Suma por columnas | $z_{q(.j)}$ = número de individuos que contestaron la modalidad $j$ de $q$ |
-:::
-
----
-
-## Ejemplo: tabla disyuntiva completa y tabla en códigos {style="font-size: 85%;"}
-
-$$\begin{array}{c|cccc|cc|ccc|r|ccc|}
-\multicolumn{1}{c}{} & \multicolumn{9}{c}{\textbf{Tabla disyuntiva completa}} & \multicolumn{1}{r}{} & \multicolumn{3}{c}{\textbf{Tabla en códigos}} \\
-\hline
-ind & p_1\,o1 & p_1\,o2 & p_1\,o3 & p_1\,o4 & p_2\,o1 & p_2\,o2 & p_3\,o1 & p_3\,o2 & p_3\,o3 & & p_1 & p_2 & p_3 \\
-\hline
-1 & 1 & 0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 & \rightarrow & 1 & 1 & 1 \\
-2 & 0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & \rightarrow & 2 & 2 & 3 \\
-3 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 1 & 0 & \rightarrow & 3 & 2 & 2 \\
-4 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & \rightarrow & 4 & 1 & 2 \\
-5 & 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & \rightarrow & 3 & 1 & 1 \\
-\hline
-\end{array}$$
-
-::: {.fragment}
-::: {.callout-note}
-En R, la función `MCA()` del paquete `FactoMineR` acepta la **tabla en códigos** (formato largo) y construye internamente la tabla disyuntiva completa y la tabla de Burt.
-:::
-:::
 
 ---
 
@@ -849,7 +845,7 @@ En R, la función `MCA()` del paquete `FactoMineR` acepta la **tabla en códigos
 La tabla de Burt $B = Z^\prime Z$ es simétrica por bloques:
 
 **En la diagonal** — tablas de contingencia internas de la pregunta $q$:
-$$D_q = Z_q^\prime Z_q = \text{diag}(z_{q(\cdot 1)},\, z_{q(\cdot 2)},\, \ldots,\, z_{q(\cdot p_q)})$$
+$$D_q = Z_q^\prime Z_q = \text{diag}(z_{q(\cdot 1)},\, z_{q(\cdot 2)},\, \ldots,\, z_{q(\cdot p_q)}), \quad q=1, \ldots, Q$$
 
 ::: {.fragment}
 **Fuera de la diagonal** — tablas de contingencia entre las preguntas $q$ y $q^\prime$:
@@ -857,16 +853,32 @@ $$Z_q^\prime Z_{q^\prime} = \left\{ \sum_{i=1}^n z_{q(ij)}\, z_{q^\prime(ik)} \r
 cuyo elemento $(j,k)$ es el número de individuos que contestaron la opción $j$ de $q$ **y** la opción $k$ de $q^\prime$.
 :::
 
-::: {.fragment}
-**Obtención de las componentes:**
+---
+
+## Tabla de Burt: estructura por bloques {style="font-size: 90%;"}
+
+<p align="center">
+<img src="images/BURT1.png" width="90%">
+</p>
+
+## Obtención de las componentes {style="font-size: 85%;"}
+
+Para el ACM se usan entonces los perfiles fila y columna de la tabla disyuntiva completa, se mantiene
+el criterio de distancia $\chi^2$ y las interpretaciones son los mismos que los del ACS.
+
+La matriz a la que se calculan los valores y vectores propios es:
+
 $$S = \frac{1}{Q} Z^\prime Z D^{-1} = \frac{1}{Q} B D^{-1}$$
 
-donde $D = \text{diag}(D_1, D_2, \ldots, D_Q)$.
-:::
+donde 
+
+- $D^{-1} = \text{diag}(D_1^{-1}, D_2^{-1}, \ldots, D_Q^{-1})$
+
+- $D_q^{-1} = Z_q^\prime Z_q =  \text{diag}(1/z_{q(\cdot 1)}, 1/z_{q(\cdot 2)}, \ldots, 1/z_{q(\cdot p_q)}), \quad q=1,\ldots Q$
 
 # Inercia en el ACM {background-color="#0077b6"}
 
-## Inercia de modalidades, preguntas y total {style="font-size: 90%;"}
+## Inercia de modalidades, preguntas y total {style="font-size: 80%;"}
 
 ::: {.fragment}
 **Inercia (varianza) de una modalidad** $j$:
@@ -879,7 +891,7 @@ Aumenta cuando **pocos individuos** la contestaron ($z_{.j}$ pequeño); disminuy
 ::: {.fragment}
 **Inercia de una pregunta completa** $q$:
 
-$$I(q) = \sum_{j=1}^{p_q} I(j) = \frac{1}{Q}(p_q - 1)$$
+$$I(q) = \sum_{j=1}^{p_q} I(j) = \sum_{j=1}^{p_q} \frac{1}{Q}\left(1 - \frac{z_{.j}}{n}\right) = \frac{1}{Q}(p_q - 1)$$
 
 Solo depende de $p_q$ y $Q$: **no tiene interés estadístico**.
 :::
