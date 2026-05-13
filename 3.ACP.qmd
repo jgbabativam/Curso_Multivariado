@@ -1568,6 +1568,12 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 
 # Laboratorio {background-color="#0077b6"}
 
+## Laboratorio Ciudades
+
+Para ver este laboratorio de clic sobre este enlace:
+
+[Laboratorio ACP]()
+
 ## Índice de Probreza Multidimensional - IPM
 
 ![](images/IPM.png){fig-align="right" width="80%"}
