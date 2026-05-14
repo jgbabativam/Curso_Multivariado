@@ -854,15 +854,38 @@ fviz_pca_biplot(pca_supl, repel = TRUE, col.var  = "#C0392B", col.ind  = "#0077b
 
 # Ejemplo 2: Calidad de vida — ECV DANE {background-color="#0077b6"}
 
-## Encuesta Nacional de Calidad de Vida {style="font-size: 90%;"}
+## ¿Qué es la ENCV?
 
-La **ECV** es el principal instrumento del DANE para medir las condiciones de vida de los hogares colombianos. Se realiza anualmente con cobertura nacional y departamental.
+La **Encuesta Nacional de Calidad de Vida** es una investigación estadística periódica que:
+
+- Recopila información sobre las **condiciones socioeconómicas y de vida** de los hogares colombianos
+- Captura dimensiones como educación, salud, empleo, servicios públicos, vivienda y acceso a bienes
+- Utiliza un **diseño muestral complejo** con estratificación y conglomeración
+- Produce estimaciones a nivel nacional, regional y departamental
+
+## Marco Legal
+
+**Ley 1523 de 2012** (*Política Nacional de Gestión del Riesgo de Desastres*)
+
+- Establece la **obligatoriedad de realizar la ENCV anualmente**
+- Integrada en el Sistema Estadístico Nacional (SEN) bajo supervisión del DANE
+- Reglamentada mediante resoluciones del Departamento Administrativo Nacional de Estadística
 
 ::: {.fragment}
+::: {.callout-important}
+El objetivo central de la ENCV es calcular el **Índice de Pobreza Multidimensional (IPM)**
+:::
+:::
+
+## Índice de Probreza Multidimensional - IPM
+
+![](images/IPM.png){fig-align="right" width="80%"}
+
+## Encuesta Nacional de Calidad de Vida 
+
 El conjunto de datos que usaremos contiene **15 indicadores de calidad de vida** para los **33 departamentos** de Colombia (incluido Bogotá D.C.), construidos a partir de los resultados publicados por el DANE para la ECV 2022.
 
 Todas las variables están en escala 0–100 con la convención:
-:::
 
 ::: {.fragment}
 ::: {.re-blue}
@@ -1100,10 +1123,10 @@ ggplot(coord_var, aes(x = Dim1, y = Dim2, label = Variable)) +
   ggrepel::geom_text_repel(size = 3.2, color = "#2C3E50",
                             max.overlaps = 20) +
   annotate("text", x = 0.87, y = -0.85,
-           label = "Conectividad\ndigital",
+           label = "Servicios\nbásicos",
            fontface = "italic", color = "#C0392B", size = 3.5) +
   annotate("text", x = 0.87, y = 0.85,
-           label = "Servicios\nbásicos",
+           label = "Conectividad\ndigital",
            fontface = "italic", color = "#27AE60", size = 3.5) +
   annotate("text", x = -0.25, y = 0.0,
            label = "Factor tamaño\n(infraestructura)", fontface = "bold.italic",
@@ -1577,9 +1600,6 @@ Para ver este laboratorio de clic sobre este enlace:
 
 [Laboratorio ACP](https://github.com/jgbabativam/Curso_Multivariado/blob/main/Laboratorios/LabC_ACP.pdf)
 
-## Índice de Probreza Multidimensional - IPM
-
-![](images/IPM.png){fig-align="right" width="80%"}
 
 ## Asignación por grupos
 
@@ -1603,7 +1623,7 @@ Usando los datos a nivel de hogares del **IPM** de la **Encuesta Nacional de Cal
 
 [DANE Microdatos ECV 2025](https://microdatos.dane.gov.co/index.php/catalog/903/get-microdata)
 
-Cada grupo debe usar el siguiente código como referencia para generar el conjunto de datos que va a trabajar. Los códigos deben ser entregados.
+Use el conjunto de datos a nivel de **Hogares** ubicado en la carpeta **DEPARTAMENTAL**. Cada grupo debe usar el siguiente código como referencia para generar el conjunto de datos que va a trabajar. Los códigos (script o archivo .Rmd) debe ser entregado junto con el informe y presentación que se usará en la socialización. 
 
 ---
 
@@ -1647,7 +1667,7 @@ df_ipm <- getdata(ipm, muestra)
 
 4. ¿Cuántas componentes retiene cada uno de los tres criterios presentados? Justifique cuál le parece más adecuado para este conjunto de datos.
 
-## Laboratorio (4/5) {style="font-size: 90%;"}
+## Laboratorio (4/5) {style="font-size: 85%;"}
 
 ::: {.incremental} 
 
@@ -1658,10 +1678,10 @@ Identifique:
 
 6. Construya el **plano de individuos** con fviz_pca_ind() coloreando por $cos^2$ y otro por $contrib$. 
 Identifique: 
-  - El departamento con mejor calidad de vida general usando el criterio de correlación. 
-  - El departamento peor representado en el plano 1-2 usando el criterio de los cosenos cuadrados. 
-  - Dos departamentos con perfiles similares (use la distancia entre variables sobre el plano). 
-  - Dos departamentos con perfiles opuestos (use la distancia entre variables sobre el plano).
+  - Los 4 departamentos con mejor calidad de vida general usando el criterio de correlación. 
+  - Los 4 departamentos peor representados en el plano 1-2 usando el criterio de los cosenos cuadrados. 
+  - Los 2 departamentos con los perfiles más similares (use la distancia entre variables sobre el plano). 
+  - Los 2 departamentos con perfiles más opuestos (use la distancia entre variables sobre el plano).
 
 :::
 
@@ -1671,7 +1691,7 @@ Identifique:
 
 7. Genere el **biplot** e interprete qué variable(s) caracterizan al departamento que quedó en el extremo derecho del eje 1. 
 
-8. Agregue las variables IPM y porcentaje de hogares en condición de pobreza  (sin transformar) como **variables suplementarias** usando quanti.sup. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional? 
+8. Agregue las variables IPM y porcentaje de hogares en condición de pobreza  (sin transformar) como **variables suplementarias** e incluya a Bogotá como **objeto suplementario**. ¿Cómo se ubica en el plano de variables? ¿Qué componente captura mejor la pobreza multidimensional?, ¿Qué ocurrió con Bogotá? 
 
 9. Repita el ACP con los indicadores de una de las dimensiones como variables suplementarias. ¿Cambia la interpretación de las componentes? 
 
