@@ -296,7 +296,7 @@ Dos preguntas permiten explorar si quienes tienen sentimientos positivos hacia l
 #| message: false
 #| warning: false
 library(pacman)
-p_load(tidyverse, FactoMineR, factoextra, gt, janitor)
+p_load(tidyverse, FactoMineR, factoextra, gt, janitor, corrplot)
 
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 CCLatin <- read.csv2(paste0(url, "Muestra_CC.csv"), sep = ";")
@@ -407,31 +407,61 @@ round(eig_acs, 3)
 
 ---
 
-## Análisis de las filas — Factores 1 y 2
+## Análisis de las filas — Factores 1 y 2 {style="font-size: 85%;"}
 
-```{r, echo=FALSE}
-library(FactoMineR)
-library(knitr)
+::: {.columns}
+::: {.column width="62%"}
+```{r}
+#| echo: false
+cor_f <- round(acs_p16x17$row$coord[, 1:2], 2)
+con_f <- round(acs_p16x17$row$contrib[, 1:2], 2)
+cos_f <- round(acs_p16x17$row$cos2[, 1:2], 2)
 
-coord <- acs_p16x17$row$coord[, 1:2]
-cos2  <- acs_p16x17$row$cos2[, 1:2]
-contrib <- acs_p16x17$row$contrib[, 1:2]
-
-tabla_filas <- data.frame(
-  Fila = rownames(coord),
-  Coord_Dim1 = coord[,1],
-  Coord_Dim2 = coord[,2],
-  Cos2_Dim1 = cos2[,1],
-  Cos2_Dim2 = cos2[,2],
-  Contrib_Dim1 = contrib[,1],
-  Contrib_Dim2 = contrib[,2]
+data.frame(
+  Modalidad = rownames(cor_f),
+  CF1 = cor_f[, 1], CF2 = cor_f[, 2],
+  NF1 = con_f[, 1], NF2 = con_f[, 2],
+  SF1 = cos_f[, 1], SF2 = cos_f[, 2]
 ) |>
-  mutate(across(-Fila, round, 3)) |>
-  arrange(desc(Contrib_Dim1))
-
-kable(tabla_filas, align = "c")
+  gt() |>
+  tab_spanner(label = "Coordenadas",        columns = c(CF1, CF2)) |>
+  tab_spanner(label = "Contribuciones (%)", columns = c(NF1, NF2)) |>
+  tab_spanner(label = "Cos²",         columns = c(SF1, SF2)) |>
+  cols_label(Modalidad = "Modalidad",
+             CF1 = "F1", CF2 = "F2",
+             NF1 = "F1", NF2 = "F2",
+             SF1 = "F1", SF2 = "F2") |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_spanners()) |>
+  tab_options(table.font.size = px(17), data_row.padding = px(5),
+              table.width = pct(100))
 ```
+:::
+::: {.column width="38%"}
+```{r}
+#| echo: false
+#| fig-height: 3.8
+#| fig-width: 3.2
+cos2_mat <- acs_p16x17$row$cos2[, 1:2]
+rownames(cos2_mat) <- gsub("p16_PNOR=\\d+_", "", rownames(cos2_mat))
+colnames(cos2_mat) <- c("F1", "F2")
+corrplot(cos2_mat, is.corr = FALSE, method = "color",
+         addCoef.col = "black", number.cex = 0.85,
+         tl.col = "black", tl.cex = 0.9,
+         col = COL1("Reds", 100), cl.ratio = 0.25,
+         col.lim = c(0, 1),
+         mar = c(0, 0, 1.8, 0),
+         title = "Cos² por factor")
+```
+:::
+:::
 
+::: {.callout-note}
+**Factor 1** queda tipificado por **muy positivo** (contr. 38.09%, cos²=0.92) —pese a tener la menor coordenada en valor absoluto (−0.19)— y por **indiferente** (coord. 0.50, cos²=0.94, contr. 15.21%). Las modalidades **muy neg** y **neg** definen el **Factor 2**, contribuyendo conjuntamente el 94.6% de su varianza. **Lectura del Factor 1:** coordenadas extremas negativas → sentimientos muy negativos; pequeñas negativas → sentimientos muy positivos; positivas (~0.5) → indiferencia ante las normas.
+:::
 
 ---
 
@@ -442,30 +472,66 @@ kable(tabla_filas, align = "c")
 #| fig-align: center
 #| fig-width: 9
 #| fig-height: 5.5
-fviz_ca_row(acs_p16x17, repel = TRUE,
-            col.row = "cos2",
+fviz_ca_row(acs_p16x17, repel = TRUE, col.row = "cos2",
             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-            title = "Análisis por filas — Sentimientos ante palabras como regla o norma") +
-  theme_bw()
+            title = "Análisis por filas — Sentimientos ante palabras como regla o norma") + theme_bw()
 ```
 
 ---
 
-## Análisis por filas: indicadores {style="font-size: 80%;"}
+## Indicadores de columnas — Facilidad para actuar conforme a la ley {style="font-size: 85%;"}
 
+::: {.columns}
+::: {.column width="62%"}
 ```{r}
-#| echo: true
-cor_f  <- round(acs_p16x17$row$coord[, 1:2], 3)
-con_f  <- round(acs_p16x17$row$contrib[, 1:2], 2)
-cos_f  <- round(acs_p16x17$row$cos2[, 1:2], 3)
-colnames(cor_f) <- colnames(con_f) <- colnames(cos_f) <- c("Factor 1", "Factor 2")
-cbind(Coord = cor_f, Contr = con_f, Cos2 = cos_f)
-```
+#| echo: false
+cor_c <- round(acs_p16x17$col$coord[, 1:2], 2)
+con_c <- round(acs_p16x17$col$contrib[, 1:2], 2)
+cos_c <- round(acs_p16x17$col$cos2[, 1:2], 2)
 
-::: {.fragment}
-::: {.callout-note}
-La modalidad **muy negativo** tiene la mayor coordenada negativa sobre el Factor 1. El Factor 2 es un indicador de sentimientos negativos o muy negativos hacia las reglas: las dos modalidades con bajas frecuencias sobresalen lejos del origen sobre este factor.
+data.frame(
+  Modalidad = rownames(cor_c),
+  CF1 = cor_c[, 1], CF2 = cor_c[, 2],
+  NF1 = con_c[, 1], NF2 = con_c[, 2],
+  SF1 = cos_c[, 1], SF2 = cos_c[, 2]
+) |>
+  gt() |>
+  tab_spanner(label = "Coordenadas",        columns = c(CF1, CF2)) |>
+  tab_spanner(label = "Contribuciones (%)", columns = c(NF1, NF2)) |>
+  tab_spanner(label = "Cos²",         columns = c(SF1, SF2)) |>
+  cols_label(Modalidad = "Modalidad",
+             CF1 = "F1", CF2 = "F2",
+             NF1 = "F1", NF2 = "F2",
+             SF1 = "F1", SF2 = "F2") |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_spanners()) |>
+  tab_options(table.font.size = px(17), data_row.padding = px(5),
+              table.width = pct(100))
+```
 :::
+::: {.column width="38%"}
+```{r}
+#| echo: false
+#| fig-height: 3.8
+#| fig-width: 3.2
+cos2_col <- acs_p16x17$col$cos2[, 1:2]
+rownames(cos2_col) <- gsub("p17b_FACL=\\d+_", "", rownames(cos2_col))
+colnames(cos2_col) <- c("F1", "F2")
+corrplot(cos2_col, is.corr = FALSE, method = "color",
+         addCoef.col = "black", number.cex = 0.85,
+         tl.col = "black", tl.cex = 0.9,
+         col = COL1("Reds", 100), col.lim = c(0, 1), cl.ratio = 0.25,
+         mar = c(0, 0, 1.8, 0),
+         title = "Cos² por factor")
+```
+:::
+:::
+
+::: {.callout-note}
+**Factor 1** está mejor tipificado por **siempre** (p17b_FACL=4_s): mayor contribución (44.25%) y mejor representada sobre este factor (cos²=0.98), con coordenada negativa (−0.12). La modalidad **casi nunca** tiene la mayor coordenada positiva (0.24) y alta contribución (33.81%). **Factor 2** es un indicador de poca facilidad para cumplir la ley: **nunca** (p17b_FACL=1_n) tiene la mayor coordenada (0.37), la mayor contribución (38.85%) y el mejor cos² en F2 (0.79), situándose lejos del origen.
 :::
 
 ---
@@ -477,11 +543,9 @@ La modalidad **muy negativo** tiene la mayor coordenada negativa sobre el Factor
 #| fig-align: center
 #| fig-width: 9
 #| fig-height: 5.5
-fviz_ca_col(acs_p16x17, repel = TRUE,
-            col.col = "cos2",
+fviz_ca_col(acs_p16x17, repel = TRUE, col.col = "cos2",
             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-            title = "Análisis por columnas — Facilidad para actuar conforme a la ley") +
-  theme_bw()
+            title = "Análisis por columnas — Facilidad para actuar conforme a la ley") + theme_bw()
 ```
 
 ---
@@ -492,12 +556,14 @@ fviz_ca_col(acs_p16x17, repel = TRUE,
 #| echo: true
 #| fig-align: center
 #| fig-width: 9
-#| fig-height: 5.5
-fviz_ca_biplot(acs_p16x17, repel = TRUE,
-               col.row = "#0077b6", col.col = "#C0392B",
-               title = "Asociación entre sentimientos y facilidad para cumplir la ley") +
-  theme_bw()
+#| fig-height: 5.2
+fviz_ca_biplot(acs_p16x17, repel = TRUE, col.row = "#0077b6", col.col = "#C0392B",
+               title = "Asociación entre sentimientos y facilidad para cumplir la ley") + theme_bw()
 ```
+
+::: {.callout-note}
+**Centro del plano**: *siempre* y *casi siempre* (azul) se ubican junto a *indiferente*, *positivo* y *muy positivo* (rojo) indicando **asociación**, estar cerca del origen es una señal de que la mayoría de los encuestados comparte sentimientos positivos hacia las normas y encuentra fácil actuar conforme a la ley. **Asociación clave:** la cercanía entre *nunca* (p17b_FACL=1_n) y *negativo* (p16_PNOR=2_neg) confirma que quienes nunca cumplen la ley tienden a mostrar sentimientos negativos ante las normas o reglas.
+:::
 
 ---
 
@@ -524,8 +590,7 @@ fviz_ca_biplot(acs_p16x17, repel = TRUE,
 #| message: false
 #| warning: false
 Nedx17  <- table(CCLatin$p7_NEd, CCLatin$p17_b)
-pnor_Ned_faci <- rbind(as.data.frame.matrix(t16x17),
-                       as.data.frame.matrix(Nedx17))
+pnor_Ned_faci <- rbind(as.data.frame.matrix(t16x17), as.data.frame.matrix(Nedx17))
 ca_supl <- CA(pnor_Ned_faci, row.sup = 6:11, graph = FALSE)
 ```
 
@@ -539,7 +604,61 @@ plot.CA(ca_supl, title = "Sentimientos, facilidad para cumplir la ley y nivel ed
 ```
 :::
 
-# Ejemplo 2: Confianza en la justicia — 38 países {background-color="#0077b6"}
+---
+
+## Variable suplementaria: indicadores por nivel educativo {style="font-size: 85%;"}
+
+::: {.columns}
+::: {.column width="62%"}
+```{r}
+#| echo: false
+cor_s <- round(ca_supl$row.sup$coord[, 1:2], 2)
+cos_s <- round(ca_supl$row.sup$cos2[, 1:2], 2)
+
+data.frame(
+  Nivel = rownames(cor_s),
+  CF1 = cor_s[, 1], CF2 = cor_s[, 2],
+  SF1 = cos_s[, 1], SF2 = cos_s[, 2]
+) |>
+  gt() |>
+  tab_spanner(label = "Coordenadas", columns = c(CF1, CF2)) |>
+  tab_spanner(label = "Cos²",       columns = c(SF1, SF2)) |>
+  cols_label(Nivel = "Nivel educativo",
+             CF1 = "F1", CF2 = "F2",
+             SF1 = "F1", SF2 = "F2") |>
+  opt_row_striping() |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_labels()) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_column_spanners()) |>
+  tab_options(table.font.size = px(17), data_row.padding = px(5),
+              table.width = pct(100))
+```
+:::
+::: {.column width="38%"}
+```{r}
+#| echo: false
+#| fig-height: 4.2
+#| fig-width: 3.2
+cos2_sup <- ca_supl$row.sup$cos2[, 1:2]
+rownames(cos2_sup) <- sub("^\\d+\\s+", "", rownames(cos2_sup))
+colnames(cos2_sup) <- c("F1", "F2")
+corrplot(cos2_sup, is.corr = FALSE, method = "color",
+         addCoef.col = "black", number.cex = 0.82,
+         tl.col = "black", tl.cex = 0.82,
+         col = COL1("Reds", 100), cl.ratio = 0.25,
+         col.lim = c(0, 1),
+         mar = c(0, 0, 1.8, 0),
+         title = "Cos² por factor")
+```
+:::
+:::
+
+::: {.callout-note}
+Las variables suplementarias solo tienen coordenadas y Cos² (no contribuciones). **Sin educación** y **Posgrado** tienen las mayores coordenadas negativas sobre F1 (−0.32 y −0.20). La mejor representada es **Sin educación** (cos²=0.72); **Posgrado** alcanza cos²=0.55, suficiente para estar bien representada en F1. Ambos niveles se proyectan del mismo lado que *muy positivo* y *siempre fácil cumplir la ley*, lo que podría indicar asociación con encuestados que tienen sentimientos muy positivos hacia las normas y alta facilidad para acatarlas.
+:::
+
+# Ejemplo 2: Confianza en la justicia en 38 países {background-color="#0077b6"}
 
 ## Encuesta Mundial de Valores {style="font-size: 88%;"}
 
@@ -554,16 +673,19 @@ Una de sus preguntas interroga por el **grado de confianza en la justicia** en 3
 #| echo: true
 #| message: false
 #| warning: false
-conf_just <- read.csv2(paste0(url, "ConfianzaJUsticia.csv"))
-rownames(conf_just) <- conf_just$Pais
-conf_just$Pais <- NULL
-conf_just <- conf_just[order(-conf_just[, 1]), ]
+library(pacman)
+p_load(tidyverse, janitor, FactoMineR, factoextra, corrplot)
+
+conf_just <- read.csv2(paste0(url, "ConfianzaJUsticia.csv")) |> 
+             column_to_rownames("Pais") |> 
+             arrange(desc(muchis.))
+
 ```
 :::
 
 ---
 
-## Tabla de contingencia — Países × Niveles de confianza
+## Tabla de contingencia: Países × Niveles de confianza
 
 <div style="height:420px; overflow-y:auto;">
 ```{r}
@@ -583,14 +705,14 @@ conf_just |>
 
 ---
 
-## ACS — Confianza en la justicia
+## ACS: Confianza en la justicia
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
 acs_conf <- CA(conf_just, graph = FALSE)
-round(get_eigenvalue(acs_conf), 3)
+#round(get_eigenvalue(acs_conf), 3)
 ```
 
 ::: {.fragment}
@@ -599,10 +721,8 @@ round(get_eigenvalue(acs_conf), 3)
 #| fig-align: center
 #| fig-width: 10
 #| fig-height: 4.5
-fviz_eig(acs_conf, addlabels = TRUE, barfill = "#0077b6", barcolor = "#0077b6",
-         linecolor = "#C0392B") +
-  labs(title = "Gráfico de sedimentación — Confianza en la justicia",
-       x = "Dimensión", y = "% varianza explicada") + theme_bw()
+fviz_eig(acs_conf, addlabels = TRUE, barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
+  labs(title = "Gráfico de sedimentación — Confianza en la justicia", x = "Dimensión", y = "% varianza explicada") + theme_bw()
 ```
 :::
 
@@ -667,11 +787,11 @@ fviz_ca_biplot(acs_conf, repel = TRUE, labelsize = 3,
 - Los países latinoamericanos tienden a agruparse, reflejando patrones culturales comunes respecto a la percepción del sistema judicial.
 :::
 
-# Ejemplo 3: Candidatos — Elecciones Bogotá 2023 {background-color="#0077b6"}
+# Ejemplo 3: Elecciones Alcaldía de Bogotá 2023 {background-color="#0077b6"}
 
 ## Contexto {style="font-size: 88%;"}
 
-En contextos electorales, identificar el perfil perceptivo de los candidatos resulta clave. Los datos provienen de una **muestra aleatoria de 300 personas en Bogotá** que evaluaron a los candidatos a la Alcaldía de Bogotá 2023 asignando atributos a cada candidato (respuestas de selección múltiple).
+En contextos electorales, identificar la percepción ciudadana hacia los candidatos resulta fundamental. Los datos analizados provienen de una muestra aleatoria de 300 personas, extraída de un estudio con 4894 encuestas aplicadas en todas las localidades de Bogotá. El instrumento evaluó a los candidatos a la Alcaldía de Bogotá 2023 mediante preguntas de selección múltiple, donde los participantes asignaron diversos atributos a cada perfil.
 
 ::: {.fragment}
 La tabla resultante es:
@@ -680,20 +800,57 @@ La tabla resultante es:
 |:----------|:-----------|
 | **Filas** | 26 atributos percibidos (positivos, negativos, ideológicos, de alineación política) |
 | **Columnas** | 9 candidatos (incluye "Ninguno" y "Ns/Nr") |
-| **Celdas** | Número de menciones del atributo al candidato |
+
+: {tbl-colwidths="[30,70]"}
 
 El ACS permite construir el **mapa perceptivo** de los candidatos.
 :::
 
 ---
 
-## Carga y preparación de los datos {style="font-size: 86%;"}
+## Diseño del cuestionario {style="font-size: 70%;"}
+
+Se entrega a los entrevistados una tarjeta con la imagen y nombres de los candidatos. Luego se leen los atributos y para cada uno el encuestado responde con cuál(es) candidatos lo asocia.
+
+<p align="center">
+<img src="images/AlcalBog.png" width="55%">
+</p>
+
+## Carga de los datos
+
+</br>
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
+library(pacman)
+p_load(here, tidyverse, FactoMineR, factoextra, corrplot,
+       ggrepel, gt, janitor, haven)
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 clase <- read_sav(paste0(url, "df_clase.sav"))
+
+```
+
+</br>
+
+Explore el conjunto de datos con `glimpse(as_factor(clase))` y compare con el cuestionario
+
+## Ordenar y transformar
+
+```{r, out.width= '100%', fig.align = 'center'}
+knitr::include_graphics(here::here("images/tidyr-pivoting.gif"))
+```
+[Fuente: tidyexplain](https://www.garrickadenbuie.com/project/tidyexplain/)
+
+
+## Preparación de los datos {style="font-size: 86%;"}
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 
 df_long <- clase |>
   pivot_longer(cols = starts_with("P21"), names_to = "P21", values_to = "respuesta") |>
@@ -765,85 +922,81 @@ tabla_cand |>
 #| echo: true
 #| message: false
 #| warning: false
-tabla_activa <- tabla_cand |> select(-any_of(c("Ninguno", "Ns/Nr")))
-acs_cand <- CA(tabla_activa, graph = FALSE)
-round(get_eigenvalue(acs_cand)[1:5, ], 3)
-```
-
-::: {.fragment}
-```{r}
-#| echo: true
-#| fig-align: center
-#| fig-width: 9
-#| fig-height: 4.2
-fviz_eig(acs_cand, addlabels = TRUE, ncp = 6,
-         barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
+res <- CA(tabla_cand, graph = FALSE)
+fviz_screeplot(res, addlabels = TRUE, ylim = c(0, 50), barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
   labs(title = "Gráfico de sedimentación — Candidatos Bogotá 2023",
        x = "Dimensión", y = "% varianza explicada") + theme_bw()
 ```
-:::
 
 ---
 
-## Contribuciones de los candidatos
+## Contribuciones de las columnas (candidatos)
 
 ```{r}
 #| echo: true
-#| fig-align: center
-#| fig-width: 10
-#| fig-height: 5.5
-fviz_ca_col(acs_cand, repel = TRUE,
-            col.col = "contrib",
+corrplot(res$col$contrib, is.corr=FALSE, tl.col = "black")
+```
+
+## Contribuciones de las filas (atributos)
+
+```{r}
+#| echo: true
+corrplot(res$row$contrib, is.corr=FALSE, tl.col = "black")
+```
+
+## Análisis de los cosenos para los candidatos
+
+```{r}
+#| echo: true
+corrplot(res$col$cos2, is.corr=FALSE, tl.col = "black")
+```
+
+## Análisis de los cosenos para los atributos
+
+```{r}
+#| echo: true
+corrplot(res$row$cos2, is.corr=FALSE, tl.col = "black")
+```
+
+
+---
+
+## Perfil de los candidatos (Plano 1-2)
+
+```{r}
+#| echo: true
+fviz_ca_col(res, repel = TRUE, col.col = "cos2", axes = c(1,2),
             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-            title = "Candidatos — por contribución al plano 1-2") + theme_bw()
+            select.col = list(cos2 = 0.5))
 ```
 
----
-
-## Contribuciones de los atributos
+## Posicionamiento de los atributos (Plano 1-2)
 
 ```{r}
 #| echo: true
-#| fig-align: center
-#| fig-width: 10
-#| fig-height: 5.5
-fviz_ca_row(acs_cand, repel = TRUE, labelsize = 3,
-            col.row = "cos2",
-            gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-            title = "Atributos percibidos — por cos² en el plano 1-2") + theme_bw()
+fviz_ca_row(res, repel = TRUE, col.row = "cos2", axes = c(1,2),
+            gradient.cols = c("lightblue", "blue", "darkblue"),
+            select.row = list(cos2 = 0.5))
 ```
 
 ---
 
-## Mapa perceptivo: candidatos y atributos {style="font-size: 90%;"}
+## Biplot: candidatos y atributos {style="font-size: 90%;"}
 
 ```{r}
 #| echo: true
-#| fig-align: center
-#| fig-width: 10
-#| fig-height: 5.5
-fviz_ca_biplot(acs_cand, repel = TRUE, labelsize = 3,
-               col.col = "#C0392B", col.row = "#2471A3",
-               title = "Mapa perceptivo — Candidatos Bogotá 2023",
-               select.col = list(cos2 = 0.35),
-               select.row = list(cos2 = 0.35)) + theme_bw()
+fviz_ca_biplot(res, axes = c(1,2),
+               repel = TRUE, 
+               select.col = list(cos2 = 0.5),
+               select.row = list(cos2 = 0.5))
 ```
 
----
+## Análisis complementarios
 
-## Interpretación del mapa perceptivo {style="font-size: 88%;"}
+1. Haga un análisis que le permita encontrar las diferencias y similaridades entre los candidatos Galán, Oviedo, Molano y Vargas.
+2. ¿Cuáles son los aspectos que diferencian al candidato Lara frente a los candidatos Galán y Oviedo?.
+3. ¿Que modificación debe realizar si su objetivo se centra en encontrar los aspectos que diferencian al candidato Lara frente a los candidatos Molano y Vargas?.
 
-::: {.incremental}
-- **Dimensión 1** — eje ideológico: separa los candidatos de izquierda de los de derecha. Los atributos "Tendencia de izquierda" y "Representa a Petro" se oponen a "Tendencia de derecha", "Candidato de Uribe/Peñalosa" y "Garantiza mano dura".
-
-- **Dimensión 2** — eje de propuestas y carácter: distingue candidatos percibidos por sus propuestas y cualidades personales de aquellos con etiquetas de dependencia política.
-
-- Los candidatos más **diferenciados** del resto (lejos del origen) tienen perfiles más marcados en la mente del electorado.
-
-- Los candidatos **cercanos entre sí** son percibidos de manera similar por los encuestados.
-
-- Los atributos al centro del plano (alta frecuencia) son asignados homogéneamente a múltiples candidatos.
-:::
 
 # Análisis de Correspondencias Múltiples (ACM) {background-color="#0077b6"}
 
@@ -888,6 +1041,13 @@ $$Z = [Z_1,\, Z_2,\, \cdots,\, Z_Q] \qquad (n \times p), \quad p = \sum_{q=1}^Q 
 <img src="images/ACM2.png" width="90%">
 </p>
 
+## Ejemplo: Matriz disyuntiva completa 
+
+<p align="center">
+<img src="images/ACS1.png" width="95%">
+</p>
+
+
 # Tabla de Burt {style="font-size: 90%;"}
 
 Al realizar la operación $Z^\prime Z$ se llega a la matriz que concatena todas las tablas de contingencia entre pares de variables, denominada tabla de *Burt*
@@ -924,6 +1084,12 @@ cuyo elemento $(j,k)$ es el número de individuos que contestaron la opción $j$
 
 <p align="center">
 <img src="images/BURT1.png" width="90%">
+</p>
+
+## Ejemplo: Tabla de Burt
+
+<p align="center">
+<img src="images/ACS2.png" width="95%">
 </p>
 
 ## Obtención de las componentes {style="font-size: 85%;"}
