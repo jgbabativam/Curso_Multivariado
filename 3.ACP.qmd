@@ -506,7 +506,7 @@ ya que $v_\alpha^\prime v_\alpha = 1$
 
 Para los **objetos**, la contribución del objeto $i$ a la componente $\alpha$ es:
 
-$$\text{CTR}(i, \alpha) = \frac{z_{i\alpha}^2}{\sum_{i^\prime=1}^n z_{i^\prime\alpha}^2} = \frac{z_{i\alpha}^2}{\lambda_\alpha}$$
+$$\text{CTR}(i, \alpha) = \frac{z_{i\alpha}^2}{\sum_{i^\prime=1}^n z_{i^\prime\alpha}^2} = \frac{z_{i\alpha}^2}{n\lambda_\alpha}$$
 
 ::: {.fragment}
 ::: {.callout-note}
