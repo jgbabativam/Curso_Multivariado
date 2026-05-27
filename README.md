@@ -31,7 +31,7 @@ El repositorio está diseñado como un recurso de aprendizaje tanto para estudia
 | Panorama | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/1.Panorama.html)|
 | Medidas Descriptivas <br> Multivariadas | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/2.MedidasMulti.html)|
 | Análisis de Componentes Principales | [Ejercicios preparatorios](https://jgbabativam.github.io/Curso_Multivariado/Laboratorios/LabPreparcialACP.pdf) | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/3.ACP.html) |
-| Análisis de Correspondencias | — | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/4.Correspondencias.html) |
+| Análisis de Correspondencias | — | [Ver diapositivas ACS](https://jgbabativam.github.io/Curso_Multivariado/4.ACS.html) |
 
 ---
 

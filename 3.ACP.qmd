@@ -1696,3 +1696,16 @@ Identifique:
 9. Repita el ACP con los indicadores de una de las dimensiones como variables suplementarias. ¿Cambia la interpretación de las componentes? 
 
 :::
+
+# GRACIAS! {background-color="#ddf3ff"}
+
+ 
+# Citación y derechos de autor
+
+Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
+Cualquier copia parcial o total de este material, debe citar la fuente como:
+
+> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+
+
