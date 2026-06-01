@@ -26,12 +26,13 @@ revealjs-plugins:
 #| warning: false
 library(pacman)
 p_load(here, tidyverse, FactoMineR, factoextra, corrplot,
-       ggrepel, gt, janitor)
+       ggrepel, gt, janitor, haven)
 ```
 
 ```{r}
 #| label: carga-datos
-load(here("datos", "ej_ac.rds"))
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+microdato <- read_sav(paste0(url, "ejemploACS.sav"))
 ```
 
 # Ejemplo ACS {background-color="#0077b6"}
@@ -56,11 +57,13 @@ load(here("datos", "ej_ac.rds"))
 
 ## Frecuencias absolutas {style="font-size: 90%;"}
 
-Se encuestaron **400 personas** de una institución de educación sobre su opinión respecto a una **reforma académica**.
+Se simularon datos para **400 personas** de una institución de educación sobre su opinión respecto a una **reforma académica**.
 
 ```{r}
 #| echo: true
-load(here("datos", "ej_ac.rds"))
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+microdato <- read_sav(paste0(url, "ejemploACS.sav")) |> 
+             mutate(across(c("opinion", "grupo"), ~as_factor(.)))
 
 tbl <- table(microdato$grupo, microdato$opinion)
 ```
@@ -166,7 +169,7 @@ rownames(m_pf)[nrow(m_pf)] <- "Centroide G_J"
 df_pf <- as.data.frame.matrix(m_pf) |> rownames_to_column("Grupo")
 nr_pf <- nrow(df_pf)
 
-df_pf |>
+res <- df_pf |>
   gt() |>
   opt_row_striping() |>
   tab_style(style = cell_text(weight = "bold"),
@@ -176,6 +179,8 @@ df_pf |>
   tab_options(table.font.size = px(18), data_row.padding = px(5),
               table.width = pct(100)) |>
   tab_header(title = "Perfiles fila")
+
+res
 ```
 
 ::: {.fragment style="font-size: 0.8em;"}
@@ -253,9 +258,9 @@ En AC buscamos diferencias respecto de lo esperado bajo independencia. Una categ
 
 **Perfiles fila**: 
 
-* Estudiantes = (0.10, 0.20, 0.30, 0.40) 
-* Docentes = (0.425, 0.10, 0.075, 0.40)
-* Centroide = (0.3, 0.175, 0.15, 0.375)
+```{r}
+res
+```
 
 $$d^2(\text{Est},\,\text{Doc}) = \frac{(0.10-0.425)^2}{0.30} + \frac{(0.20-0.10)^2}{0.175} + \frac{(0.30-0.075)^2}{0.15} + \frac{(0.40-0.40)^2}{0.375} = 0.747$$
 
@@ -336,13 +341,13 @@ round(Z, 5)
 ::: {.fragment style="font-size: 0.8em;"}
 ::: {.re-blue}
 > **Inercia total:** $T = \displaystyle\sum_{ij} z_{ij}^2 = \chi^2/n$.
-> Verificación: $\sum z_{ij}^2 = `r round(sum(Z^2), 5)`$ y $\chi^2/n = `r round(chi_test$statistic/n, 5)`$. 
+> Verificación: $\sum z_{ij}^2 = `r round(sum(Z^2), 5)`$ y $\chi^2/n = `r round(chi_test$statistic, 5)`/400 = `r round(chi_test$statistic/n, 5)`$. 
 :::
 :::
 
 # Extracción de factores {background-color="#0077b6"}
 
-## Matriz de varianzas y covarianzas {style="font-size: 90%;"}
+## Análogo de la matriz de varianzas y covarianzas {style="font-size: 90%;"}
 
 Los factores se obtienen de la descomposición en valores propios de:
 
