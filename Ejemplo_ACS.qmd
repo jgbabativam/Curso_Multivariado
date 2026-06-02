@@ -43,7 +43,7 @@ microdato <- read_sav(paste0(url, "ejemploACS.sav"))
 1. Construir la tabla de contingencia y verificar asociación con $\chi^2$.
 2. Calcular perfiles fila/columna y sus centroides.
 3. Definir la **distancia $\chi^2$** entre perfiles.
-4. Derivar la **matriz estandarizada** $\mathbf{Z}$ y la de covarianzas $\mathbf{S}$.
+4. Derivar la **matriz estandarizada** $\mathbf{Z}$ y la de sumas de cuadrados $\mathbf{Z}^\prime \mathbf{Z}$.
 5. Extraer factores por descomposición en **valores propios**.
 6. Obtener coordenadas vía **ecuaciones de transición**.
 7. Generar el **plano factorial** con `ggplot2`.
