@@ -237,7 +237,7 @@ donde $F = \{f_{ij}\}$ es la matriz de frecuencias relativas, $D_I = \text{diag}
 
 ::: {.fragment}
 1. **Coordenadas** ($r_{i\alpha}$, $c_{j\alpha}$): posición de la modalidad sobre el factor.
-2. **Contribuciones:** aporte de la modalidad a la varianza del factor:
+2. **Contribuciones:** aporte de la modalidad a la inercia del factor:
 $$C_\alpha(i) = \frac{f_{i.}\, r_{\alpha i}^2}{\lambda_\alpha} \qquad C_\alpha(j) = \frac{f_{.j}\, c_{\alpha j}^2}{\lambda_\alpha}$$
 3. **Cosenos cuadrados:** capacidad del factor para representar la modalidad:
 $$\cos^2_\alpha(i) = \frac{r_{\alpha i}^2}{d^2(i, G_I)} \qquad \cos^2_\alpha(j) = \frac{c_{\alpha j}^2}{d^2(j, G_J)}$$
@@ -460,7 +460,7 @@ corrplot(cos2_mat, is.corr = FALSE, method = "color",
 :::
 
 ::: {.callout-note}
-**Factor 1** queda tipificado por **muy positivo** (contr. 38.09%, cos²=0.92) —pese a tener la menor coordenada en valor absoluto (−0.19)— y por **indiferente** (coord. 0.50, cos²=0.94, contr. 15.21%). Las modalidades **muy neg** y **neg** definen el **Factor 2**, contribuyendo conjuntamente el 94.6% de su varianza. **Lectura del Factor 1:** coordenadas extremas negativas → sentimientos muy negativos; pequeñas negativas → sentimientos muy positivos; positivas (~0.5) → indiferencia ante las normas.
+**Factor 1** queda tipificado por **muy positivo** (contr. 38.09%, cos²=0.92) —pese a tener la menor coordenada en valor absoluto (−0.19)— y por **indiferente** (coord. 0.50, cos²=0.94, contr. 15.21%). Las modalidades **muy neg** y **neg** definen el **Factor 2**, contribuyendo conjuntamente el 94.6% de su inercia. **Lectura del Factor 1:** coordenadas extremas negativas → sentimientos muy negativos; pequeñas negativas → sentimientos muy positivos; positivas (~0.5) → indiferencia ante las normas.
 :::
 
 ---
@@ -722,7 +722,7 @@ acs_conf <- CA(conf_just, graph = FALSE)
 #| fig-width: 10
 #| fig-height: 4.5
 fviz_eig(acs_conf, addlabels = TRUE, barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
-  labs(title = "Gráfico de sedimentación — Confianza en la justicia", x = "Dimensión", y = "% varianza explicada") + theme_bw()
+  labs(title = "Gráfico de sedimentación — Confianza en la justicia", x = "Dimensión", y = "% inercia explicada") + theme_bw()
 ```
 :::
 
@@ -925,7 +925,7 @@ tabla_cand |>
 res <- CA(tabla_cand, graph = FALSE)
 fviz_screeplot(res, addlabels = TRUE, ylim = c(0, 50), barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
   labs(title = "Gráfico de sedimentación — Candidatos Bogotá 2023",
-       x = "Dimensión", y = "% varianza explicada") + theme_bw()
+       x = "Dimensión", y = "% inercia explicada") + theme_bw()
 ```
 
 ---

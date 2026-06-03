@@ -407,7 +407,7 @@ data.frame(Eje = c("F1", "F2"), pct = round(pct_var, 2)) |>
             fontface = "bold", size = 5) +
   scale_fill_manual(values = c("#0077b6", "#C0392B")) +
   labs(x = "Factor", y = "% inercia explicada",
-       title = "Varianza explicada por cada factor") +
+       title = "Inercia explicada por cada factor") +
   ylim(0, max(pct_var) * 1.15) +
   theme_bw(base_size = 16)
 ```
@@ -429,10 +429,9 @@ colnames(C_coord) <- c("F1", "F2")
 ```
 
 ::: {.fragment}
-**Traspuesta de las coordenadas columna**:
 ```{r}
 #| echo: true
-round(t(C_coord), 5)
+round(C_coord, 5)
 ```
 :::
 
