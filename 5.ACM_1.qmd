@@ -154,7 +154,10 @@ $$
 Cada fila contiene exactamente una respuesta por pregunta, por lo que su suma es igual al número total de preguntas $Q$. La suma de todos los elementos de la matriz es $nQ$.
 :::
 
-## En la práctica puede sea necesario pasar de una tabla disyuntiva completa a una tabla de códigos o viceversa {.smaller}
+---
+
+## Tabla disyuntiva completa para $Q$ preguntas  {.smaller}
+> En la práctica puede sea necesario pasar de una tabla disyuntiva completa a una tabla de códigos o viceversa 
 
 <style>
 .tabla-codigos {
@@ -218,7 +221,6 @@ La tabla en códigos se obtiene reemplazando, para cada pregunta, el bloque disy
 </table>
 
 ## Matriz disyuntiva completa {style="font-size: 80%;"}
-Sea $p=\sum_{q=1}^{Q}p_q$ el número total de modalidades de respuesta en todo el instrumento. Ahora se arreglan las respuestas a todas las preguntas de la encuesta en una \textbf{matriz disyuntiva completa} de dimensiones $n \times p$:
 
 La **matriz disyuntiva completa** concatena todas las preguntas:
 
@@ -226,6 +228,12 @@ $$Z = [Z_1,\, Z_2,\, \cdots,\, Z_Q] \qquad (n \times p), \quad p = \sum_{q=1}^Q 
 
 <p align="center">
 <img src="images/ACM2.png" width="90%">
+</p>
+
+## Ejemplo: Matriz disyuntiva completa 
+
+<p align="center">
+<img src="images/ACS1.png" width="95%">
 </p>
 
 # Tabla de Burt {style="font-size: 90%;"}
@@ -250,8 +258,7 @@ $$B = Z^\prime Z = \begin{bmatrix} Z_1^\prime Z_1 & Z_1^\prime Z_2 & \cdots & Z_
 
 La tabla de Burt $B = Z^\prime Z$ es simétrica por bloques:
 
-**En la diagonal** — tablas de contingencia internas de la pregunta $q$:
-## Bloque diagonal de la tabla de Burt
+**Bloque diagonal de la tabla de Burt**
 
 $$
 D_q = Z_q^\prime Z_q =
@@ -266,14 +273,17 @@ $$
 <!-- $$D_q = Z_q^\prime Z_q = \text{diag}(z_{q(\cdot 1)},\, z_{q(\cdot 2)},\, \ldots,\, z_{q(\cdot p_q)}), \quad q=1, \ldots, Q$$ -->
 
 ::: {.fragment}
-**Fuera de la diagonal** — tablas de contingencia entre las preguntas $q$ y $q^\prime$:
+**Fuera de la diagonal:**  tablas de contingencia entre las preguntas $q$ y $q^\prime$:
 $$Z_q^\prime Z_{q^\prime} = \left\{ \sum_{i=1}^n z_{q(ij)}\, z_{q^\prime(ik)} \right\}_{j,k}$$
-cuyo elemento $(j,k)$ es el número de individuos que contestaron la opción $j$ de $q$ **y** la opción $k$ de $q^\prime$.
+cuyo elemento $(j,k)$ es el número de individuos que contestaron la opción $j$ de la pregunta $q$ **y** la opción $k$ de la pregunta $q^\prime$.
 :::
 
 ---
 
 ## Tabla de Burt: estructura por bloques fuera de la diagonal
+
+</br></br>
+
 $$
 \scriptsize
 Z_q^\prime Z_{q'}=
@@ -299,6 +309,13 @@ $$
 <!-- <img src="images/BURT1.png" width="90%"> -->
 <!-- </p> -->
 
+## Tabla de Burt: estructura por bloques {style="font-size: 90%;"}
+
+<p align="center">
+<img src="images/BURT1.png" width="90%">
+</p>
+
+
 ## Ejemplo: Tabla de Burt
 
 <p align="center">
@@ -322,7 +339,7 @@ donde
 
 ## Interpretación de los elementos de la matriz $S$ {.smaller}
 
-Como la tabla de Burt $B$ es una matriz por bloques, cuyos bloques están dados por los productos cruzados $Z_q'Z_{q'}$, los elementos de la matriz $S$ pueden escribirse como
+Como la tabla de Burt $B$ es una matriz por bloques, cuyos bloques están dados por los productos cruzados $Z_q^\prime Z_{q'}$, los elementos de la matriz $S$ pueden escribirse como
 
 $$
 s_{jk}
@@ -364,7 +381,7 @@ Al dividir por $z_{q'(\cdot k)}$, se obtiene una frecuencia relativa condicionad
 
 ## Varianza e inercia en el ACS y el ACM {.smaller}
 
-### En ACS y ACM se utiliza el concepto de inercia en lugar de la varianza del ACP, porque hay una diferencia importante entre éstos. La varianza está basada en la distancia euclidiana en datos cuantitativos y por tanto mide dispersión, mientras que la inercia utiliza la distancia $\chi^2$ que es una medida de la atracción o repulsión entre modalidades de las variables.
+> En ACS y ACM se utiliza el concepto de inercia en lugar de la varianza del ACP, porque hay una diferencia importante entre éstos. La varianza está basada en la distancia euclidiana en datos cuantitativos y por tanto mide dispersión, mientras que la inercia utiliza la distancia $\chi^2$ que es una medida de la atracción o repulsión entre modalidades de las variables.
 
 ::: {.callout-note appearance="simple"}
 
@@ -372,7 +389,7 @@ Al dividir por $z_{q'(\cdot k)}$, se obtiene una frecuencia relativa condicionad
 
 * Una mayor varianza implica un mayor grado de dispersión de los datos alrededor de su centro de gravedad. Esta idea puede interpretarse en términos de inercia, ya que una dispersión más grande supone un mayor radio de acción o de influencia de una modalidad o de una pregunta.
 
-* Por esta razón, en el análisis de correspondencias la variabilidad de los perfiles suele cuantificarse mediante medidas de inercia (véase, por ejemplo, @lebart2006statistique).
+* Por esta razón, en el análisis de correspondencias la variabilidad de los perfiles suele cuantificarse mediante medidas de inercia (véase, por ejemplo, Lebart, 2006).
 
 Interpretación geométrica
 
@@ -382,7 +399,7 @@ Interpretación geométrica
 
 :::
 
-## Inercia de modalidades, preguntas y total {style="font-size: 60%;"}
+## Inercia de modalidades, preguntas y total {style="font-size: 70%;"}
 
 ::: {.fragment}
 **Inercia (varianza) de una modalidad** $j$:
@@ -502,7 +519,7 @@ datos_acm <- cclp20[, -(1:2)]
 
 ---
 
-## ACM — Valores propios
+## ACM: Valores propios
 
 ```{r}
 #| echo: true
@@ -526,7 +543,7 @@ fviz_eig(acm_p20, addlabels = TRUE, ncp = 8,
 
 ---
 
-## Indicadores de modalidades {style="font-size: 80%;"}
+## Indicadores de modalidades {style="font-size: 75%;"}
 
 ```{r}
 #| echo: true
@@ -631,36 +648,48 @@ fviz_mca_var(
 
 # Ejemplo 2: Confianza en instituciones — LAPOP Colombia 2021 {background-color="#0077b6"}
 
-## Contexto: Barómetro de las Américas {style="font-size: 50%;"}
+## Contexto: Barómetro de las Américas {style="font-size: 65%;"}
 
-El **Barómetro de las Américas** (LAPOP) es una encuesta científica transnacional que se realiza periódicamente (generalmente cada dos años) para medir las experiencias, actitudes, valores y percepciones ciudadanas en América Latina.
+El **Barómetro de las Américas** (LAPOP) es una encuesta científica transnacional que mide actitudes, valores y percepciones ciudadanas en América Latina.
 
-La edición Colombia 2021 tiene 2 993 encuestados. Usa un diseño de **muestra dividida**: distintos módulos de preguntas van a diferentes subconjuntos.
+La edición Colombia 2021 incluye **2 993 encuestados** y utiliza un diseño de **muestra dividida**, por lo que distintos módulos se aplican a diferentes subconjuntos de personas.
 
 ::: {.fragment}
-El ejemplo usa seis preguntas del **mismo módulo** (n ≈ 1 368, escala 1–7):
 
-| Variable | Dimensión |
-|:---------|:---------|
-| `b2` | ¿Hasta qué punto tiene usted **respeto por las instituciones políticas** de [país]? | Respeto por las instituciones políticas | 
-| `b3` | ¿Hasta qué punto cree usted que los **derechos básicos del ciudadano están bien protegidos** por el sistema político de [país]? |
-| `b4` | ¿Hasta qué punto se siente usted **orgulloso(a) de vivir bajo el sistema político** de [país] |
-| `b6` | ¿Hasta qué punto piensa usted que se debe **apoyar al sistema político de** [país] |
-| `b32` | ¿Hasta qué punto tiene usted **confianza en su alcaldía / intendencia / gobierno local**?" (Nota: El término exacto varía según el país, ej. "alcaldía" en Colombia/México o "municipalidad" en Chile) |
-| `b47a` | ¿Hasta qué punto tiene usted **confianza en las elecciones** en este país? |
+### Dimensión analizada: **Apoyo al sistema político**
 
-Las escalas 1–7 se recodifican: **Baja** (1–3) · **Media** (4) · **Alta** (5–7).
-El género (`q1tb`: Hombre/Mujer) se incluye como **variable suplementaria**.
+Se utilizan seis preguntas del mismo módulo (*n*= 1 366), medidas en una escala de 1 a 7.
+
+| Var. | Pregunta |
+|:---:|:----------|
+| `b2` | Respeto por las instituciones políticas |
+| `b3` | Protección de los derechos básicos del ciudadano |
+| `b4` | Orgullo de vivir bajo el sistema político |
+| `b6` | Apoyo al sistema político |
+| `b32` | Confianza en el gobierno local |
+| `b47a` | Confianza en las elecciones |
+
+Las respuestas se recodifican en tres categorías:
+
+**Baja (1–3)** · **Media (4)** · **Alta (5–7)**
+
+El género (`q1tb`: Hombre/Mujer) se incorpora como **variable suplementaria**.
+
 :::
 
 ---
 
-## Carga y recodificación {style="font-size: 86%;"}
+## Preparación del conjunto de datos {style="font-size: 86%;"}
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
+library(pacman)
+p_load(here, tidyverse, FactoMineR, factoextra, corrplot,
+       ggrepel, gt, janitor, haven)
+
+url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 lapop_raw <- read_dta(paste0(url, "COL_2021_LAPOP.dta"))
 
 recode_trust <- function(x) {
@@ -693,15 +722,14 @@ lapop_acm <- lapop_raw |>
 
 ---
 
-## ACM — Valores propios
+## ACM: Valores propios
 
 ```{r}
 #| echo: true
 #| message: false
 #| warning: false
 acm_lapop <- MCA(lapop_acm,
-                 quali.sup = which(names(lapop_acm) == "Genero"),
-                 graph = FALSE)
+                 quali.sup = which(names(lapop_acm) == "Genero"), graph = FALSE)
 ```
 
 ::: {.fragment}
@@ -712,8 +740,7 @@ acm_lapop <- MCA(lapop_acm,
 #| fig-height: 4.5
 fviz_eig(acm_lapop, addlabels = TRUE, ncp = 8,
          barfill = "#0077b6", barcolor = "#0077b6", linecolor = "#C0392B") +
-  labs(title = "Gráfico de sedimentación — Legitimidad política y confianza (LAPOP 2021)",
-       x = "Dimensión", y = "% varianza explicada") + theme_bw()
+  labs(title = "Gráfico de sedimentación. Legitimidad política y confianza (LAPOP 2021)", x = "Dimensión", y = "% inercia explicada") + theme_bw()
 ```
 :::
 
@@ -743,8 +770,7 @@ fviz_mca_var(acm_lapop, repel = TRUE, labelsize = 3.5,
 #| fig-height: 5.5
 fviz_mca_var(acm_lapop, repel = TRUE, labelsize = 3.5,
              col.var.sup = "#C0392B",
-             title = "Legitimidad política con género del encuestado (suplementario) — LAPOP 2021") +
-  theme_bw()
+             title = "Legitimidad política con género del encuestado (suplementario). LAPOP 2021") + theme_bw()
 ```
 
 ---
@@ -759,7 +785,7 @@ fviz_mca_var(acm_lapop, repel = TRUE, labelsize = 3.5,
 fviz_mca_ind(acm_lapop, geom = "point", alpha.ind = 0.3,
              col.ind = "cos2",
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-             title = "Encuestados — Legitimidad política LAPOP Colombia 2021") + theme_bw()
+             title = "Encuestados: Legitimidad política LAPOP Colombia 2021") + theme_bw()
 ```
 
 ---
