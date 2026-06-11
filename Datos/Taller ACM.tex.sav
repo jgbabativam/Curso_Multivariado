@@ -1,0 +1,105 @@
+\documentclass[9pt]{article}
+\pagestyle{myheadings}
+\usepackage{amsmath,amssymb}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{flafter}%para que las figuras aparezcan despues del texto
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{enumerate}
+
+\hoffset -1.5 cm \voffset -1.5 cm \setlength{\textwidth}{15cm}
+\setlength{\textheight}{22cm} \pagenumbering{arabic}
+\setlength{\oddsidemargin}{0.8 cm} \setlength{\topmargin}{-1 cm}
+\setlength{\textwidth}{15.5cm} \setlength{\textheight}{21.5 cm}
+\setlength{\footskip}{1.5 cm} \setlength{\parindent}{0cm}
+\title{\textbf{TALLER  \\ Métodos Multivariados de Datos}}
+\author{\textbf{Profesor: Giovany Babativa}}
+\date{}
+
+
+\begin{document}
+\renewcommand{\tablename}{Tabla}
+\maketitle
+\markboth{Métodos Multivariados de Datos}{Giovany Babativa M.}
+
+\begin{enumerate}
+
+\item Una empresa desea saber si existe asociación entre tres variables que caracterizan a sus empleados: la categoría laboral (Administrativo, Seguridad y Directivo), sexo (Hombre, Mujer) y Clasificación étnica (Si, No). Para responder a dicha inquietud, realice un análisis de correspondencias múltiple basandose en la información dada en la base de datos \textit{Empleados.sav}. Analice y concluya.
+
+\item En la tabla \ref{TabPart} se presenta una distribución hipotética de los asientos en el senado por partido político para cinco departamentos de Colombia.
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{|r|ccc|c|} \hline
+
+           & {\bf Conservador} & {\bf Liberal} & {\bf Otros} & {\bf Total} \\
+\hline \hline
+ Atlántico &          8 &          9 &          7 &         24 \\
+
+    Bogotá &         39 &         30 &          6 &         75 \\
+
+     Valle &         25 &         11 &         39 &         75 \\
+
+ Santander &          3 &          2 &          1 &          6 \\
+
+ Antioquia &         13 &         10 &          2 &         25 \\
+\hline
+     Total &         88 &         62 &         55 &        205 \\
+\hline
+\end{tabular}
+\caption{Distribución hipotética de los asientos del senado.}\label{TabPart}
+\end{table}
+
+Los marginales fila muestran que los departamentos con menos población tienen menor representación en el senado. Los marginales por columna muestran que los conservadores están alejados de los liberales y ambos se separan de los otros partidos. Haga un mapa factorial que le permita relaciones comunes entre los departamentos y la afinidad política, concluya.
+
+\item El archivo \textit{credito.sav} contiene información de 480 clientes de una entidad bancaria - las etiquetas de las variables documentan la base. Realice un ACM y concluya.
+
+\item La base de datos \textit{$Autos\_2.sav$} muestra los resultados de la percepción de 24 dueños de automóviles de algunas marcas de interés. Se evaluaron 9 atributos y se desea saber cuál es la marca que se asocia al mejor desempeño. Así que se decide contratar a un estudiante eficiente del curso de métodos multivariados para que proponga y realice el análisis más adecuado. Explique.
+
+\item Las siguientes instrucciones de R permiten ver el archivo Bogotá que contienen la distribución del número de manzanas por estrato en las localidades de Bogotá, el cual se encuentra en la biblioteca del FactoClass \\
+
+
+library(FactoClass)    \#cargar el paquete \\
+data(Bogota)		\#invocar el archivo de Localidades \\
+help(Bogota)		\#Descripción del archivo \\
+
+
+\begin{enumerate}[a.]
+\item ¿Utilizaría la columna sin estrato como activa en un análisis de correspondencias?. ¿Por qué?.
+\item ¿Según la prueba Chi-cuadrado, debería hacerse un ACS?
+\item Realice un ACS de la tabla de distribución de manzanas por localidad.
+\item Cuántos ejes retiene para el análisis?. Por que?.
+\item Interpretar por contribuciones, coordenadas y correlaciones los cuatro primeros factores en términos de los estratos.
+\item Interpretar por contribuciones, coordenadas y correlaciones los cuatro primeros factores en términos de las localidades.
+\item En el mapa de localidades y estratos, indique las localidades donde predominan los estratos altos
+\item En el mapa de localidades y estratos, indique las localidades donde no predominan los estratos altos
+\item Según el primer plano factorial, cómo es la asociación entre localidades y estratos?.
+\item Hay contraposiciones en el tercer eje que no se observen en el primer plano factorial?.Según lo anterior, vale la pena interpretar el tercer eje?.
+\item Utilizando el primer plano factorial proponga una partición de las localidades en cinco clases.
+\end{enumerate}
+
+\item Las mismas instrucciones mencionadas arriba pero con el archivo BreedsDogs, permiten ver una descripción del mencionado archivo. El objetivo del estudio es seleccionar las razas de perros de acuerdo con la función para la que se utilizan: compañía, caza o utilidad (salvamento, defensa, perro para ciego o perro de policía, etc.). Para cada una de las 27 razas estudiadas se registran seis variables que miden las cualidades físicas o psíquicas de la raza. Ingrese la variable función como suplementaria
+
+
+\begin{enumerate}[a.]
+A partir del archivo de datos responda:
+\item ¿Cuáles son las características del perro CANI?
+\item Identifique los pares de razas (``individuos'') que presentan características idénticas.
+\item Construya la tabla disyuntiva completa. ¿Qué categorías presenta la raza Boxer para cada una de las variables?
+\item Construya la tabla de Burt (se puede pedir en el ACM). ¿Cuántas razas de perros son muy inteligentes y poco afectuosos?
+\item ¿Cuántos ejes factoriales considera razonable interpretar?
+\item ¿Cuáles son las categorías que constituyen el primer eje? (contribución mayor que le promedio)
+\item ¿Qué categorías tienen coordenadas importantes en el primer eje y de qué signos son las mismas?
+\item ¿Cuáles son las razas que se encuentran más alejadas del origen?. ¿Cuáles son sus coordenadas sobre el primer eje?
+\item ¿Cuáles son las categorías que más contribuyen al segundo eje?
+\item Observando la coordenada de la categoría baja de la característica observada velocidad. ¿En qué dirección del segundo eje se encontrarán los perros poco veloces?. Teniendo en cuenta esto y razonando sobre el espacio de los individuos ¿qué razas de perros podrían considerarse poco veloces?.
+\item En el gráfico de las categorías activas e ilustrativas (función) sobre el primer plano factorial. ¿A qué grupo de categorías activas se encuentran vinculadas cada una de las categorías de la variable suplementaria?
+\item En el gráfico simultáneo de individuos y categorías: ¿qué razas de perros corresponden a cada una de los grupos de categorías identificados?, es decir, ¿qué razas de perros conforman cada grupo?.
+\item Para cada grupo de razas de perros que usted ha definido, calcule los perfiles de las características observadas, es decir, ¿cuáles son las características de cada uno de los grupos de razas?.    Concluya.    
+
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}
