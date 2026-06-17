@@ -31,7 +31,7 @@ El repositorio está diseñado como un recurso de aprendizaje tanto para estudia
 | Panorama | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/1.Panorama.html)|
 | Medidas Descriptivas <br> Multivariadas | — |  [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/2.MedidasMulti.html)|
 | Análisis de Componentes Principales | [Ejercicios preparatorios](https://jgbabativam.github.io/Curso_Multivariado/Laboratorios/LabPreparcialACP.pdf) | [Ver diapositivas](https://jgbabativam.github.io/Curso_Multivariado/3.ACP.html) |
-| Análisis de Correspondencias | [Ejercicio en clase ACS](https://jgbabativam.github.io/Curso_Multivariado/Ejemplo_ACS.html) <br> [Grupos de trabajo-G2](https://jgbabativam.github.io/Curso_Multivariado/Laboratorios/GruposTrabajoG2.xlsx) | [Ver diapositivas ACS](https://jgbabativam.github.io/Curso_Multivariado/4.ACS.html) <br> [Ver diapositivas ACM](https://jgbabativam.github.io/Curso_Multivariado/5.ACM_1.html)|
+| Análisis de Correspondencias | [Ejercicio en clase ACS](https://jgbabativam.github.io/Curso_Multivariado/Ejemplo_ACS.html) <br> [Grupos de trabajo-G2](https://jgbabativam.github.io/Curso_Multivariado/Laboratorios/GruposTrabajoG2.xlsx) <br> [Ejercicios preparatorios](https://jgbabativam.github.io/Curso_Multivariado/Laboratorios/LabPreParcialACSM.pdf) | [Ver diapositivas ACS](https://jgbabativam.github.io/Curso_Multivariado/4.ACS.html) <br> [Ver diapositivas ACM](https://jgbabativam.github.io/Curso_Multivariado/5.ACM_1.html)|
 
 ---
 
