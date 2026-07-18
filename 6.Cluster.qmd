@@ -667,7 +667,7 @@ desc_lapop <- map_dfr(names(res.clus.lapop$desc.var$category), function(k) {
   as.data.frame(res.clus.lapop$desc.var$category[[k]]) |>
     rownames_to_column("modalidad") |>
     mutate(cluster = k) |>
-    select(cluster, modalidad, `Mod/Cla`, Global, v.test) |>
+    select(cluster, modalidad, `Mod/Cla`, `Cla/Mod`, Global, v.test) |>
     slice_max(order_by = v.test, n = 4)
 })
 ```
@@ -678,7 +678,7 @@ desc_lapop <- map_dfr(names(res.clus.lapop$desc.var$category), function(k) {
 desc_lapop |>
   mutate(across(where(is.numeric), ~round(., 1))) |>
   gt(groupname_col = "cluster") |>
-  cols_label(modalidad = "Modalidad", `Mod/Cla` = "% en el clúster",
+  cols_label(modalidad = "Modalidad", `Mod/Cla` = "% Mod/Cla", `Cla/Mod` = "% Cla/Mod",
              Global = "% global", v.test = "v.test") |>
   tab_options(table.font.size = px(17), data_row.padding = px(3))
 ```
