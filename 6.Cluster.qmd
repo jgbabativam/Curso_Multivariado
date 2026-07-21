@@ -1,6 +1,6 @@
 ---
 title: "Estadística Descriptiva Multivariada"
-subtitle: "Análisis Clúster: Métodos de Partición, Jerárquicos y HCPC"
+subtitle: "Análisis de Agrupaciones (Clúster): Métodos de Partición, Jerárquicos y HCPC"
 author:
   - name: Jimmy A Corzo S, PhD
     email: jacorzos@unal.edu.co
@@ -26,7 +26,7 @@ revealjs-plugins:
 #| warning: false
 library(pacman)
 p_load(here, tidyverse, FactoMineR, factoextra, corrplot, cluster,
-       ggrepel, gt, janitor, haven, kableExtra)
+       ggrepel, gt, janitor, haven, kableExtra, NbClust)
 ```
 
 ```{r}
@@ -34,17 +34,17 @@ p_load(here, tidyverse, FactoMineR, factoextra, corrplot, cluster,
 url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
 ```
 
-# Análisis Clúster {background-color="#0077b6"}
+# Análisis de Agrupaciones (Clúster) {background-color="#0077b6"}
 
-## ¿Qué es el análisis clúster? {style="font-size: 90%;"}
+## ¿Qué es el análisis de agrupaciones (clúster)? {style="font-size: 90%;"}
 
-Conjunto de técnicas para agrupar individuos con base en la similaridad que tienen en un vector de variables $\mathbf{x}' = (x_1, \ldots, x_p)$, **sin conocer de antemano** a qué grupo pertenece cada uno.
+Conjunto de técnicas para agrupar objetos con base en la similitud que tienen en un vector de variables $\mathbf{x}' = (x_1, \ldots, x_p)$, **sin conocer de antemano** a qué grupo pertenece cada uno.
 
 ::: {.fragment}
 Un buen agrupamiento cumple dos condiciones simultáneas:
 
-1. **Homogeneidad interna**: los individuos dentro de un mismo clúster son lo más similares posible.
-2. **Heterogeneidad externa**: los clústeres se diferencian claramente entre sí.
+1. **Homogeneidad interna**: los objetos dentro de una misma agrupación (clúster) son lo más similares posible.
+2. **Heterogeneidad externa**: las agrupaciones (clústeres) se diferencian claramente entre sí.
 :::
 
 ::: {.fragment}
@@ -63,7 +63,7 @@ Un buen agrupamiento cumple dos condiciones simultáneas:
 - **Insumo para otras técnicas**: crear una variable de grupo que luego se use en análisis descriptivo o predictivo.
 :::
 
-## Tipos de análisis clúster {style="font-size: 85%;"}
+## Tipos de análisis de agrupaciones (clúster) {style="font-size: 85%;"}
 
 <p align="center">
 <img src="images/Cluster1.PNG" width="92%">
@@ -79,7 +79,7 @@ En este curso nos concentramos en los dos enfoques clásicos: **jerárquicos** y
 ::: {.column width="50%"}
 **Jerárquicos**
 
-Construyen un árbol (dendrograma) agrupando sucesivamente los elementos o grupos más próximos, sin fijar de antemano el número de clústeres.
+Construyen un árbol (dendrograma) agrupando sucesivamente los elementos o grupos más próximos, sin fijar de antemano el número de agrupaciones (clústeres).
 
 *Costosos computacionalmente para $n$ grande.*
 :::
@@ -87,13 +87,13 @@ Construyen un árbol (dendrograma) agrupando sucesivamente los elementos o grupo
 ::: {.column width="50%"}
 **No jerárquicos (partición)**
 
-Dividen el conjunto de individuos en un número **prefijado** $k$ de grupos, optimizando algún criterio (p. ej. minimizar la varianza intra-clúster).
+Dividen el conjunto de objetos en un número **prefijado** $k$ de grupos, optimizando algún criterio (p. ej. minimizar la varianza intra-agrupación (intra-clúster)).
 
 *Requieren definir $k$ antes de correr el algoritmo.*
 :::
 :::
 
-## Etapas de un análisis clúster {style="font-size: 85%;"}
+## Etapas de un análisis de agrupaciones (clúster) {style="font-size: 85%;"}
 
 ::: {.incremental}
 1. Definir claramente los **objetivos** del análisis.
@@ -101,7 +101,7 @@ Dividen el conjunto de individuos en un número **prefijado** $k$ de grupos, opt
 3. **Estandarizar** las variables para evitar el efecto de la escala.
 4. Elegir una **medida de distancia** o disimilaridad.
 5. Elegir el **algoritmo** de agrupación.
-6. Obtener la **agrupación** y decidir el número de clústeres.
+6. Obtener la **agrupación** y decidir el número de agrupaciones (clústeres).
 7. **Validar** e interpretar los resultados.
 :::
 
@@ -128,7 +128,7 @@ Otras alternativas según el tipo de variable:
 
 - **Manhattan**: $d_{ij} = \sum_{k=1}^p |x_{ik} - x_{jk}|$ — más robusta a atípicos.
 - **Distancia $\chi^2$**: para tablas de frecuencias (la misma del ACS/ACM).
-- **Gower**: para mezclas de variables cuantitativas y cualitativas.
+- Existen además otras medidas (p. ej. **Gower**, para mezclas de variables cuantitativas y cualitativas) que no se profundizan en este capítulo.
 :::
 
 ::: {.fragment}
@@ -141,7 +141,7 @@ Otras alternativas según el tipo de variable:
 
 ## El algoritmo de las $K$-medias {style="font-size: 80%;"}
 
-Dado un número de grupos $k$, el algoritmo busca la partición que **minimiza la suma de cuadrados intra-clúster**:
+Dado un número de grupos $k$, el algoritmo busca la partición que **minimiza la suma de cuadrados intra-agrupación (intra-clúster)**:
 
 $$\min \sum_{c=1}^{k} \sum_{i \in C_c} \| x_i - \bar{x}_c \|^2$$
 
@@ -190,17 +190,17 @@ Dos variantes clásicas:
 El proceso se repite (reasignar → recalcular centroides) hasta que las asignaciones **no cambian** entre una iteración y la siguiente.
 :::
 
-# Ejemplo de juguete {background-color="#0077b6"}
+# Ejemplo simulado {background-color="#0077b6"}
 
 ## Datos artificiales {style="font-size: 88%;"}
 
-Seis individuos descritos por dos variables: gasto mensual y años de educación.
+Seis objetos descritos por dos variables: gasto mensual y años de educación.
 
 ```{r}
 #| echo: true
 datos <- data.frame(
   Individuo = c("A", "B", "C", "D", "E", "F"),
-  gastos = c(5, 6, 15, 16, 25, 30),
+  gastos = c(5, 6, 18, 20, 25, 30),
   educa  = c(5, 6, 14, 15, 20, 19)
 )
 print(datos)
@@ -239,11 +239,13 @@ $$z_{ij} = \frac{x_{ij} - \bar{x}_j}{s_j}$$
 
 ```{r}
 #| echo: true
-(distancias <- dist(datos_z[, c("gastoz", "educaz")]))
+mat_z <- datos_z[, c("gastoz", "educaz")]
+rownames(mat_z) <- datos_z$Individuo
+(distancias <- dist(mat_z))
 ```
 
 ::: {.fragment}
-Los individuos A-B, C-D y E-F son los pares más próximos: son los primeros candidatos a fusionarse en cualquier algoritmo de agrupación.
+Los objetos A-B, C-D y E-F son los pares más próximos: son los primeros candidatos a fusionarse en cualquier algoritmo de agrupación.
 :::
 
 ## Aplicación de $K$-medias ($k=2$) {style="font-size: 85%;"}
@@ -273,37 +275,59 @@ ggplot(datos_z, aes(x = gastoz, y = educaz, color = cluster, label = Individuo))
 
 ## Métodos para elegir $k$ {style="font-size: 70%;"}
 
-El número de clústeres $k$ debe fijarse **antes** de correr K-medias. Dos criterios ayudan a elegirlo:
+El número de agrupaciones (clústeres) $k$ debe fijarse **antes** de correr K-medias. Existen varios criterios para ayudar a elegirlo:
 
-::: {.columns}
-::: {.column width="50%"}
+::: {.panel-tabset}
+
+### Codo
+
 **Método del codo (elbow)**
 
-Grafica la suma de cuadrados intra-clúster (WSS) contra $k$:
+Grafica la suma de cuadrados intra-agrupación (intra-clúster) (WSS) contra $k$:
 
 $$WSS(k) = \sum_{c=1}^{k} \sum_{i \in C_c} \| x_i - \bar{x}_c \|^2$$
 
 $WSS$ siempre **disminuye** al aumentar $k$. Se busca el punto donde la curva deja de descender rápidamente — el "codo" — porque agregar más grupos aporta poca reducción adicional de varianza.
-:::
 
-::: {.column width="50%"}
+### Silueta
+
 **Ancho de silueta (silhouette)**
 
-Para cada individuo $i$, compara su distancia promedio a los demás miembros de su clúster ($a_i$) con la distancia promedio al clúster vecino más próximo ($b_i$):
+Para cada objeto $i$, compara su distancia promedio a los demás miembros de su agrupación (clúster) ($a_i$) con la distancia promedio a la agrupación (clúster) vecina más próxima ($b_i$):
 
 $$s_i = \frac{b_i - a_i}{\max(a_i,\, b_i)}, \qquad s_i \in [-1, 1]$$
 
-Se elige el $k$ que **maximiza** el ancho de silueta promedio $\bar{s}$. Valores cercanos a 1 indican individuos bien agrupados; cercanos a 0 o negativos, mal clasificados.
-:::
+Se elige el $k$ que **maximiza** el ancho de silueta promedio $\bar{s}$. Valores cercanos a 1 indican objetos bien agrupados; cercanos a 0 o negativos, mal clasificados.
+
+### Hartigan
+
+**Estadístico de Hartigan**
+
+Compara la reducción del WSS al pasar de $k$ a $k+1$ grupos, ajustada por el tamaño de la muestra $n$:
+
+$$H(k) = \left(\frac{WSS(k)}{WSS(k+1)} - 1\right)(n - k - 1)$$
+
+Se aumenta $k$ mientras $H(k)$ sea grande; se elige el primer $k$ en que $H(k)$ cae por debajo de un umbral (usualmente ≈10).
+
+### Calinski-Harabasz
+
+**Índice de Calinski-Harabasz**
+
+Compara la dispersión entre grupos (SSB) con la dispersión dentro de los grupos (SSW), cada una ponderada por sus grados de libertad:
+
+$$CH(k) = \frac{SSB/(k-1)}{SSW/(n-k)}$$
+
+Se elige el $k$ que **maximiza** $CH(k)$.
+
 :::
 
 ::: {.fragment}
 ::: {.callout-important}
-El codo es una regla visual (subjetiva); la silueta da un valor numérico comparable entre distintos $k$. Se recomienda usar **ambos** junto con el criterio del analista.
+El codo es una regla visual (subjetiva); silueta, Hartigan y Calinski-Harabasz dan un valor numérico comparable entre distintos $k$. Se recomienda usar **varios criterios** junto con el criterio del analista.
 :::
 :::
 
-## ¿Cómo elegir $k$ en el ejemplo de juguete? {style="font-size: 85%;"}
+## ¿Cómo elegir $k$? {style="font-size: 85%;"}
 
 ::: {.panel-tabset}
 
@@ -316,7 +340,7 @@ El codo es una regla visual (subjetiva); la silueta da un valor numérico compar
 #| fig-height: 4.5
 fviz_nbclust(datos_z[, c("gastoz", "educaz")], kmeans,
              method = "wss", k.max = 5) +
-  labs(title = "Suma de cuadrados intra-clúster (WSS)")
+  labs(title = "Suma de cuadrados intra-agrupación (intra-clúster) (WSS)")
 ```
 
 ### Silueta
@@ -331,18 +355,42 @@ fviz_nbclust(datos_z[, c("gastoz", "educaz")], kmeans,
   labs(title = "Ancho de silueta promedio")
 ```
 
+### Hartigan
+
+```{r}
+#| echo: true
+#| fig-align: center
+#| fig-width: 8
+#| fig-height: 4.5
+nb_hartigan <- NbClust(datos_z[, c("gastoz", "educaz")], distance = "euclidean",
+                        min.nc = 2, max.nc = 4, method = "kmeans", index = "hartigan")
+
+data.frame(k = 2:4, hartigan = nb_hartigan$All.index) |>
+  ggplot(aes(x = k, y = hartigan)) +
+  geom_line() + geom_point(size = 2) +
+  labs(title = "Estadístico de Hartigan", x = "Número de clústeres k", y = "H(k)") +
+  theme_bw()
+```
+
+### Calinski-Harabasz
+
+```{r}
+#| echo: true
+#| fig-align: center
+#| fig-width: 8
+#| fig-height: 4.5
+nb_ch <- NbClust(datos_z[, c("gastoz", "educaz")], distance = "euclidean",
+                  min.nc = 2, max.nc = 4, method = "kmeans", index = "ch")
+
+data.frame(k = 2:4, ch = nb_ch$All.index) |>
+  ggplot(aes(x = k, y = ch)) +
+  geom_line() + geom_point(size = 2) +
+  labs(title = "Índice de Calinski-Harabasz", x = "Número de clústeres k", y = "CH(k)") +
+  theme_bw()
+```
+
 :::
 
-
-## Alternativas al K-medias {style="font-size: 82%;"}
-
-<p align="center">
-<img src="images/Cluster4.PNG" width="75%">
-</p>
-
-::: {.fragment}
-Destacan `K-medoids (PAM)` (más robusto a atípicos, admite cualquier matriz de distancias) y `DBSCAN` (no requiere fijar $k$, identifica grupos de forma arbitraria y detecta ruido).
-:::
 
 # Métodos jerárquicos {background-color="#0077b6"}
 
@@ -357,7 +405,7 @@ Los métodos jerárquicos construyen agrupaciones **anidadas**, igual que una cl
 ## Algoritmo de aglomeración jerárquica {style="font-size: 88%;"}
 
 ::: {.incremental}
-1. Comenzar con tantos grupos como individuos ($n$ grupos). Las distancias entre grupos son las distancias entre los elementos originales.
+1. Comenzar con tantos grupos como objetos ($n$ grupos). Las distancias entre grupos son las distancias entre los elementos originales.
 2. Fusionar los **dos grupos más próximos** según la matriz de distancias.
 3. Sustituir esos dos grupos por uno nuevo que los representa, y **recalcular** las distancias de este nuevo grupo con los demás.
 4. Repetir (2) y (3) hasta que todos los elementos queden en un único grupo.
@@ -376,9 +424,9 @@ La forma de "recalcular" la distancia entre grupos define el método:
 | **Simple** (single) | $\min_{i\in A, j\in B} d_{ij}$ | Sensible a efecto "cadena" |
 | **Completo** (complete) | $\max_{i\in A, j\in B} d_{ij}$ | Grupos compactos, sensible a atípicos |
 | **Promedio** (average) | $\frac{1}{|A||B|}\sum_{i\in A, j\in B} d_{ij}$ | Compromiso entre los anteriores |
-| **Ward** | Mínimo incremento en la inercia intra-clúster al fusionar | El más usado en la práctica |
+| **Ward** | Mínimo incremento en la inercia intra-agrupación (intra-clúster) al fusionar | El más usado en la práctica |
 
-## Ejemplo de juguete: dendrograma {style="font-size: 85%;"}
+## Ejemplo simulado: dendrograma {style="font-size: 85%;"}
 
 ```{r}
 #| echo: true
@@ -388,7 +436,7 @@ La forma de "recalcular" la distancia entre grupos define el método:
 hc_complete <- hclust(distancias, method = "complete")
 
 plot(hc_complete, labels = datos$Individuo,
-     main = "Clúster jerárquico (enlace completo)",
+     main = "Agrupación jerárquica (clúster) (enlace completo)",
      sub = "", xlab = "", ylab = "Distancia")
 rect.hclust(hc_complete, k = 2, border = "red")
 ```
@@ -447,7 +495,7 @@ En este ejemplo, **los cuatro criterios** coinciden en la partición en dos grup
 
 ::: {.incremental}
 - **Regla visual**: cortar el dendrograma donde la distancia vertical entre fusiones consecutivas sea **grande** (un "salto" evidente).
-- **Criterio de inercia**: elegir el número de clústeres que maximiza la ganancia relativa de inercia inter-clúster al pasar de $k$ a $k-1$ grupos.
+- **Criterio de inercia**: identificar el número de grupos $k$ a partir del cual la pérdida relativa de inercia inter-agrupación (inter-clúster) al pasar de $k$ a $k-1$ grupos es grande, es decir, al fusionar esos dos grupos quedan siendo menos diferentes entre sí. Se retiene el $k$ inmediatamente anterior a esa pérdida grande.
 - Ambos criterios coinciden con la lógica que usa `HCPC()` para sugerir automáticamente un número de grupos.
 :::
 
@@ -459,8 +507,8 @@ En este ejemplo, **los cuatro criterios** coinciden en la partición en dos grup
 
 ::: {.incremental}
 1. **Reducción de dimensión**: se parte de las coordenadas factoriales de un ACP, ACM o ACS (en vez de las variables originales).
-2. **Clasificación jerárquica** (Ward) sobre esas coordenadas, para construir el dendrograma y sugerir el número de clústeres.
-3. **Consolidación** de la partición con un algoritmo de $K$-medias, partiendo de los centros de gravedad obtenidos en el paso jerárquico.
+2. **Clasificación jerárquica** (Ward) sobre esas coordenadas, para construir el dendrograma y sugerir el número de agrupaciones (clústeres).
+3. **Consolidación** de la partición con un algoritmo de $K$-medias, partiendo de los centros de gravedad obtenidos en el paso jerárquico, utilizando como valor de $K$ el número de agrupaciones (clústeres) que acaba de generar la clasificación jerárquica en el paso anterior.
 :::
 
 ## ¿Por qué trabajar sobre componentes? {style="font-size: 88%;"}
@@ -469,12 +517,19 @@ En este ejemplo, **los cuatro criterios** coinciden en la partición en dos grup
 - Las coordenadas factoriales son **ortogonales**: se elimina la redundancia (correlación) entre variables originales.
 - Al retener solo los primeros ejes se **filtra ruido** y se reduce el costo computacional.
 - Permite unificar el flujo de trabajo: el **mismo objeto** (`PCA()`, `MCA()` o `CA()`) alimenta tanto el mapa factorial como la clasificación.
-- `HCPC()` produce, además del dendrograma, una **caracterización automática** de cada clúster: qué variables (o modalidades) lo tipifican.
+- `HCPC()` produce, además del dendrograma, una **caracterización automática** de cada agrupación (clúster): qué variables (o modalidades) lo tipifican.
 :::
 
 # Estudio de caso 1: perfiles de calidad de vida departamental {background-color="#0077b6"}
 
 ## Los datos {style="font-size: 86%;"}
+
+```{r}
+#| echo: true
+#| eval: false
+library(pacman)
+p_load(tidyverse, FactoMineR, factoextra, gt)
+```
 
 Retomamos los 33 departamentos colombianos y sus 15 indicadores de calidad de vida (ECV-DANE 2022) usados en el ACP.
 
@@ -518,6 +573,7 @@ table(res.clus.ecv$data.clust$clust)
 ```
 
 ```{r}
+#| echo: true
 #| fig-align: center
 #| fig-width: 9
 #| fig-height: 5
@@ -527,7 +583,7 @@ fviz_dend(res.clus.ecv, cex = 0.6, palette = "jco",
           main = "Dendrograma — Departamentos según calidad de vida")
 ```
 
-## Paso 3: Plano factorial por clúster {style="font-size: 88%;"}
+## Paso 3: Plano factorial por agrupación (clúster) {style="font-size: 88%;"}
 
 ```{r}
 #| echo: true
@@ -537,10 +593,14 @@ fviz_dend(res.clus.ecv, cex = 0.6, palette = "jco",
 fviz_cluster(res.clus.ecv, repel = TRUE,
              show.clust.cent = TRUE, palette = "jco",
              ggtheme = theme_minimal(),
-             main = "Clúster de departamentos — Calidad de vida ECV 2022")
+             main = "Agrupación de departamentos (clúster) — Calidad de vida ECV 2022")
 ```
 
-## Caracterización de los clústeres {style="font-size: 72%;"}
+## Caracterización de las agrupaciones (clústeres) {style="font-size: 72%;"}
+
+::: {.re-blue}
+`leen_adultos`: % de adultos que saben leer y escribir. `inv_ipm`: inverso del IPM (100 − IPM). `inv_hacinamiento`: inverso del % de hogares en hacinamiento (100 − % hacinamiento).
+:::
 
 ```{r}
 #| echo: true
@@ -559,7 +619,7 @@ desc_ecv <- map_dfr(names(res.clus.ecv$desc.var$quanti), function(k) {
 desc_ecv |>
   mutate(across(where(is.numeric), ~round(., 1))) |>
   gt(groupname_col = "cluster") |>
-  cols_label(variable = "Variable", `Mean in category` = "Media en clúster",
+  cols_label(variable = "Variable", `Mean in category` = "Media en agrupación (clúster)",
              `Overall mean` = "Media global", v.test = "v.test") |>
   tab_options(table.font.size = px(18), data_row.padding = px(3))
 ```
@@ -569,16 +629,16 @@ desc_ecv |>
 ## Interpretación {style="font-size: 82%;"}
 
 ::: {.incremental}
-- **Clúster 1** (4 dptos: Amazonas, Vaupés, Guainía, Vichada): valores **muy por debajo** de la media nacional en todos los indicadores (internet, alcantarillado, educación superior, IPM). Es el grupo con las condiciones de vida más precarias — la Amazonía y la Orinoquía profundas.
+- **Agrupación 1 (Clúster 1)** (4 dptos: Amazonas, Vaupés, Guainía, Vichada): valores **muy por debajo** de la media nacional en energía, alfabetización de adultos (`leen_adultos`), el indicador invertido de pobreza multidimensional (`inv_ipm`) y afiliación en salud. Es el grupo con las condiciones de vida más precarias — la Amazonía y la Orinoquía profundas.
 
-- **Clúster 2** (13 dptos: Caribe, Pacífico, Arauca, Caquetá, Putumayo…): indicadores **moderadamente por debajo** de la media, en departamentos históricamente afectados por el conflicto y con menor cobertura de servicios.
+- **Agrupación 2 (Clúster 2)** (13 dptos: Caribe, Pacífico, Arauca, Caquetá, Putumayo…): valores **por debajo** de la media en acceso a computador, internet, gas natural y educación superior — departamentos históricamente afectados por el conflicto y con menor cobertura de servicios.
 
-- **Clúster 3** (16 dptos: Bogotá, Antioquia, Valle, eje cafetero, Santanderes…): indicadores **por encima** de la media en todas las dimensiones — la región Andina y las principales áreas metropolitanas.
+- **Agrupación 3 (Clúster 3)** (16 dptos: Bogotá, Antioquia, Valle, eje cafetero, Santanderes…): valores **por encima** de la media en acceso a internet y computador, y en calidad de vivienda (paredes y piso adecuados) — la región Andina y las principales áreas metropolitanas.
 :::
 
-## Individuos "parangón" de cada clúster {style="font-size: 85%;"}
+## Objetos "parangón" de cada agrupación (clúster) {style="font-size: 85%;"}
 
-Son los departamentos **más representativos** (más cercanos al centro de su clúster):
+Son los departamentos **más representativos** (más cercanos al centro de su agrupación (clúster)):
 
 <div style="height:500px; overflow-y:auto; border:1px solid #ddd;">
 
@@ -647,7 +707,7 @@ fviz_dend(res.clus.lapop, cex = 0.4, palette = "jco",
           main = "Dendrograma — Confianza institucional LAPOP 2021")
 ```
 
-## Plano de individuos coloreado por clúster {style="font-size: 88%;"}
+## Plano de objetos coloreado por agrupación (clúster) {style="font-size: 88%;"}
 
 ```{r}
 #| echo: true
@@ -659,7 +719,7 @@ fviz_cluster(res.clus.lapop, geom = "point", alpha = 0.4,
              main = "Encuestados LAPOP 2021 según legitimidad política")
 ```
 
-## Caracterización cualitativa de los clústeres {style="font-size: 68%;"}
+## Caracterización cualitativa de las agrupaciones (clústeres) {style="font-size: 68%;"}
 
 ```{r}
 #| echo: true
@@ -688,19 +748,19 @@ desc_lapop |>
 ## Interpretación {style="font-size: 76%;"}
 
 ::: {.incremental}
-- **Clúster 1** (n=487, 36%): domina la modalidad **"Baja"** en las seis variables — ciudadanos con **desafección generalizada** hacia el sistema político.
+- **Agrupación 1 (Clúster 1)** (n=487, 36%): domina la modalidad **"Baja"** en las seis variables — ciudadanos con **desafección generalizada** hacia el sistema político.
 
-- **Clúster 2** (n=126, 9%): grupo pequeño y atípico, tipificado casi exclusivamente por **"Respeto Media"** (concentra el 100% de esa modalidad); en el resto de variables se inclina hacia valores bajos. Es el tipo de perfil "particular" que un análisis exploratorio univariado difícilmente detectaría.
+- **Agrupación 2 (Clúster 2)** (n=126, 9%): grupo pequeño y atípico, tipificado casi exclusivamente por **"Respeto Media"** (concentra el 100% de esa modalidad); en el resto de variables se inclina hacia valores bajos. Es el tipo de perfil "particular" que un análisis exploratorio univariado difícilmente detectaría.
 
-- **Clúster 3** (n=368, 27%): predominan las modalidades **"Media"** — ciudadanos **ambivalentes**, ni claramente críticos ni claramente leales al sistema.
+- **Agrupación 3 (Clúster 3)** (n=368, 27%): predominan las modalidades **"Media"** — ciudadanos **ambivalentes**, ni claramente críticos ni claramente leales al sistema.
 
-- **Clúster 4** (n=385, 28%): domina la modalidad **"Alta"** en todas las variables — ciudadanos con **alta legitimidad percibida** del sistema político. Este clúster tiene una proporción de **mujeres significativamente mayor** a la esperada ($\chi^2$, p = 0.022), asociación visible gracias a `Genero` como variable suplementaria.
+- **Agrupación 4 (Clúster 4)** (n=385, 28%): domina la modalidad **"Alta"** en todas las variables — ciudadanos con **alta legitimidad percibida** del sistema político. Esta agrupación (clúster) tiene una proporción de **mujeres significativamente mayor** a la esperada ($\chi^2$, p = 0.022), asociación visible gracias a `Genero` como variable suplementaria.
 :::
 
 ## De la teoría a la práctica {style="font-size: 88%;"}
 
 ::: {.re-blue}
-> El mismo flujo de trabajo — reducir dimensión, clasificar jerárquicamente y consolidar con K-medias — funciona igual sobre coordenadas de un **ACP** (variables cuantitativas) que de un **ACM** (variables cualitativas). Lo único que cambia es el objeto que se pasa a `HCPC()`.
+> El mismo flujo de trabajo: reducir dimensión, clasificar jerárquicamente y consolidar con K-medias; funciona igual sobre coordenadas de un **ACP** (variables cuantitativas) que de un **ACM** (variables cualitativas). Lo único que cambia es el objeto que se pasa a `HCPC()`.
 :::
 
 # Laboratorio {background-color="#0077b6"}
@@ -724,6 +784,7 @@ Cada grupo trabajará con una **semilla distinta**, un conjunto de variables cua
 | 2 | 2468 | `r14_Sci_Qs_Webometrics.csv` (universidades LatAm) | f, g, h, i, j |
 | 3 | 3579 | `ecv_departamentos_2022.csv` (otro subconjunto de indicadores) | c, d, e, f, k |
 | 4 | 9753 | `IPM2025.sav` (pobreza multidimensional) | a, g, h, i, j, k |
+| 5 | 6813 | `ARWU_100_top.csv` (ranking mundial de universidades) | b, e, g, i, k |
 
 ## Laboratorio — K-medias (1/3) {style="font-size: 85%;"}
 
@@ -732,7 +793,7 @@ Con el conjunto de datos cuantitativos asignado a su grupo:
 ::: {.incremental}
 1. Seleccione al menos **4 variables cuantitativas** relevantes y elimine observaciones con datos faltantes.
 2. **Estandarice** las variables y justifique por qué es necesario en este caso.
-3. Use `fviz_nbclust()` (WSS y silueta) para proponer un número de clústeres $k$.
+3. Use `fviz_nbclust()` (WSS y silueta) para proponer un número de agrupaciones (clústeres) $k$.
 4. Aplique `kmeans()` con el $k$ elegido y su semilla asignada (`set.seed()`).
 5. Visualice la partición con `fviz_cluster()` y calcule la **silueta promedio** (`silhouette()`, `fviz_silhouette()`). ¿La calidad de la partición es adecuada?
 :::
@@ -742,9 +803,9 @@ Con el conjunto de datos cuantitativos asignado a su grupo:
 ::: {.incremental}
 6. Con la misma matriz estandarizada, construya la **matriz de distancias** (`dist()`) y aplique `hclust()` con al menos **dos criterios de enlace** distintos.
 7. Grafique ambos dendrogramas. ¿Los cortes en el mismo número de grupos coinciden con la partición de K-medias?
-8. Aplique un **ACP** sobre las mismas variables y luego `HCPC()` sobre el resultado. Compare el número de clústeres sugerido automáticamente con el que usted eligió en el punto 3.
-9. Use `res.clus$desc.var$quanti` para **caracterizar** cada clúster: ¿qué variables lo definen y en qué sentido (por encima o por debajo de la media)?
-10. Nombre cada clúster con una etiqueta descriptiva y redacte un párrafo de interpretación.
+8. Aplique un **ACP** sobre las mismas variables y luego `HCPC()` sobre el resultado. Compare el número de agrupaciones (clústeres) sugerido automáticamente con el que usted eligió en el punto 3.
+9. Use `res.clus$desc.var$quanti` para **caracterizar** cada agrupación (clúster): ¿qué variables lo definen y en qué sentido (por encima o por debajo de la media)?
+10. Nombre cada agrupación (clúster) con una etiqueta descriptiva y redacte un párrafo de interpretación.
 :::
 
 ## Laboratorio — ACM + HCPC (3/3) {style="font-size: 70%;"}
@@ -753,11 +814,11 @@ Con los ítems de justificación para desobedecer la ley asignados a su grupo:
 
 ::: {.incremental}
 1. Aplique el **ACM** (`MCA()`) sobre los ítems asignados.
-2. Aplique `HCPC()` sobre el resultado del ACM. ¿Cuántos clústeres sugiere automáticamente?
-3. Grafique el dendrograma y el plano de individuos coloreado por clúster.
-4. Use `res.clus$desc.var$category` para identificar las modalidades que **tipifican** cada clúster.
-5. Agregue **ciudad** o **nivel educativo** (`Muestra_CC.csv`) como variable suplementaria en el ACM antes de correr `HCPC()`. ¿Alguna de estas variables se asocia significativamente con algún clúster?
-6. Elabore una **caracterización final**: nombre cada clúster según el perfil de justificaciones que lo tipifica.
+2. Aplique `HCPC()` sobre el resultado del ACM. ¿Cuántas agrupaciones (clústeres) sugiere automáticamente?
+3. Grafique el dendrograma y el plano de objetos coloreado por agrupación (clúster).
+4. Use `res.clus$desc.var$category` para identificar las modalidades que **tipifican** cada agrupación (clúster).
+5. Agregue **ciudad** o **nivel educativo** (`Muestra_CC.csv`) como variable suplementaria en el ACM antes de correr `HCPC()`. ¿Alguna de estas variables se asocia significativamente con alguna agrupación (clúster)?
+6. Elabore una **caracterización final**: nombre cada agrupación (clúster) según el perfil de justificaciones que lo tipifica.
 :::
 
 # GRACIAS! {background-color="#ddf3ff"}
