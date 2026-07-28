@@ -198,6 +198,10 @@ Seis objetos descritos por dos variables: gasto mensual y años de educación.
 
 ```{r}
 #| echo: true
+library(pacman)
+p_load(here, tidyverse, FactoMineR, factoextra, corrplot, cluster,
+       ggrepel, gt, janitor, haven, NbClust)
+
 datos <- data.frame(
   Individuo = c("A", "B", "C", "D", "E", "F"),
   gastos = c(5, 6, 18, 20, 25, 30),
@@ -724,6 +728,7 @@ table(res.clus.lapop$data.clust$clust)
 #| fig-align: center
 #| fig-width: 9
 #| fig-height: 5
+#| echo: true
 fviz_dend(res.clus.lapop, cex = 0.4, palette = "jco",
           rect = TRUE, rect_fill = TRUE,
           main = "Dendrograma — Confianza institucional LAPOP 2021")
@@ -852,3 +857,5 @@ Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https
 Cualquier copia parcial o total de este material, debe citar la fuente como:
 
 > Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/
+
+
