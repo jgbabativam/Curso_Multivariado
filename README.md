@@ -11,6 +11,10 @@ A lo largo del contenido se exploran técnicas como:
 
 El repositorio está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan la asignatura como para cualquier persona interesada en el análisis de datos multivariados y técnicas modernas de ciencia de datos.
 
+Para citar este repositorio use:
+
+> Corzo J., \& Babativa-Márquez, J.G. *Materiales del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/
+
 ---
 
 ## 📦 Contenido del repositorio
