@@ -1586,12 +1586,28 @@ ggplot(coord_sue, aes(PC1, PC2, color = Cluster, label = Universidad)) +
 # GRACIAS! {background-color="#ddf3ff"}
 
  
-# Citación y derechos de autor
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Si utiliza este material
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+Si utiliza este material total o parcialmente en cursos, investigaciones, presentaciones o publicaciones, por favor cite la fuente como:
 
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). GitHub. https://jgbabativam.github.io/EDM/
+
+**Repositorio:** <https://github.com/jgbabativam/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+
+**DOI (próximamente):** *Se incorporará una vez la versión 2026-1 sea archivada en Zenodo.*
+:::
+
+\vfill
+
+::: {.footer}
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026
+:::
 
