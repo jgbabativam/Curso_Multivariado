@@ -31,7 +31,7 @@ p_load(here, tidyverse, FactoMineR, factoextra, corrplot,
 
 ```{r}
 #| label: carga-datos
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 microdato <- read_sav(paste0(url, "ejemploACS.sav"))
 ```
 
@@ -61,7 +61,7 @@ Se simularon datos para **400 personas** de una institución de educación sobre
 
 ```{r}
 #| echo: true
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 microdato <- read_sav(paste0(url, "ejemploACS.sav")) |> 
              mutate(across(c("opinion", "grupo"), ~as_factor(.)))
 
@@ -1051,13 +1051,26 @@ Como los 2 ejes explican el **100 % de la inercia**, los cos² suman exactamente
 # GRACIAS! {background-color="#ddf3ff"}
 
  
-# Citación y derechos de autor
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Citación sugerida
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
+
+**Repositorio GitHub:** <https://github.com/jgbabativam/EDM>
+
+**Sitio web del curso:** <https://jgbabativam.github.io/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+:::
+
+\vfill
+
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026
 
 
 

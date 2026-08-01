@@ -55,7 +55,7 @@ Puede copiar, modificar y redistribuir este material, siempre que se otorgue el 
 | Panorama | — |  [Ver diapositivas](https://jgbabativam.github.io/EDM/1.Panorama.html)|
 | Medidas Descriptivas <br> Multivariadas | — |  [Ver diapositivas](https://jgbabativam.github.io/EDM/2.MedidasMulti.html)|
 | Análisis de Componentes Principales | [Ejercicios preparatorios](https://jgbabativam.github.io/EDM/Laboratorios/LabPreparcialACP.pdf) | [Ver diapositivas](https://jgbabativam.github.io/EDM/3.ACP.html) |
-| Análisis de Correspondencias | [Ejercicio en clase ACS](https://jgbabativam.github.io/EDM/Ejemplo_ACS.html) <br> [Ejercicios preparatorios](https://jgbabativam.github.io/EDM/Laboratorios/LabPreParcialACSM.pdf) | [Ver diapositivas ACS](https://jgbabativam.github.io/EDM/4.ACS.html) <br> [Ver diapositivas ACM](https://jgbabativam.github.io/EDM/5.ACM_1.html)|
+| Análisis de Correspondencias | [Ejercicio en clase ACS](https://jgbabativam.github.io/EDM/Ejemplo_ACS.html) <br> [Ejercicios preparatorios](https://jgbabativam.github.io/EDM/Laboratorios/LabPreParcialACSM.pdf) | [Ver diapositivas ACS](https://jgbabativam.github.io/EDM/4.ACS.html) <br> [Ver diapositivas ACM](https://jgbabativam.github.io/EDM/5.ACM.html)|
 | Agrupaciones |  | [Ver diapositivas Clúster](https://jgbabativam.github.io/EDM/6.Cluster.html)|
 
 ---
