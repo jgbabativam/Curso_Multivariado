@@ -73,7 +73,7 @@ Se recomienda tener conocimientos básicos de:
 
 Puedes acceder al material completo en:
 
-👉 https://jgbabativam.github.io/Curso_Multivariado/
+👉 https://jgbabativam.github.io/EDM/
 
 ---
 
