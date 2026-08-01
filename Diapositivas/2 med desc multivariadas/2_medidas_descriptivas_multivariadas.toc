@@ -1,1 +1,0 @@
-\beamer@sectionintoc {1}{Vector de medias, matriz de covarianzas y matriz de correlación}{13}{0}{1}
