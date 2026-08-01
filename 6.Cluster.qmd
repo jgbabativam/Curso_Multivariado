@@ -31,7 +31,7 @@ p_load(here, tidyverse, FactoMineR, factoextra, corrplot, cluster,
 
 ```{r}
 #| label: setup-url
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ```
 
 # Análisis de Agrupaciones (Clúster) {background-color="#0077b6"}
@@ -541,7 +541,7 @@ Retomamos los 33 departamentos colombianos y sus 15 indicadores de calidad de vi
 #| echo: true
 #| message: false
 #| warning: false
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
  
 ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE) |>
        column_to_rownames("departamento") |>
@@ -800,7 +800,7 @@ desc_lapop |>
 library(pacman)
 p_load(tidyverse, FactoMineR, factoextra, cluster, haven, janitor)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ```
 
 Cada grupo trabajará con una **semilla distinta**, un conjunto de variables cuantitativas para K-medias/jerárquico y un subconjunto de ítems cualitativos para el ACM + HCPC.
@@ -850,12 +850,26 @@ Con los ítems de justificación para desobedecer la ley asignados a su grupo:
 
 # GRACIAS! {background-color="#ddf3ff"}
 
-# Citación y derechos de autor
+ 
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Citación sugerida
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
+
+**Repositorio GitHub:** <https://github.com/jgbabativam/EDM>
+
+**Sitio web del curso:** <https://jgbabativam.github.io/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+:::
+
+\vfill
+
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026
 
 

@@ -666,7 +666,7 @@ Los datos corresponden a **promedios por país** de las posiciones de sus univer
 library(pacman)
 p_load(tidyverse, FactoMineR, factoextra, janitor, corrplot)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 rank_lat <- read.csv2(paste0(url, "r14_Sci_Qs_Webometrics.csv"))
 ```
 
@@ -906,7 +906,7 @@ Los indicadores en escala inversa (analfabetismo, hacinamiento, IPM) se transfor
 library(pacman)
 p_load(tidyverse, janitor, corrplot)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ecv <- read.csv(paste0(url, "ecv_departamentos_2022.csv"), header = TRUE) |> 
        column_to_rownames("departamento") |> 
        rename(inv_hacinamiento = sin_hacinamiento,
@@ -1427,7 +1427,7 @@ donde $U_k^{(q)}$ y $V_k^{(q)}$ son las primeras $q$ columnas de $U_k$ y $V_k$.
 library(pacman)
 p_load(jpeg, tidyverse)
 
-url_img <- "https://raw.githubusercontent.com/jgbabativam/Curso_Multivariado/main/images/rushmore.jpg"
+url_img <- "https://raw.githubusercontent.com/jgbabativam/EDM/main/images/rushmore.jpg"
 
 tmp <- tempfile(fileext = ".jpg")
 download.file(url_img, tmp, mode = "wb")
@@ -1598,7 +1598,7 @@ knitr::include_graphics(here::here("images/rushmore.jpg"))
 
 Para ver este laboratorio de clic sobre este enlace:
 
-[Laboratorio ACP](https://github.com/jgbabativam/Curso_Multivariado/blob/main/Laboratorios/LabC_ACP.pdf)
+[Laboratorio ACP](https://github.com/jgbabativam/EDM/blob/main/Laboratorios/LabC_ACP.pdf)
 
 
 ## Asignación por grupos
@@ -1700,12 +1700,24 @@ Identifique:
 # GRACIAS! {background-color="#ddf3ff"}
 
  
-# Citación y derechos de autor
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Citación sugerida
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
 
+**Repositorio GitHub:** <https://github.com/jgbabativam/EDM>
+
+**Sitio web del curso:** <https://jgbabativam.github.io/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+:::
+
+\vfill
+
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026
 

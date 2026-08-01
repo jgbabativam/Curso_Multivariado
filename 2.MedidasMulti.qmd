@@ -144,7 +144,7 @@ $$\bar{x} = \begin{bmatrix}
 library(pacman)
 p_load(tidyverse, janitor, corrplot, gt)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") |> clean_names()
 ```
 
@@ -678,7 +678,7 @@ Uno de los más exigentes rankings del mundo es el *Academic Rank of World Unive
 library(pacman)
 p_load(tidyverse, janitor)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 arwu <- read.csv2(paste0(url, "ARWU_100_top.csv")) |> clean_names()
 ```
 
@@ -829,7 +829,7 @@ Esta regla es coherente con la idea de concentración de probabilidad en la dist
 library(pacman)
 p_load(tidyverse, janitor, corrplot, gt)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";") 
 ```
 
@@ -1366,7 +1366,7 @@ A continuación se presenta la distribución de las instituciones según su posi
 library(pacman)
 p_load(tidyverse, janitor, FactoMineR)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 arwu <- read.csv2(paste0(url, "arwu.csv")) 
 
 rownames(arwu) <- arwu$Institution
@@ -1385,7 +1385,7 @@ rownames(arwu) <- arwu$Institution
 library(pacman)
 p_load(tidyverse, janitor, FactoMineR)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 arwu <- read.csv2(paste0(url, "arwu.csv")) 
 
 rownames(arwu) <- arwu$Institution
@@ -1437,7 +1437,7 @@ Visualización de los datos originales comparando la relación alumnos/profesor 
 #| fig-width: 7
 #| fig-height: 5
 #| out-width: "70%"
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ciudades <- read.csv2(paste0(url, "ciudades.csv"), sep=";", fileEncoding = "latin1",
   check.names = TRUE)
 
@@ -1529,7 +1529,7 @@ El ejercicio implica los siguientes pasos:
 ## Ejemplo: Reconstrucción SVD del ARWU
 
 ```{r, echo=TRUE}
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 arwu_svd <- read.csv2(paste0(url, "ARWU_100_top.csv"))[, -c(2:6)]
 rownames(arwu_svd) <- arwu_svd[, 1]
 C <- as.matrix(arwu_svd[, -1])
@@ -1699,16 +1699,28 @@ Como preparación para el examen, se recomienda resolver el siguiente laboratori
 
 </br>
 
-[Laboratorio](https://github.com/jgbabativam/Curso_Multivariado/blob/main/Laboratorios/LabB_Panorama_MedDesc.pdf)
+[Laboratorio](https://github.com/jgbabativam/EDM/blob/main/Laboratorios/LabB_Panorama_MedDesc.pdf)
 
 # GRACIAS! {background-color="#ddf3ff"}
 
 
-# Citación y derechos de autor
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Citación sugerida
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
 
+**Repositorio GitHub:** <https://github.com/jgbabativam/EDM>
+
+**Sitio web del curso:** <https://jgbabativam.github.io/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+:::
+
+\vfill
+
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026

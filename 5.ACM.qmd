@@ -31,7 +31,7 @@ p_load(here, tidyverse, FactoMineR, factoextra, corrplot,
 
 ```{r}
 #| label: setup-url
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 ```
 
 # Análisis de Correspondencias Múltiples (ACM) {background-color="#0077b6"}
@@ -241,7 +241,7 @@ Se incluyen ciudad y nivel educativo como **variables suplementarias**.
 library(pacman)
 p_load(tidyverse, FactoMineR, factoextra, gt, janitor, corrplot)
 
-url <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 CCLatin <- read.csv2(paste0(url, "Muestra_CC.csv"), sep = ";")
 
 cclp20 <- CCLatin[, c(4, 8, 64:74)]
@@ -523,7 +523,7 @@ Los ejercicios utilizan los datos de la **Encuesta de Cultura Ciudadana (ECC)** 
 library(pacman)
 p_load(tidyverse, FactoMineR, factoextra, haven, corrplot)
 
-url   <- "https://github.com/jgbabativam/Curso_Multivariado/raw/main/Datos/"
+url   <- "https://github.com/jgbabativam/EDM/raw/main/Datos/"
 datos <- read.csv2(paste0(url, "Muestra_CC.csv"), sep = ";")
 ```
 
@@ -604,12 +604,27 @@ Con los ítems de justificación para desobedecer la ley asignados a su grupo:
 # GRACIAS! {background-color="#ddf3ff"}
 
  
-# Citación y derechos de autor
+ 
+## Citación y derechos de autor
 
-Este material ha sido creado por Jimmy Corzo y [Giovany Babativa-Márquez](https://github.com/jgbabativam) y es de libre distribución bajo la licencia [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Este material fue elaborado por **Jimmy Corzo** y **Giovany Babativa-Márquez** y se distribuye bajo la licencia
+**Creative Commons Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)**.
 
-Cualquier copia parcial o total de este material, debe citar la fuente como:
+::: {.callout-note}
+### Citación sugerida
 
-> Corzo J., \& Babativa-Márquez, J.G. *Diapositivas del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/Curso_Multivariado/ 
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
+
+**Repositorio GitHub:** <https://github.com/jgbabativam/EDM>
+
+**Sitio web del curso:** <https://jgbabativam.github.io/EDM>
+
+**Licencia:** <https://creativecommons.org/licenses/by-sa/4.0/>
+:::
+
+\vfill
+
+**Versión del material:** 2026-1 • **Última actualización:** Julio de 2026
+
 
 

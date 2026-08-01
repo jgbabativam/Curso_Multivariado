@@ -11,9 +11,29 @@ A lo largo del contenido se exploran técnicas como:
 
 El repositorio está diseñado como un recurso de aprendizaje tanto para estudiantes que cursan la asignatura como para cualquier persona interesada en el análisis de datos multivariados y técnicas modernas de ciencia de datos.
 
-Para citar este repositorio use:
+---
 
-> Corzo J., \& Babativa-Márquez, J.G. *Materiales del curso de estadística descriptiva multivariada*. URL: https://jgbabativam.github.io/EDM/
+## 📖 Cómo citar este material
+
+Si utiliza este material en cursos, investigaciones, presentaciones o publicaciones, por favor cite:
+
+> Corzo, J., & Babativa-Márquez, J. G. (2026). *Materiales del curso Estadística Descriptiva Multivariada* (Versión 2026-1). Zenodo. https://doi.org/10.5281/zenodo.21730142
+
+---
+
+## 🌐 Recursos
+
+- **Sitio web del curso:** https://jgbabativam.github.io/EDM/
+- **Repositorio GitHub:** https://github.com/jgbabativam/EDM
+- **DOI:** https://doi.org/10.5281/zenodo.21730142
+
+---
+
+## 📄 Licencia
+
+Este material se distribuye bajo la licencia **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
+
+Puede copiar, modificar y redistribuir este material, siempre que se otorgue el crédito correspondiente y las obras derivadas se distribuyan bajo la misma licencia.
 
 ---
 
